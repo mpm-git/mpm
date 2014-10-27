@@ -1,0 +1,57 @@
+<HTML><HEAD>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta http-equiv="imagetoolbar" content="no">
+<link href="resources/css/jquery-ui-themes.css" type="text/css" rel="stylesheet">
+<link href="resources/css/axure_rp_page.css" type="text/css" rel="stylesheet">
+<link href="userr1_files/axurerp_pagespecificstyles.css" type="text/css" rel="stylesheet">
+<!--[if IE 6]>
+<link href="userr1_files/axurerp_pagespecificstyles_ie6.css" type="text/css" rel="stylesheet">
+<![endif]-->
+<SCRIPT src="resources/scripts/jquery-1.4.2.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/jquery-ui-1.8.10.custom.min.js"></SCRIPT>
+<SCRIPT src="resources/scripts/axurerp_beforepagescript.js"></SCRIPT>
+<SCRIPT src="resources/scripts/messagecenter.js"></SCRIPT>
+</HEAD>
+<BODY>
+<DIV class="main_container">
+
+<DIV id=u0_container class="u0_container">
+<DIV id="u0_img" class="u0_original"></DIV>
+<DIV id=u1 class="u1" >
+<DIV id=u1_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u0 src="resources/images/transparent.gif" class="u0"    >
+
+<DIV id=u2_container class="u2_container">
+<DIV id="u2_img" class="u2_original"></DIV>
+<DIV id=u3 class="u3" >
+<DIV id=u3_rtf>&nbsp;</DIV></DIV>
+</DIV>
+<IMG id=u2 src="resources/images/transparent.gif" class="u2"    >
+
+<INPUT id=u4 type=text value="姓名 :" class="u4"  readonly   >
+
+<INPUT id=u5 type=text value="李玉仙" class="u5"  readonly   >
+
+<INPUT id=u6 type=text value="工号 :" class="u6"  readonly   >
+
+<INPUT id=u7 type=text value="021822" class="u7"  readonly   >
+
+<INPUT id=u8 type=submit class="u8" value="保存"  >
+
+<INPUT id=u9 type=text value="权限修改" class="u9"  readonly   >
+
+<INPUT id=u10 type=text value="用户类型 :" class="u10"  readonly   >
+
+<SELECT id=u11 class="u11"  >
+<OPTION selected value="请选择用户类型...">请选择用户类型...</OPTION>
+<OPTION  value="管理员">管理员</OPTION>
+<OPTION  value="普通用户">普通用户</OPTION>
+</SELECT>
+</DIV>
+<DIV class=preload>
+<img src="userr1_files/u0_original.png" width="1" height="1"/>
+<img src="userr1_files/u2_original.png" width="1" height="1"/></DIV>
+</BODY>
+<SCRIPT src="resources/scripts/axurerp_pagescript.js"></SCRIPT>
+<SCRIPT src="userr1_files/axurerp_pagespecificscript.js" charset="utf-8"></SCRIPT>

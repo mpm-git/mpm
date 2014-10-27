@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/EMOE/!svn/ver/9655/branches/MPM/src
+END
+struts.xml
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/EMOE/!svn/ver/9586/branches/MPM/src/struts.xml
+END
+rule.xml
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/EMOE/!svn/ver/9586/branches/MPM/src/rule.xml
+END
+applicationContext.xml
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/EMOE/!svn/ver/9586/branches/MPM/src/applicationContext.xml
+END
+log4j.properties
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/EMOE/!svn/ver/9586/branches/MPM/src/log4j.properties
+END

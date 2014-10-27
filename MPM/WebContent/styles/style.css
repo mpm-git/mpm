@@ -1,0 +1,174 @@
+body {
+	margin: 0;
+	padding: 0;
+	font: 12px/1.5 arial;
+	background: #F0F0F0;
+}
+
+
+.table-layout {
+	width: 100%;
+	height: 100%;
+
+}
+
+
+/*
+
+ul, li{border:0;outline:none;margin:0;padding:0;}
+ul, ul li{list-style: none;}
+ul.text {margin-bottom: 1em; line-height: 1.5em;}
+.text-center {text-align: center;}
+
+#loginForm {
+	padding-top: 300px;
+	width: 100%;
+	text-align: center;
+}
+
+
+.header {
+	width: 100%;
+	height: 65px;
+	background-image: url('./images/top_nav_bg.png') ;
+	border-bottom:1px solid #C0C0C0;
+}
+
+
+.logo {
+	position: absolute;
+	top: 0px;
+	left: 8px;
+	padding-top: 12px;
+	padding-left: 10px;
+	width: 300px;
+	height: 60px;
+}
+
+.welcome {
+	position: absolute;
+	left: 330px;
+	top: 45px;
+	width: 200px;
+	text-align: right;
+}
+
+.top_menu {
+	position: absolute;
+	top: 0px;
+	right: 6px;
+	width: 500px;
+	height: 60px;
+	text-align: center;
+}
+
+.top_menu .menus {
+	margin: auto;
+	width: 450px;
+	height: 100%;
+}
+
+.top_menu .menus .menu {
+	margin-top: 3px;
+	margin-left: 40px;
+	width: 55px;
+	height: 50px;
+	float: left;
+	text-align: center;
+}
+
+.top_menu .menu img{
+	width: 40px;
+	height: 40px;
+}
+
+
+
+
+.middler {
+	width: 1024px;
+	text-align: left;
+	margin: 10px auto;
+	min-height: 530px;
+	border: 1px solid;
+}
+
+.middler1 {
+	width: 99%;
+	margin: 10px auto;
+	min-height: 530px;
+	border: 1px solid;
+}
+
+.middler1 .submenu {
+	width: 200px;
+	border: 1px solid;
+	float: left;
+}
+
+
+.middler1 .content {
+	border: 1px solid;
+	min-height: 530px;
+	min-width: 800px;
+	float: left;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.footer {
+	margin-top: 40px;
+	width: 100%;
+	height: 30px;
+	text-align: center;
+	
+}
+
+
+
+
+
+.main_page_content_left {
+	border: solid 1px #D9E1E4;
+	width: 810px;
+	height: 530px;
+	float: left;
+	margin-left: -1px;
+	margin-top: -1px;
+	background: #F4F8F8;
+}
+
+.main_page_content_right {
+	border: solid 1px #D9E1E4;
+	width: 200px;
+	height: 530px;
+	float: right;
+	margin-left: 10px;
+	margin-right: -1px;
+	margin-top: -1px;
+}
+
+.mainpage_inpatientArea_monitor {
+	width: 800px;
+	height: 520px;
+	float: left;
+	margin-left: 5px;
+	margin-top: 5px;
+	background-image: url('./images/impatientAreas/ImpatientArea1.jpg');
+}
+
+
+.mainpage_inpatientArea_monitor_right {
+	margin-left: 10px;
+	border: solid 1px;
+	width: 200px;
+	height: 100%;
+	float: right;
+}
+
+#mainpage_inpatientAreaMap img {
+	border: solid 1px;
+	width: 590px;
+	height: 350px;
+}
+*/

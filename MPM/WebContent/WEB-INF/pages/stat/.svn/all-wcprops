@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/EMOE/!svn/ver/9667/branches/MPM/WebContent/WEB-INF/pages/stat
+END
+adduser.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/adduser.jsp
+END
+newrfid.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/newrfid.jsp
+END
+nursingStrengthStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/EMOE/!svn/ver/9648/branches/MPM/WebContent/WEB-INF/pages/stat/nursingStrengthStat.jsp
+END
+patientSingleNursingLevelStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/patientSingleNursingLevelStat.jsp
+END
+patientSingleDiagnosisResultStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/patientSingleDiagnosisResultStat.jsp
+END
+CardManager.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/CardManager.jsp
+END
+varset.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/varset.jsp
+END
+NurseLeaveStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/NurseLeaveStat.jsp
+END
+nursingEfficiencyStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/EMOE/!svn/ver/9648/branches/MPM/WebContent/WEB-INF/pages/stat/nursingEfficiencyStat.jsp
+END
+patientSingleTimeModel.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/patientSingleTimeModel.jsp
+END
+dataMiningStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/EMOE/!svn/ver/9667/branches/MPM/WebContent/WEB-INF/pages/stat/dataMiningStat.jsp
+END
+patientSingleMain.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/patientSingleMain.jsp
+END
+NursePatientStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/NursePatientStat.jsp
+END
+right.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/right.jsp
+END
+patientSingleAgeStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/patientSingleAgeStat.jsp
+END
+patientSingleNurseStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/EMOE/!svn/ver/9648/branches/MPM/WebContent/WEB-INF/pages/stat/patientSingleNurseStat.jsp
+END
+PatientRoundedStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/PatientRoundedStat.jsp
+END
+DoctorRoundsStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/DoctorRoundsStat.jsp
+END
+changepswd.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/changepswd.jsp
+END
+NurseRoundsStat.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/EMOE/!svn/ver/9634/branches/MPM/WebContent/WEB-INF/pages/stat/NurseRoundsStat.jsp
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet
+END
+Test.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet/Test.java
+END
+PatientInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet/PatientInfo.java
+END
+Patientadvice.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet/Patientadvice.java
+END
+Patientcall.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet/Patientcall.java
+END
+GetActionFromDP.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet/GetActionFromDP.java
+END
+Patientdata.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/EMOE/!svn/ver/9586/branches/MPM/src/cn/com/mwsn/btpm/httpservlet/Patientdata.java
+END
