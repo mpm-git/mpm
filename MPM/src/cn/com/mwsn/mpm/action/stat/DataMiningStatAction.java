@@ -19,7 +19,8 @@ import com.opensymphony.xwork2.ActionSupport;
  *
  */
 @Results({ @Result(name = "success", location = "/WEB-INF/pages/stat/dataMiningStat.jsp"),
-	@Result(name = "error", location = "/error/error.jsp") })
+	@Result(name = "error", location = "/error/error.jsp") ,
+	@Result(name = "result", location = "/WEB-INF/pages/result4Json.jsp")})
 public class DataMiningStatAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 5377050751703222726L;
@@ -32,6 +33,7 @@ public class DataMiningStatAction extends ActionSupport {
 	
 	//查询条件
 	private List<String> patientCondition;//选中的病人的分析项
+	private String select_disease="心脏病";//选中的疾病
 	private String algorithm;//选中的算法
 	private String suport = "70";//支持度
 	private String confidence = "30" ;//置信度
@@ -68,9 +70,9 @@ public class DataMiningStatAction extends ActionSupport {
 	@Action(value="dataMiningStat")
 	public String execute() throws Exception {
 		//默认是一直选中的
-		patientCondition = new ArrayList<String>();
-		patientCondition.add("1");
-		patientCondition.add("2");
+//		patientCondition = new ArrayList<String>();
+//		patientCondition.add("1");
+//		patientCondition.add("2");
 		if(algorithm == null){
 			algorithm = "1";
 		}
@@ -290,6 +292,16 @@ public class DataMiningStatAction extends ActionSupport {
 
 	public Map<String, String> getAlgorithms() {
 		return algorithms;
+	}
+
+
+	public String getSelect_disease() {
+		return select_disease;
+	}
+
+
+	public void setSelect_disease(String select_disease) {
+		this.select_disease = select_disease;
 	}
 
 

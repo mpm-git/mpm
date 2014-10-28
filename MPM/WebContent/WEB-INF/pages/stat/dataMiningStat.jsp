@@ -35,7 +35,33 @@ $(function(){
 	G.req(["gPopMenu"],function(j){j("#fMenu");});
 });
 
-
+var guanlian={
+	select_disease:"心脏病",
+	suport:70,
+	confidence:30,
+	diseases:[
+	          	{
+	        	  name:'糖尿病',
+	        	  confidence:12,
+	        	  suport:21
+	        	},
+	        	{
+		        	  name:'高血压',
+		        	  confidence:72,
+		        	  suport:41
+		        },
+		        {
+		        	  name:'高血脂',
+		        	  confidence:62,
+		        	  suport:41
+		        },
+		        {
+		        	  name:'高血糖',
+		        	  confidence:90,
+		        	  suport:80
+		        }
+	          ]
+};
 $(document).ready(function() {
 	    
 	    var type = ${searchType};
@@ -93,24 +119,32 @@ $(document).ready(function() {
 			});
 		}else{
 			//关联挖掘
-			$('#chartDiv').highcharts({ 
-				chart: { type: 'bubble', zoomType: 'xy' }, 
-				title: { text: '疾病与诊断数据分析' },
-				credits: {enabled: false},
-				yAxis: {                                                                             
-		            title: {                                                                         
-		                text: '疾病指数'                                                          
-		            }                                                                                
-		        }  
-			});
-			
+// 			$('#chartDiv').highcharts({ 
+// 				chart: { type: 'bubble', zoomType: 'xy' }, 
+// 				title: { text: '疾病间数据分析' },
+// 				credits: {enabled: false},
+// 				yAxis: {                                                                             
+// 		            title: {                                                                         
+// 		                text: '百分比(%)'                                                          
+// 		            }                                                                                
+// 		        }  
+// 			});
+			var _categories=[];
+			var _confidence=[];
+			var _suport=[];
+			for(var i=0;i<guanlian.diseases.length;i++)
+			{
+				_categories.push(guanlian.diseases[i].name);
+				_confidence.push(guanlian.diseases[i].confidence);
+				_suport.push(guanlian.diseases[i].suport);
+			}
 			$('#relate_chart').highcharts({ 
 				chart: { type: 'column' }, 
-				title: { text: '年龄与诊断数据分析' },
+				title: { text: guanlian.select_disease+'与其他疾病数据分析' },
 				credits: {enabled: false},
 				xAxis: { 
-					title:{text:"年龄"},
-					categories: [ '20', '30', '40', '50', '60', '70', '80']
+					title:{text:"病种"},
+					categories: _categories
 				}, 
 				yAxis: { 
 					min: 0, 
@@ -120,7 +154,14 @@ $(document).ready(function() {
 	                    color: "#FF0000",
 	                    dashStyle: "Dash", //Dash，Dot，Solid，默认Solid
 	                    width: 1.5,
-	                    value: '<s:property value="confidence"/>',  //y轴显示
+	                    value:guanlian.confidence ,  //y轴显示
+	                    zIndex: 5
+	                },
+	                {   //一条延长到全部画图区的线，标记住轴中一个特定值。
+	                    color: "#0000ff",
+	                    dashStyle: "Dash", //Dash，Dot，Solid，默认Solid
+	                    width: 2.5,
+	                    value:guanlian.suport ,  //y轴显示
 	                    zIndex: 5
 	                }]
 				}, 
@@ -130,11 +171,22 @@ $(document).ready(function() {
 				},
 				plotOptions: { column: { pointPadding: 0.2, borderWidth: 0 } }
 			});
-			
-			genertateData2();
+			var chart22 = $("#relate_chart").highcharts();
+	          chart22.addSeries({
+		    	    type: 'column', 
+			        name:"支持度", 
+			        data: _suport
+		       });
+            chart22.addSeries({
+	    	    type: 'spline', 
+		        name: '置信度', 
+		        data: _confidence
+	         });
+  
+			//genertateData2();
 		}
 		
-		genertateData('chartDiv', 1);
+		//genertateData('chartDiv', 1);
 
 
 		
@@ -312,9 +364,20 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
       </ul>
       <form action="dataMiningStat.action" method="post" id="searchForm">
 	      <ul class="titles">
+<!-- 	        <li> -->
+<!-- 	                              病人： -->
+<%-- 	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" /> --%>
+<!-- 	        </li> -->
 	        <li>
-	                              病人：
-	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" />
+	                              病种：
+	          <select name="select_disease " id="select_disease" style="width:160px;height:22px;">
+	              <option value="1" <s:if test="select_disease==1">selected="selected"</s:if>>心脏病</option>
+	              
+	              <option value="2" <s:if test="select_disease==2">selected="selected"</s:if>>糖尿病</option>
+	              <option value="3" <s:if test="select_disease==3">selected="selected"</s:if>>高血压</option>
+	              <option value="4" <s:if test="select_disease==4">selected="selected"</s:if>>高血脂</option>
+	               
+	            </select>
 	        </li>
 	        <!-- <li>
 	                             护士：
@@ -347,8 +410,8 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
      <div style="border-bottom: 1px dashed #CCCCCC"></div>
      
      <div id="resultDiv1" style="width: 800px;margin-left: auto;margin-right: auto;">
-	      <div id="chartDiv" style="padding-top: 20px; width: 800px; height: 300px; margin: 0 auto; margin-bottom: 20px;">
-	      </div>
+<!-- 	      <div id="chartDiv" style="padding-top: 20px; width: 800px; height: 300px; margin: 0 auto; margin-bottom: 20px;"> -->
+<!-- 	      </div> -->
 	      
 	      
 <!-- 	      <input type="button"  style="float: right;margin: 10px;" class="ui-button ui-widget ui-state-default ui-corner-all" value="导出excel" id="excelBtn" />
