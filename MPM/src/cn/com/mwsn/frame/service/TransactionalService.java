@@ -1,6 +1,7 @@
 package cn.com.mwsn.frame.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.com.mwsn.frame.entity.IdEntity;
 import cn.com.mwsn.frame.exception.ServiceException;
@@ -101,5 +102,15 @@ public interface TransactionalService {
 	 * @return List<? extends IdEntity>
 	 */
 	public List findByIds(Class<? extends IdEntity> clazz, List<Integer> ids);
+
+	/**分页查询
+	 * @param queryString
+	 * @param map
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+//	<T> List<T> find(String queryString, Map<String, Object> map, int page, int rows);
+	<T> QueryResult<List<T>> find(String queryString, Map<String, Object> map, int page, int rows);
 
 }
