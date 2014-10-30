@@ -1,8 +1,14 @@
 package cn.com.mwsn.mpm.service.impl;
 
+import java.util.List;
+
+import org.apache.struts2.json.JSONUtil;
+import org.cz.utils.gson.GsonUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.com.mwsn.dataplatform.eventengine.entity.Incident;
+import cn.com.mwsn.frame.service.QueryResult;
 import cn.com.mwsn.frame.service.impl.TransactionalServiceImpl;
 import cn.com.mwsn.mpm.entity.User;
 import cn.com.mwsn.mpm.service.UserService;
@@ -15,6 +21,7 @@ public class UserServiceImpl extends TransactionalServiceImpl implements
 
 	@Override
 	public int validateAccount(String account, String pwd) {
+//		QueryResult<List<Incident>> queryResult = this.find("select u from Incident u order by u.time",null,1,10);
 		User user = this.findBy(User.class, "account", account);
 		if (user == null ){
 			return 3;

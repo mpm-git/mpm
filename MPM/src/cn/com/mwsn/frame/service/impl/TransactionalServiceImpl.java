@@ -9,11 +9,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.hibernate.SQLQuery;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.mwsn.frame.entity.IdEntity;
 import cn.com.mwsn.frame.exception.ServiceException;
+import cn.com.mwsn.frame.service.QueryResult;
 import cn.com.mwsn.frame.service.TransactionalService;
 
 @Transactional
@@ -133,7 +133,29 @@ public abstract class TransactionalServiceImpl implements
 		setParameters(query, params);
 		return (List<T>) query.getResultList();
 	}
-
+	public <T> QueryResult<List<T>> find(String queryString, Map<String, Object> map, int pageIndex, int pageSize) {
+		
+		String _queryString=queryString.trim().toLowerCase();
+		queryString=queryString.trim();
+		String _countQueryString=null;
+		if(_queryString.startsWith("from"))
+			_countQueryString="select count(*) "+queryString;
+		else if(_queryString.indexOf(" from ")>-1)
+		{
+			_countQueryString="select count(*)"+queryString.substring(_queryString.indexOf(" from "));
+		}
+		Query q =entityManager.createQuery(queryString);
+		Query q4count = entityManager.createQuery(_countQueryString);
+		if (map != null && !map.isEmpty()) {
+			Set keys = map.keySet();
+			for (Object key : keys) {
+				q.setParameter(key.toString(), map.get(key));
+			}
+		}
+		List<T> resultList = q.setFirstResult((pageIndex - 1) * pageSize).setMaxResults(pageSize).getResultList();
+		QueryResult<List<T>> result=new QueryResult<List<T>>(((Number)q4count.getSingleResult()).intValue(), pageIndex, pageSize,resultList);
+		return result;
+	}
 	@SuppressWarnings("unchecked")
 	public <T> List<T> findMaxRow(String queryString, int maxRow,
 			Object... params) {
@@ -281,22 +303,22 @@ public abstract class TransactionalServiceImpl implements
 		}
 	}
 
-	public void setSQLParameters(SQLQuery query, Object... params) {
-		if (params.length == 1) {// MAP
-			if (params[0] instanceof Map) {
-				Map map = (Map) params[0];
-				Set keys = map.keySet();
-				for (Object key : keys) {
-					query.setParameter(key.toString(), map.get(key));
-				}
-				return;
-			}
-
-		}
-		for (int i = 0; i < params.length; i++) {
-			query.setParameter(i, params[i]);
-		}
-	}
+//	public void setSQLParameters(SQLQuery query, Object... params) {
+//		if (params.length == 1) {// MAP
+//			if (params[0] instanceof Map) {
+//				Map map = (Map) params[0];
+//				Set keys = map.keySet();
+//				for (Object key : keys) {
+//					query.setParameter(key.toString(), map.get(key));
+//				}
+//				return;
+//			}
+//
+//		}
+//		for (int i = 0; i < params.length; i++) {
+//			query.setParameter(i, params[i]);
+//		}
+//	}
 
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
