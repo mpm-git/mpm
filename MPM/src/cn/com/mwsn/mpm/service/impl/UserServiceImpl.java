@@ -37,6 +37,17 @@ public class UserServiceImpl extends TransactionalServiceImpl implements
 		return this.findBy(User.class, "account", account);
 		
 	}
+
+	@Override
+	public boolean changePassWord(User user) {
+		try {
+			this.save(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 	
 	
 	

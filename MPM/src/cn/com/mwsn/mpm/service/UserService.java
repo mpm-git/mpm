@@ -25,5 +25,14 @@ public interface UserService extends TransactionalService{
 	 * 	如果该账号存在，则返回User实体类，否则返回null
 	 */
 	public User queryUser(String account);
+	
+	
+	/**
+	 * 修改帐号密码
+	 * @param user
+	 * @return
+	 * 	如果密码修改成功，则返回true，否则返回false
+	 */
+	public boolean changePassWord(User user);
 
 }
