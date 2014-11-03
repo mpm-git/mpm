@@ -50,9 +50,9 @@
 </script>
 <script type="text/javascript">
 	function alert1() {
-		var oldpswd = $('#oldpswd').val();
-		var newpswd = $('#newpswd').val();
-		var renewpswd = $('#renewpswd').val();
+	var oldpswd = $('#oldpswd').val();
+	var newpswd = $('#newpswd').val();
+	var renewpswd = $('#renewpswd').val();
 		var str = "";
 	
 		if (oldpswd == "") {
@@ -64,14 +64,45 @@
 		if (renewpswd == "") {
 			str = "请输入确认密码";
 		}
-	
+		
 		if (str != "") {
 			alert(str);
 			return;
 		}
-		alert("添加成功！");
+		//TODO
+		
+		if(newpswd!=renewpswd){
+			alert("新密码二次输入不相同，请重新输入！");
+			return;
+		}
 		document.changepswd.submit();
-}
+	}
+	
+	$(function(){
+		$('#oldpswd').blur(function(){
+			var oldpswd_ = $('#oldpswd').val();
+			$.ajax({    
+		        url : '../system/validatePassword.action',    
+		        type : 'post',    
+		        data : {
+		        	'oldpswd': oldpswd_
+		        	},    
+		        dataType : 'json',    
+		        success : function(data) {
+		        	console.info(data.message);
+		        	if(data.status=='success'){
+		        		$('#password_velidate').color="#00FF00";
+		        	}
+		        	if(data.status=='error_old_password'){
+		        		$('#password_velidate').color="#FF0000";
+		        	}
+		        	$('#password_velidate').html(data.message);
+		        	
+		        }
+		    });  
+		});
+	});
+	
 </script>
 </head>
 <body>
@@ -104,6 +135,7 @@
 								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;旧密码：
 								</td>
 								<td><input type="password" id="oldpswd" name="oldpswd"/></td>
+								<td><span id="password_velidate" style="float: left;"></span></td>
 							</tr>
 							<tr>
 								<td height="13"></td>
@@ -125,7 +157,8 @@
 								<td><input name="renewpswd" type="password" id="renewpswd"></td>
 							</tr>
 						</table>
-						<div class="btnsave">
+						<!-- <div class="btnsave"> -->
+						<div style="margin-left: 80%">
 							<a href="javascript:alert1()"><img
 								 />保   存</a>
 						</div>
