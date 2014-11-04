@@ -4,8 +4,6 @@
 
 
 <html>
-
-
 <body>
 
         <div class="gheader-wp">

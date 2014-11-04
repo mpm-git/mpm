@@ -3,9 +3,12 @@ package org.cz.utils.gson;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import cn.com.mwsn.mpm.common.Constant;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -207,19 +210,28 @@ public class GsonUtil {
 	public static void main(String[] args) {
 		String s="{\"status\":\"200\",\"message\":\"成功\",\"result\":{\"type_sn\":3,\"logo_per_price\":11.2,\"logo_upload_price\":22.3,\"logo_draw_price\":2.0,\"logo_text_price\":33.4,\"logo_color_price\":44.5,\"currency\":2}}";
 		String c="[{'color':'#ff0000'},{'color':'#004466'},{'color':'#ffff00'},{'color':'#ff005e'},{'color':'#a60de3'},{'color':'#0d1fe3'},{'color':'#0daae3'},{'color':'#0de338'},{'color':'#9fe30d'},{'color':'#d5e30d'},{'color':'#e3510d'},{'color':'#e3260d'},{'color':'#c620e0'}]";
-		
 		List<?> list = GsonUtil.jsonToList(c);
 		System.out.println(list.get(0));
 		Map<?, ?> map0 = GsonUtil.jsonToMap(s);
 		System.out.println(map0.get("result"));
 		Map<?, ?> map1 = GsonUtil.jsonToMap(map0.get("result").toString());
 		System.out.println(map1.get("logo_per_price"));
+		
+		
+		
+		List<?> jsonToList = GsonUtil.jsonToList(Constant.executeType);
+		List<Map<String,String>> lists =new ArrayList<Map<String,String>>();
+		for (Object ss : jsonToList) {
+			Map<String,String> map = (Map<String, String>) GsonUtil.jsonToMap(ss.toString());
+			lists.add(map);
+			System.out.println(map);
+		}
 //		Map<String, String> map =  GsonUtil.jsonToMap4String(s);
 //		System.out.println(map);
 //		System.out.println(map.get("result"));
 //		Map<?, ?> map = GsonUtil.jsonToMap(s);
 		
-//		List<?> list = GsonUtil.jsonToList(s, new Type(){
+//		List<?> lists = GsonUtil.jsonToList(s, new Type(){
 //			@Expose
 //			private String status;
 //			@Expose

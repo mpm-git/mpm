@@ -1,5 +1,8 @@
 package cn.com.mwsn.mpm.entity;
 
+
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -24,26 +27,28 @@ public class Patient extends IdEntity {
 	private String name;
 	private String descc;
 	private String sex;                  //0:男   1:女
-	private String type;                  //病人类型名称
-	private INHOSMODEL_CODE inhospital;   //入院方式
+	private Date birthday;	//生日
 	private String clinicNo;              //住院号
-	private String patientNo;             //就诊号
-	private String registerNo;            //门诊号
 	private String caseNo;                //病案号
 	private String hisinnerNo;            //His内部标示
 	private String hisouterNo;            //His外部标示
 	private String curBed;                 //床号
-	private InpatientCell cell;
+	private InpatientBed bed;
 	private String curdeptCode;        //科室
 	private String curdeptDesc;      
+	private String careLevel;              //护理级别
+	private Date inhospitalTime;           //入院时间 
+	private Date leaveHospitalTime;        //出院时间 
+	private String dietCare;               //饮食注意
+	private String type;                  //病人类型名称
+	private INHOSMODEL_CODE inhospital;   //入院方式
+	private String patientNo;             //就诊号
+	private String registerNo;            //门诊号
 	
 	//床头终端需要
 	private Doctor doctorCharge;           //主治医生
 	private Nurse nurseCharge;             //责任护士
-	private String careLevel;              //护理级别
-	private String dietCare;               //饮食注意
 	private String deviceID;               //与之关联的床头终端ID
-	private long inhospitalTime;           //入院时间 
 	private String safeNotice;             //安全告知
 	private String drugAllergy;           //药物过敏
 	private String bloodPressure;          //血压数据
@@ -62,14 +67,20 @@ public class Patient extends IdEntity {
 		this.descc = descc;
 	}
 	@OneToOne
-	public InpatientCell getCell() {
-		return cell;
+	public InpatientBed getBed() {
+		return bed;
 	}
-	public void setCell(InpatientCell cell) {
-		this.cell = cell;
+	public void setBed(InpatientBed bed) {
+		this.bed = bed;
 	}
 	public String getSex() {
 		return sex;
+	}
+	public Date getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
@@ -128,6 +139,12 @@ public class Patient extends IdEntity {
 	public void setCurBed(String curBed) {
 		this.curBed = curBed;
 	}
+	public Date getLeaveHospitalTime() {
+		return leaveHospitalTime;
+	}
+	public void setLeaveHospitalTime(Date leaveHospitalTime) {
+		this.leaveHospitalTime = leaveHospitalTime;
+	}
 	public String getCurdeptCode() {
 		return curdeptCode;
 	}
@@ -172,10 +189,10 @@ public class Patient extends IdEntity {
 	public void setDeviceID(String deviceID) {
 		this.deviceID = deviceID;
 	}
-	public long getInhospitalTime() {
+	public Date getInhospitalTime() {
 		return inhospitalTime;
 	}
-	public void setInhospitalTime(long inhospitalTime) {
+	public void setInhospitalTime(Date inhospitalTime) {
 		this.inhospitalTime = inhospitalTime;
 	}
 	public String getSafeNotice() {

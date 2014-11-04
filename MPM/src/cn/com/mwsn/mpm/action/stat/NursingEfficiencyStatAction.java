@@ -85,7 +85,7 @@ public class NursingEfficiencyStatAction extends ActionSupport {
 			for(int i = 0; i < names.length;i++){
 				Nurse p = new Nurse();
 				p.setName(names[i]);
-				p.setNurseId(bedNos[i]);//工号
+				p.setNurseNo(bedNos[i]);//工号
 				list.add(p);
 				if((i+1) % 5 == 0){
 					allNursesList.put(j+"", list);
@@ -125,7 +125,7 @@ public class NursingEfficiencyStatAction extends ActionSupport {
 		List<Nurse> ps = allNursesList.get(patientArea+"");
 		nurseList = new HashMap<String, String>();
 		for(Nurse p : ps){
-			nurseList.put(p.getNurseId(), p.getName());
+			nurseList.put(p.getNurseNo(), p.getName());
 			defaultNurses += p.getName() + ", ";
 		}
 		
@@ -193,7 +193,7 @@ public class NursingEfficiencyStatAction extends ActionSupport {
         	}
         	tableData = composeDate(chartData, title);
 		}
-		
+		System.out.println(chartData);
 		return SUCCESS;
 	}
 	
@@ -207,7 +207,7 @@ public class NursingEfficiencyStatAction extends ActionSupport {
 		List<Nurse> patients = allNursesList.get(patientArea+"");
 		nurseList = new HashMap<String, String>();
 		for(Nurse p : patients){
-			nurseList.put(p.getNurseId(), p.getName());
+			nurseList.put(p.getNurseNo(), p.getName());
 		}
 		
 		Struts2Utils.getRequest().setAttribute("retult", GsonUtil.objectToJson(nurseList));

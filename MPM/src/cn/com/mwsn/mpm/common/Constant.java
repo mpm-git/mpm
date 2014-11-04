@@ -3,7 +3,9 @@ package cn.com.mwsn.mpm.common;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.cz.utils.gson.GsonUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -64,8 +66,31 @@ public class Constant {
 	public static enum RECORD_STATE {START, STOP};
 	public static enum MOBILEFLAG {FINDING, FOUND};
 	public static enum DATEFLAG {FINDBED, ALARM};
-	
+	public static String executeType="["
+			+ "{name:'晨间护理',info:'整理床单位'},"
+			+ "{name:'协助进食水',info:'协助进食水'},"
+			+ "{name:'晚间护理 ',info:'整理床单位'},"
+			+ "{name:'卧位护理',info:'协助患者翻身 '},"
+			+ "{name:'排泄护理',info:'失禁护理、床上使用便器、尿管护理'},"
+			+ "{name:'床上擦浴',info:'床上擦浴'},"
+			+ "{name:'生命体征',info:'体温测量、脉搏测量、呼吸测量、血压测量'},"
+			+ "{name:'各种治疗',info:'血氧饱合度测量、静脉输液、静脉输血、动静脉采血、口服给药、肌肉注射、皮试、静脉注射、胰岛素注射、心电监护、微量泵注射、灌肠、导尿'},"
+			+ "{name:'标本核对',info:'血液标本、尿标本、便标本 '},"
+			+ "{name:'各种护理',info:'物理降温、雾化护理、胃管护理、尿管护理、口腔护理、皮肤护理'},"
+			+ "{name:'出入量统计',info:'出入量统计'},"
+			+ "{name:'尿量统计',info:'尿量统计'},"
+			+ "{name:'巡视病房',info:'输液观察、病情观察、床单位整理、心理护理、安全隐患排查'},"
+			+ "{name:'健康教育',info:'入院指导、专科宣教、饮食宣教、药物宣教、安全宣教、功能锻炼、春腺活检、中药熏蒸'},"
+			+ "{name:'出院随访',info:'出院指导、用药指导、保健指导'},"
+			+ "{name:'巡床',info:'普通巡床'},"
+			+ "{name:'执行',info:'60滴分'},"
+			+ "{name:'查收',info:'1'},"
+			+ "{name:'结束',info:'1'},"
+			+ "{name:'暂停',info:'1'},"
+			+ "{name:'刻写',info:'1'}"
+			+ "]";
 	//地点代码
+	
 	public static String PLACE_201_CODE = "201";
 	public static String PLACE_202_CODE = "202";
 	//地点描述
@@ -165,7 +190,16 @@ public class Constant {
 	
 	
 	
-	
+	public static List<Map<String,String>> getExecuteType()
+	{
+		List<?> jsonToList = GsonUtil.jsonToList(Constant.executeType);
+		List<Map<String,String>> lists =new ArrayList<Map<String,String>>();
+		for (Object ss : jsonToList) {
+			Map<String,String> map = (Map<String, String>) GsonUtil.jsonToMap(ss.toString());
+			lists.add(map);
+		}
+		return lists;
+	}
 	
 	
 }

@@ -1,5 +1,7 @@
 package cn.com.mwsn.mpm.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -7,14 +9,18 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.cz.utils.gson.GsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.com.mwsn.frame.service.QueryResult;
 import cn.com.mwsn.frame.web.action.Struts2Utils;
 import cn.com.mwsn.mpm.common.Constant;
 import cn.com.mwsn.mpm.entity.CurrentPosition;
 import cn.com.mwsn.mpm.entity.InpatientCell;
+import cn.com.mwsn.mpm.entity.MH_NurseExecuteRecord_patient;
 import cn.com.mwsn.mpm.entity.RFIDCardPerson;
 import cn.com.mwsn.mpm.entity.User;
+import cn.com.mwsn.mpm.service.MH_NurseExecuteRecordService;
 import cn.com.mwsn.mpm.service.UserService;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -35,6 +41,7 @@ public class LoginAction extends ActionSupport {
 	
 	@Autowired
 	private UserService userService;
+
 	
 	
 	public String execute(){

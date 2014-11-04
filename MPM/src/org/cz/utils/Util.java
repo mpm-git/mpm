@@ -227,12 +227,12 @@ public class Util {
 	 * @param s
 	 * @return
 	 */
-	public static boolean isNULL(String s){
+	public static boolean isNULL(Object s){
 		if(s == null) {
 			return true;
-		}else if(s == "") {
+		}else if(s.toString().trim().equals("")) {
 			return true;
-		}else if("null".equalsIgnoreCase(s)) {
+		}else if("null".equalsIgnoreCase(s.toString())) {
 			return true;
 		}else {
 			return false;
@@ -386,6 +386,20 @@ public class Util {
 	  * @return 日期
 	  * @throws java.text.ParseException
 	  */
+    public static Date str2Date(String str,String format){
+    	if (null == str || "".equals(str)) {
+    		return null;
+    	}
+    	SimpleDateFormat sdf = new SimpleDateFormat(format);
+    	Date date = null;
+    	try {
+    		date = sdf.parse(str);
+    		return date;
+    	} catch (ParseException e) {
+    		e.printStackTrace();
+    	}
+    	return null;
+    }
 	public static Date str2Date(String str){
 		if (null == str || "".equals(str)) {
 			return null;

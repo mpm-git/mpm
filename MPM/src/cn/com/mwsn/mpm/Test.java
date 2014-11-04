@@ -38,8 +38,9 @@ public class Test {
 	 * @param args
 	 * @throws IOException 
 	 * @throws ParseException 
+	 * @throws java.text.ParseException 
 	 */
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, java.text.ParseException {
 		// TODO Auto-generated method stub
 		/*String str;
 		try {
@@ -63,6 +64,9 @@ public class Test {
 		
 //		s = "lokjsdshdj";
 //		System.out.println(s.replace("shd","1111"));
+		SimpleDateFormat myfmt = new SimpleDateFormat("yyyyMMddhhmmss");
+		System.out.println(myfmt.parse("20141031224000").getTime());
+		System.out.println(myfmt.parse("20141031223000").getTime());
 	
 	}
 

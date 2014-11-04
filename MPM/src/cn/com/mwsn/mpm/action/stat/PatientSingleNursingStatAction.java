@@ -15,14 +15,24 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.cz.utils.ClassUtil;
+import org.cz.utils.DateUtil;
+import org.cz.utils.Util;
+import org.cz.utils.gson.GsonUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import cn.com.mwsn.frame.service.QueryResult;
 import cn.com.mwsn.frame.util.ExportExcelUtil;
+import cn.com.mwsn.mpm.common.Constant;
+import cn.com.mwsn.mpm.entity.MH_NurseExecuteRecord_view;
 import cn.com.mwsn.mpm.entity.Patient;
+import cn.com.mwsn.mpm.service.MH_NurseExecuteRecordService;
 
 import com.opensymphony.xwork2.ActionSupport;
 /**
@@ -36,20 +46,36 @@ import com.opensymphony.xwork2.ActionSupport;
 public class PatientSingleNursingStatAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 5377050751703222726L;
-	
+	@Autowired
+	private MH_NurseExecuteRecordService mH_NurseExecuteRecordService;
+	private static final Logger log = Logger.getLogger(PatientSingleNursingStatAction.class);
+
 	//作为展示基础数据用
-	private static Map<String,List<Patient>> allPatientList;//所有病人列表 key为病区
+//	private static Map<String,List<Patient>> allPatientList;//所有病人列表 key为病区
 	private static Map<String,String> allPatientBehavior;//所有护理行为
 	private static Map<String,String> allDepartments;;//所有病区
-	private static Map<String,String> allXAxisNames;//所有x轴护理维度设定
 	//查询条件
 	private int patientArea = 1;//病区
-	private Map<String,String> patientList;//病区对应的病人列表
-	private String patients;//选中病人
+//	private Map<String,String> patientList;//病区对应的病人列表
+//	private String patients;//选中病人
 	private String beginStatDate;
 	private String endStatDate;
 	private String[] patientBehavior;//选中的护理行为
 	private String[] yAxisName;//护理维度y轴显示
+	
+	private static Map<String,String> allXAxisNamesValue;
+	private static Map<String,String> allXAxisNames;//所有x轴护理维度设定
+	List<String> xAxisNames;//x轴
+	List<String> xAxisNamesValue;//x轴
+	String title=null;
+	String fieldID=null;
+	String fieldValue=null;
+	private String[] patientBehaviorValue;//选中的护理行为
+	
+	QueryResult<List<MH_NurseExecuteRecord_view>> find_view;//所有数据
+	private Map<String,MH_NurseExecuteRecord_view> find_view_map;//图形的数据
+	DealSum dealSum;
+	String invokeField=null;
 	
 	//数据
 	private List<List<String>> tableData;//表格的数据
@@ -64,39 +90,41 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 	
 	//初始化数据
 	static {
-		if(allPatientList == null){
-			allPatientList = new HashMap<String, List<Patient>>();
-			String[] names = new String[]{"汤小平","谢应时","蒋景刚","陶兰芝","张翔",
-					"桂庆舟","王元娃","庾二平","仁元英","王能忠",
-					"李志龙","吕阿华","陶德堂","纪雨泽","刘先本",
-					"高秋香","马敬武","居阳春","李志龙","黄德英"};
-			String[] bedNos = new String[]{"607","626","601","697","625",
-					"1142","1128","1102","1147","1117",
-					"756","07A3","07A2","726","709",
-					"1234","1203","1297","1295","1299"};
-			
-			List<Patient> list = new ArrayList<Patient>();
-			int j = 1;
-			//0-4骨科  5-9呼吸科  10-14胸心外科  15-19心血管内科一病区  
-			for(int i = 0; i < names.length;i++){
-				Patient p = new Patient();
-				p.setName(names[i]);
-				p.setCurBed(bedNos[i]);//床号
-				list.add(p);
-				if((i+1) % 5 == 0){
-					allPatientList.put(j+"", list);
-					list = new ArrayList<Patient>();
-					j++;
-				}
-			}
-		}	
+//		if(allPatientList == null){
+//			allPatientList = new HashMap<String, List<Patient>>();
+//			String[] names = new String[]{"汤小平","谢应时","蒋景刚","陶兰芝","张翔",
+//					"桂庆舟","王元娃","庾二平","仁元英","王能忠",
+//					"李志龙","吕阿华","陶德堂","纪雨泽","刘先本",
+//					"高秋香","马敬武","居阳春","李志龙","黄德英"};
+//			String[] bedNos = new String[]{"607","626","601","697","625",
+//					"1142","1128","1102","1147","1117",
+//					"756","07A3","07A2","726","709",
+//					"1234","1203","1297","1295","1299"};
+//			
+//			List<Patient> list = new ArrayList<Patient>();
+//			int j = 1;
+//			//0-4骨科  5-9呼吸科  10-14胸心外科  15-19心血管内科一病区  
+//			for(int i = 0; i < names.length;i++){
+//				Patient p = new Patient();
+//				p.setName(names[i]);
+//				p.setCurBed(bedNos[i]);//床号
+//				list.add(p);
+//				if((i+1) % 5 == 0){
+//					allPatientList.put(j+"", list);
+//					list = new ArrayList<Patient>();
+//					j++;
+//				}
+//			}
+//		}	
 		
 		if(allPatientBehavior == null){
 			allPatientBehavior = new HashMap<String, String>();
-			allPatientBehavior.put("1", "输液");
-			allPatientBehavior.put("2", "测量体温");
-			allPatientBehavior.put("3", "巡床");
-			allPatientBehavior.put("4", "填写护理单");
+			List<Map<String, String>> executeType = Constant.getExecuteType();
+			int i=0;
+			for (Map<String, String> map : executeType) {
+				i++;
+				allPatientBehavior.put(i+"", map.get("name"));
+			}
 		}
 		
 		if(allDepartments == null){
@@ -112,6 +140,12 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 			allXAxisNames.put("1", "特级,一级,二级,三级,四级");//护理等级
 			allXAxisNames.put("2", "基础疾病,糖尿病,心脏病");//主要诊断
 			allXAxisNames.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
+		}
+		if(allXAxisNamesValue == null){
+			allXAxisNamesValue = new HashMap<String, String>();
+			allXAxisNamesValue.put("1", "0,1,2,3,4");//护理等级
+			allXAxisNamesValue.put("2", "基础疾病,糖尿病,心脏病");//主要诊断
+			allXAxisNamesValue.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
 		}
 	}
 
@@ -131,125 +165,218 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 	*/
 	@Action(value="patientSingleMain")
 	public String execute() throws Exception {
-		//查找病人
-		String defaultPatients = "";
-		List<Patient> ps = allPatientList.get(patientArea+"");
-		patientList = new HashMap<String, String>();
-		for(Patient p : ps){
-			patientList.put(p.getCurBed(), p.getName());
-			defaultPatients += p.getName() + ", ";
-		}
-		
-		//初始进入页面时默认一些选择条件
-		if(patients == null  || "".equals(patients)){
-			patients = defaultPatients.substring(0, defaultPatients.length() - 2);
-		}
+		Map<String,Object> parm=new HashMap<String, Object>();
 		if(patientBehavior == null){
 			Set<String> tmp = allPatientBehavior.keySet();
 			patientBehavior = tmp.toArray(new String[tmp.size()]);
+		}
+		String _patientBehaviorValue="(";
+		patientBehaviorValue=new String [patientBehavior.length];
+		for (int i=0;i<patientBehavior.length;i++) {
+			String pB =patientBehavior[i];
+			patientBehaviorValue[i]=allPatientBehavior.get(pB);
+			_patientBehaviorValue+="'"+allPatientBehavior.get(pB)+"',";
+		}
+		_patientBehaviorValue=_patientBehaviorValue.replaceAll(",$", ")");
+		String conditions="";
+		if(!Util.isNULL(beginStatDate))
+		{
+			conditions+="and executeStartTime>"+Util.str2Date(beginStatDate,"yyyy-MM-dd").getTime()+" ";
+		}
+		if(!Util.isNULL(endStatDate))
+		{
+			conditions+="and  executeStartTime<"+Util.str2Date(endStatDate,"yyyy-MM-dd").getTime()+" ";
+		}
+		conditions+="and execute in "+_patientBehaviorValue;
+		parm.put("conditions",conditions);
+		find_view = mH_NurseExecuteRecordService.find_view(parm, 0, 0);
+//		System.out.println(GsonUtil.objectToJson(find_view));
+		//查找病人
+//		String defaultPatients = "";
+//		System.out.println(beginStatDate);
+		dealSum=new DealSum() {
+			@Override
+			public Object execute(Object old,Object news) {
+				if(old==null)
+					return news;
+				return Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim());
+			}
+
+			@Override
+			public Object changeNull(Object o) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+
+		if(yAxisName[0].equals("1"))
+		{
+			invokeField="ciShu";
+		}
+		else if(yAxisName[0].equals("2"))
+		{
+			invokeField="avgHaoShi";
+		}else if(yAxisName[0].equals("3"))
+		{
+			invokeField="executeStartTime";
+			dealSum=new DealSum() {
+				@Override
+				public Object execute(Object old,Object news) {
+					if(old==null)
+						return news;
+					return (Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim()))/2;
+				}
+
+				@Override
+				public Object changeNull(Object o) {
+					// TODO Auto-generated method stub
+					return null;
+				}
+			};
 		}
 		if(yAxisName == null){
 			yAxisName = new String[]{"1"};
 		}
 		
-        if(searchType == 1){
-        	//所有病人综合分析
-        	//初始化数据
-        	if(!(patients == null || "".equals(patients))){
-        		chartData = new ArrayList<List<String>>();
-        		//第一行  病人名称
-        		List<String> xAxisNames = Arrays.asList("所有病人"); 
-        		chartData.add(xAxisNames);
-        		//下面是各个护理行为项的值和总计的值
-        		if(null != yAxisName){
-        			List<List<String>> result = null;
-        			//如果是  yAxisName=次数  的话
-        			if(yAxisName[0].equals("1")){
-        				result = generateData(5, 15, xAxisNames.size(), patientBehavior);
-        			}else if(yAxisName[0].equals("2")){
-        				//yAxisName=耗时 
-        				result = generateData(2, 10, xAxisNames.size(), patientBehavior);
-        			}else if(yAxisName[0].equals("3")){
-        				//yAxisName=开始时间 
-        				result = generateData(7, 22, xAxisNames.size(), patientBehavior);
-        			}
-        			if(result != null){
-        				for(List<String> a : result){
-        					chartData.add(a);
-        				}
-        			}
-        		}
-        		ArrayList chartData1 = new ArrayList<List<String>>();
-        		//第一行  病人名称
-        		List<String> xAxisNames1 = Arrays.asList(patients.split(", ")); 
-        		chartData1.add(xAxisNames1);
-        		//下面是各个护理行为项的值和总计的值
-        		if(null != yAxisName){
-        			List<List<String>> result1 = null;
-        			//如果是  yAxisName=次数  的话
-        			if(yAxisName[0].equals("1")){
-        				result1 = generateData(5, 15, xAxisNames1.size(), patientBehavior);
-        			}else if(yAxisName[0].equals("2")){
-        				//yAxisName=耗时 
-        				result1 = generateData(2, 10, xAxisNames1.size(), patientBehavior);
-        			}else if(yAxisName[0].equals("3")){
-        				//yAxisName=开始时间 
-        				result1 = generateData(7, 22, xAxisNames1.size(), patientBehavior);
-        			}
-        			if(result1 != null){
-        				for(List<String> a : result1){
-        					chartData1.add(a);
-        				}
-        			}
-        		}
-        		//上面部分表格数据
-        		tableData = composeDate(chartData1, "病人");
-        		
-        	}
-        }else if(searchType > 1){
-        	//2:按护理等级分析    3:按主要诊断分析    4:按年龄分析
-        	//yAxisName = new String[]{"2"};
-        	chartData = new ArrayList<List<String>>();
-        	//yAxisName=耗时 
-        	List<String> xAxisNames = Arrays.asList(allXAxisNames.get((searchType-1) + "").split(",")); 
-        	chartData.add(xAxisNames);
-        	List<List<String>> result = generateData(8, 50, allXAxisNames.get((searchType-1) + "").split(",").length, patientBehavior);
-        	if(result != null){
-        		for(List<String> a : result){
-        			chartData.add(a);
-        		}
-        	}
-        	String title = "护理等级";
-        	if(searchType == 3){
-        		title = "主要诊断";
-        	}else if(searchType == 4){
-        		title = "年龄";
-        	}
-        	tableData = composeDate(chartData, title);
-        }
-//        else if(searchType == 3){
-//        	//按主要诊断分析
-//        }else if(searchType == 4){
-//        	//按年龄分析
-//        }
-		
+		chartData = new ArrayList<List<String>>();
+		if(searchType == 1){
+    		//第一行  病人名称
+    		xAxisNames = Arrays.asList("所有病人"); 
+    		xAxisNamesValue = Arrays.asList(""); 
+			 title="病人";
+			 fieldID="clinicNo";
+			 fieldValue="patientName";
+		}
+		else if(searchType == 2) 
+		{
+			xAxisNames = Arrays.asList(allXAxisNames.get("1").split(","));
+			xAxisNamesValue = Arrays.asList(allXAxisNamesValue.get("1").split(","));
+			title = "护理等级";
+			fieldID = "careLevel";
+			fieldValue="careLevel";
+		}
+		else if(searchType == 3){
+			xAxisNames = Arrays.asList(allXAxisNames.get("2").split(",")); 
+			xAxisNamesValue = Arrays.asList(allXAxisNamesValue.get("2").split(","));
+    		title = "主要诊断";
+    		fieldID="ageInterval";
+    		fieldValue="ageInterval";
+    	}else if(searchType == 4){
+    		xAxisNames = Arrays.asList(allXAxisNames.get("3").split(",")); 
+    		xAxisNamesValue = Arrays.asList(allXAxisNamesValue.get("3").split(","));
+    		title = "年龄";
+    		fieldID="ageInterval";
+    		fieldValue="ageInterval";
+    	}
+		{
+			String[] execute = new String[]{fieldID,"execute"};
+			find_view_map=changeFind_view4Map(find_view.getResult(),execute);
+			generateData();
+			tableData = composeDate();
+		}
+//		{
+//        	//所有病人综合分析
+//        	//初始化数据
+//
+//        		//下面是各个护理行为项的值和总计的值
+//        		if(null != yAxisName){
+//        			List<List<String>> result = null;
+//        			//如果是  yAxisName=次数  的话
+//        			if(yAxisName[0].equals("1")){
+//        				
+//        				result = generateData(5, 15, xAxisNames.size(), patientBehavior);
+//        				System.out.println(result);
+//        				String[] execute = new String[]{fieldID,"execute"};
+//        				changeFind_view4Map(find_view.getResult(),execute);
+//        			}else if(yAxisName[0].equals("2")){
+//        				//yAxisName=耗时 
+//        				String[] execute = new String[]{fieldID,"execute"};
+//        				changeFind_view4Map(find_view.getResult(),execute);
+//        				result = generateData(2, 10, xAxisNames.size(), patientBehavior);
+//        			}else if(yAxisName[0].equals("3")){
+//        				//yAxisName=开始时间 
+//        				String[] execute = new String[]{fieldID,"execute"};
+//        				changeFind_view4Map(find_view.getResult(),execute);
+//        				result = generateData(7, 22, xAxisNames.size(), patientBehavior);
+//        			}
+//        			if(result != null){
+//        				for(List<String> a : result){
+//        					chartData.add(a);
+//        				}
+//        			}
+//        		}
+//        		tableData = composeDate();
+//		}
 		return SUCCESS;
 	}
+//	
+//	/**
+//	 * 根据病区联动出病人的方法,json方法
+//	 * @return
+//	 */
+//	@Action(value="listPatients", results={@Result(name="listPatients", type="json")})
+//	public String listPatients(){
+//		List<Patient> patients = allPatientList.get(patientArea+"");
+//		patientList = new HashMap<String, String>();
+//		for(Patient p : patients){
+//			patientList.put(p.getCurBed(), p.getName());
+//		}
+//		return "listPatients";
+//	}
 	
-	/**
-	 * 根据病区联动出病人的方法,json方法
-	 * @return
-	 */
-	@Action(value="listPatients", results={@Result(name="listPatients", type="json")})
-	public String listPatients(){
-		List<Patient> patients = allPatientList.get(patientArea+"");
-		patientList = new HashMap<String, String>();
-		for(Patient p : patients){
-			patientList.put(p.getCurBed(), p.getName());
+
+
+	private Map<String, MH_NurseExecuteRecord_view> changeFind_view4Map(
+			List<MH_NurseExecuteRecord_view> find_view,
+			String[] execute) {
+		
+		List<MH_NurseExecuteRecord_view> list=new ArrayList<MH_NurseExecuteRecord_view>();
+		Map<String, MH_NurseExecuteRecord_view> find_view_map =new HashMap<String, MH_NurseExecuteRecord_view>();
+		for (MH_NurseExecuteRecord_view f : find_view) {
+			MH_NurseExecuteRecord_view r = f.clone();
+			String key="";
+			for (String s : execute) {
+				Object invokeGet = ClassUtil.invokeGet(r, s);
+				String i="";
+				if(Util.isNULL(invokeGet))
+					i="null";
+				else
+					i=invokeGet.toString().trim();
+				key+=i+"_";
+			}
+			key=key.replaceAll("_$", "");
+			MH_NurseExecuteRecord_view mh=find_view_map.get(key);
+			r.setAvgHaoShi(r.getAvgHaoShi()/60000);
+			r.setMinHaoShi(r.getMinHaoShi()/60000);
+			r.setMaxHaoShi(r.getMaxHaoShi()/60000);
+			r.setHaoShi(r.getHaoShi()/60000);
+			if(mh==null)
+			{
+				r.setCiShu(1);
+				find_view_map.put(key, r);
+				list.add(r);
+			}
+			else
+			{
+				MH_NurseExecuteRecord_view record_view = find_view_map.get(key);
+				record_view.setCiShu(record_view.getCiShu()<=0?1:record_view.getCiShu()+1);
+				record_view.setHaoShi(record_view.getHaoShi()+r.getHaoShi());
+				record_view.setAvgHaoShi((record_view.getAvgHaoShi()+r.getAvgHaoShi())/2);
+				record_view.setMinHaoShi(record_view.getMinHaoShi()<r.getMinHaoShi()?record_view.getMinHaoShi():r.getMinHaoShi());
+				record_view.setMaxHaoShi(record_view.getMaxHaoShi()>r.getMaxHaoShi()?record_view.getMaxHaoShi():r.getMaxHaoShi());
+				Date start=new Date(record_view.getExecuteStartTime());
+				Date _start=new Date(r.getExecuteStartTime());
+				//找出每天最早时间
+				if(start.getHours()>_start.getHours()&&start.getMinutes()>_start.getMinutes()&&start.getSeconds()>_start.getSeconds())
+				{
+					record_view.setExecuteStartTime(r.getExecuteStartTime());
+				}
+			}
+			
 		}
-		return "listPatients";
+		return find_view_map;
 	}
-	
+
 	/**
 	 * 导出数据
 	 * @return
@@ -269,57 +396,60 @@ public class PatientSingleNursingStatAction extends ActionSupport {
     		main_title += "-按年龄";
     	}
 		//=============造数据=================================
-		if(searchType == 1){
-        	//所有病人综合分析
-        	//初始化数据
-        	if(!(patients == null || "".equals(patients))){
-        		chartData = new ArrayList<List<String>>();
-        		//第一行  病人名称
-        		List<String> xAxisNames = Arrays.asList(patients.split(", ")); 
-        		chartData.add(xAxisNames);
-        		//下面是各个护理行为项的值和总计的值
-        		if(null != yAxisName){
-        			List<List<String>> result = null;
-        			//如果是  yAxisName=次数  的话
-        			if(yAxisName[0].equals("1")){
-        				result = generateData(5, 15, xAxisNames.size(), patientBehavior);
-        			}else if(yAxisName[0].equals("2")){
-        				//yAxisName=耗时 
-        				result = generateData(2, 10, xAxisNames.size(), patientBehavior);
-        			}else if(yAxisName[0].equals("3")){
-        				//yAxisName=开始时间 
-        				result = generateData(7, 22, xAxisNames.size(), patientBehavior);
-        			}
-        			if(result != null){
-        				for(List<String> a : result){
-        					chartData.add(a);
-        				}
-        			}
-        		}
-        		//上面部分表格数据
-        		tableData = composeDate(chartData, "病人");
-        	}
-        }else if(searchType > 1){
-        	//2:按护理等级分析    3:按主要诊断分析    4:按年龄分析
-        	//yAxisName = new String[]{"2"};
-        	chartData = new ArrayList<List<String>>();
-        	//yAxisName=耗时 
-        	List<String> xAxisNames = Arrays.asList(allXAxisNames.get((searchType-1) + "").split(",")); 
-        	chartData.add(xAxisNames);
-        	List<List<String>> result = generateData(8, 50, allXAxisNames.get((searchType-1) + "").split(",").length, patientBehavior);
-        	if(result != null){
-        		for(List<String> a : result){
-        			chartData.add(a);
-        		}
-        	}
-        	String title = "护理等级";
-        	if(searchType == 3){
-        		title = "主要诊断";
-        	}else if(searchType == 4){
-        		title = "年龄";
-        	}
-        	tableData = composeDate(chartData, title);
-        }
+//		if(searchType == 1){
+//        	//所有病人综合分析
+//        	//初始化数据
+////        	if(!(patients == null || "".equals(patients))){
+//        		chartData = new ArrayList<List<String>>();
+//        		//第一行  病人名称
+//        		List<String> xAxisNames = Arrays.asList(""); 
+//        		chartData.add(xAxisNames);
+//        		//下面是各个护理行为项的值和总计的值
+//        		if(null != yAxisName){
+//        			List<List<String>> result = null;
+//        			//如果是  yAxisName=次数  的话
+//        			if(yAxisName[0].equals("1")){
+//        				result = generateData(5, 15, xAxisNames.size(), patientBehavior);
+//        			}else if(yAxisName[0].equals("2")){
+//        				//yAxisName=耗时 
+//        				result = generateData(2, 10, xAxisNames.size(), patientBehavior);
+//        			}else if(yAxisName[0].equals("3")){
+//        				//yAxisName=开始时间 
+//        				result = generateData(7, 22, xAxisNames.size(), patientBehavior);
+//        			}
+//        			if(result != null){
+//        				for(List<String> a : result){
+//        					chartData.add(a);
+//        				}
+//        			}
+//        		}
+//        		//上面部分表格数据
+//        		tableData = composeDate( "病人","patientName");
+////        	}
+//        }else if(searchType > 1){
+//        	//2:按护理等级分析    3:按主要诊断分析    4:按年龄分析
+//        	//yAxisName = new String[]{"2"};
+//        	chartData = new ArrayList<List<String>>();
+//        	//yAxisName=耗时 
+//        	List<String> xAxisNames = Arrays.asList(allXAxisNames.get((searchType-1) + "").split(",")); 
+//        	chartData.add(xAxisNames);
+//        	List<List<String>> result = generateData(8, 50, allXAxisNames.get((searchType-1) + "").split(",").length, patientBehavior);
+//        	if(result != null){
+//        		for(List<String> a : result){
+//        			chartData.add(a);
+//        		}
+//        	}
+//           	String title = "护理等级";
+//        	String field = "careLevel";
+//        	if(searchType == 3){
+//        		title = "主要诊断";
+//        		field="ageInterval";
+//        	}else if(searchType == 4){
+//        		title = "年龄";
+//        		field="ageInterval";
+//        	}
+//        	tableData = composeDate( title,field);
+//        }
 		//=======================导出excel======================
 		HSSFWorkbook workbook = ExportExcelUtil.exportExcel(tableData, main_title);
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -331,7 +461,69 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		return "success";
 	} 
 	
-	
+	private void generateData() {
+		chartData.add(xAxisNames);
+		List<String> lists=null;
+		Map<String,Object> map4Sum=new HashMap<String, Object>();
+		List<String> list4Sum=new ArrayList<String>();
+		list4Sum.add("总计");
+		
+		Map<String, MH_NurseExecuteRecord_view> _find_view_map =null;
+		String add="";
+		if(searchType==1)
+		{
+			String[] execute = new String[]{"execute"};
+			_find_view_map=changeFind_view4Map(find_view.getResult(),execute);
+			System.out.println(_find_view_map);
+		}
+		else
+		{
+			_find_view_map=find_view_map;
+			add="_";
+		}
+		for (String be : patientBehaviorValue) {
+			lists=new ArrayList<String>();
+			lists.add(be);
+			//				List<Object> l=new ArrayList<Object>();
+			for(String x:xAxisNamesValue)
+			{
+				MH_NurseExecuteRecord_view record_view = _find_view_map.get(x.trim()+add+be.trim());
+				if(record_view!=null)
+				{
+
+					Object ss = ClassUtil.invokeGet(record_view, invokeField);
+					lists.add(ss.toString());
+					Object o = map4Sum.get(x.trim());
+					if(o==null)
+						map4Sum.put(x.trim(), dealSum.execute(null,ss));
+					else
+					{
+						map4Sum.put(x.trim(), dealSum.execute(o,ss));
+					}
+					//						l.add(ss);
+				}
+				else
+				{
+					lists.add("0");
+					//						l.add(0);
+				}
+			}
+			chartData.add(lists);
+		}
+		for(String x:xAxisNamesValue)
+		{
+			Object o = map4Sum.get(x.trim());
+			if(o==null)
+				list4Sum.add("0");
+			else
+			{
+				list4Sum.add(o.toString());
+			}
+		}
+		chartData.add(list4Sum);
+		System.out.println("chartData:\n");
+		System.out.println(chartData);
+	}
 	/**
 	 * 根据现有的选项随机生成值
 	 */
@@ -374,8 +566,7 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 	 * @param title
 	 * @return
 	 */
-	private List<List<String>> composeDate(List<List<String>> g_data,  String title){
-		Random random = new Random();
+	private List<List<String>> composeDate(){
 		List<List<String>> data = new ArrayList<List<String>>();
 		if(yAxisName[0].equals("1")){
     		//次数
@@ -387,18 +578,15 @@ public class PatientSingleNursingStatAction extends ActionSupport {
     		data.add(up_line1);
     		
     		List<String> lineOther = null;
-    		List<String> line_pati = g_data.get(0);
-    		for(int j=0; j<line_pati.size(); j++){
-    			for(int i=1; i< g_data.size()-1; i++){
-    				List<String> line_other = g_data.get(i);
-    				lineOther = new ArrayList<String>();
-    				lineOther.add(line_pati.get(j));
-    				lineOther.add(line_other.get(0));
-    				lineOther.add((int)Float.parseFloat(line_other.get(1+j)) + "");
-    				lineOther.add("");
-    				data.add(lineOther);
-    			}
-    		}
+    		Set<String> keySet = find_view_map.keySet();
+    		for (String key : keySet) {
+    			lineOther = new ArrayList<String>();
+    			lineOther.add(ClassUtil.invokeGet(find_view_map.get(key), fieldValue).toString());
+				lineOther.add(find_view_map.get(key).getExecute());
+				lineOther.add(find_view_map.get(key).getCiShu()+"");
+				lineOther.add("");
+				data.add(lineOther);
+			}
     	}else if(yAxisName[0].equals("2")){
     		//耗时
     		//第一行
@@ -412,21 +600,17 @@ public class PatientSingleNursingStatAction extends ActionSupport {
     		data.add(up_line1);
     		
     		List<String> lineOther = null;
-    		List<String> line_pati = g_data.get(0);
-    		
-    		for(int j=0; j<line_pati.size(); j++){
-    			for(int i=1; i<g_data.size()-1; i++){
-    				List<String> line_other = g_data.get(i);
-    				lineOther = new ArrayList<String>();
-    				lineOther.add(line_pati.get(j));
-    				lineOther.add(line_other.get(0));
-    				lineOther.add((int)Float.parseFloat(line_other.get(1+j)) + random.nextInt(6) + "");
-    				lineOther.add(line_other.get(1+j));
-    				lineOther.add((int)Float.parseFloat(line_other.get(1+j)) - random.nextInt(2) + "");
-    				lineOther.add("");
-    				data.add(lineOther);
-    			}
-    		}
+    		Set<String> keySet = find_view_map.keySet();
+    		for (String key : keySet) {
+    			lineOther = new ArrayList<String>();
+    			lineOther.add(ClassUtil.invokeGet(find_view_map.get(key), fieldValue).toString());
+    			lineOther.add(find_view_map.get(key).getExecute());
+				lineOther.add(find_view_map.get(key).getMaxHaoShi()+"");
+				lineOther.add(find_view_map.get(key).getAvgHaoShi()+"");
+				lineOther.add(find_view_map.get(key).getMinHaoShi()+"");
+				lineOther.add("");
+				data.add(lineOther);
+			}
     	}else if(yAxisName[0].equals("3")){
     		//开始时间
     		List<String> up_line1 = new ArrayList<String>();
@@ -437,19 +621,16 @@ public class PatientSingleNursingStatAction extends ActionSupport {
     		data.add(up_line1);
     		
     		List<String> lineOther = null;
-    		List<String> line_pati = g_data.get(0);
     		
-    		for(int j=0; j<line_pati.size(); j++){
-    			for(int i=1; i<g_data.size()-1; i++){
-    				List<String> line_other = g_data.get(i);
-    				lineOther = new ArrayList<String>();
-    				lineOther.add(line_pati.get(j));
-    				lineOther.add(line_other.get(0));
-    				lineOther.add((int)Float.parseFloat(line_other.get(1+j)) + "");
-    				lineOther.add("");
-    				data.add(lineOther);
-    			}
-    		}
+    		Set<String> keySet = find_view_map.keySet();
+    		for (String key : keySet) {
+    			lineOther = new ArrayList<String>();
+    			lineOther.add(ClassUtil.invokeGet(find_view_map.get(key), fieldValue).toString());
+				lineOther.add(find_view_map.get(key).getExecute());
+				lineOther.add(DateUtil.date2Str(new Date(find_view_map.get(key).getExecuteStartTime()), "HH:mm:ss"));
+				lineOther.add("");
+				data.add(lineOther);
+			}
     		
     	}
 		return data;
@@ -464,21 +645,13 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		this.patientArea = patientArea;
 	}
 
-	public Map<String, String> getPatientList() {
-		return patientList;
-	}
-
-	public  void setPatientList(Map<String, String> patientList) {
-		this.patientList = patientList;
-	}
-
-	public String getPatients() {
-		return patients;
-	}
-
-	public void setPatients(String patients) {
-		this.patients = patients;
-	}
+//	public Map<String, String> getPatientList() {
+//		return patientList;
+//	}
+//
+//	public  void setPatientList(Map<String, String> patientList) {
+//		this.patientList = patientList;
+//	}
 
 	public String getBeginStatDate() {
 		return beginStatDate;
@@ -564,4 +737,9 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		this.downloadFileName = downloadFileName;
 	}
 	
+}
+interface DealSum
+{
+	Object execute(Object old, Object news);
+	Object changeNull(Object o);
 }

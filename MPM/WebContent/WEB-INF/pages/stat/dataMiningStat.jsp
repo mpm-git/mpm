@@ -117,6 +117,7 @@ $(document).ready(function() {
 			            }                                                                                
 			        }                                                                                 
 			});
+			//genertateData('chartDiv', 1);
 		}else{
 			//关联挖掘
 // 			$('#chartDiv').highcharts({ 
@@ -364,10 +365,10 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
       </ul>
       <form action="dataMiningStat.action" method="post" id="searchForm">
 	      <ul class="titles">
-<!-- 	        <li> -->
-<!-- 	                              病人： -->
-<%-- 	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" /> --%>
-<!-- 	        </li> -->
+	        <li>
+	                              病人：
+	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" />
+	        </li>
 	        <li>
 	                              病种：
 	          <select name="select_disease " id="select_disease" style="width:160px;height:22px;">

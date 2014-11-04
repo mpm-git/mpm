@@ -15,12 +15,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link rel="stylesheet" type="text/css" href="<s:url value='/styles/index.css'/>" />
 <link rel="stylesheet" type="text/css" href="<s:url value='/styles/smoothness/jquery-ui-1.8.16.custom.css'/>" />
 <link rel="stylesheet" type="text/css" href="<s:url value='/styles/jquery_table_jui.css'/>"  >
-
+<%-- <link rel="stylesheet" type="text/css" href="<s:url value='/javascript/DataTables-1.10.3/media/css/jquery.dataTables.css'/>"> --%>
+<%-- 	<link rel="stylesheet" type="text/css" href="<s:url value='/javascript/DataTables-1.10.3/examples/resources/syntax/shCore.css'/>"> --%>
+<%-- 	<link rel="stylesheet" type="text/css" href="<s:url value='/javascript/DataTables-1.10.3/examples/resources/demo.css'/>"> --%>
 <script type="text/javascript" src="<s:url value='/javascript/jquery-1.7.min.js'/>"></script>
 <script src="<s:url value='/javascript/h.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<s:url value='/javascript/jquery-ui-1.8.16.custom.min.js'/>" type="text/javascript" charset="utf-8"></script>
+<%--  	<script type="text/javascript" language="javascript" src="<s:url value='/javascript/DataTables-1.10.3/media/js/jquery.js'/>"></script> --%>
+	<script type="text/javascript" language="javascript" src="<s:url value='/javascript/DataTables-1.10.3/media/js/jquery.dataTables.min.js'/>"></script>
+<%-- 	<script type="text/javascript" language="javascript" src="<s:url value='/javascript/DataTables-1.10.3/examples/resources/syntax/shCore.js'/>"></script> --%>
+<%-- 	<script type="text/javascript" language="javascript" src="<s:url value='/javascript/DataTables-1.10.3/examples/resources/demo.js'/>"></script> --%>
 <script src="<s:url value='/javascript/highcharts-4.0.js'/>" type="text/javascript"></script>
-<script src="<s:url value='/javascript/jquery.dataTables.js'/>" type="text/javascript" charset="utf-8"></script>
+<%-- <script src="<s:url value='/javascript/jquery.dataTables.js'/>" type="text/javascript" charset="utf-8"></script> --%>
+
+
+
 
 <script type="text/javascript">
 
@@ -44,7 +53,42 @@ if(type == 1){
 	xAxisTitle = "年龄";
 }
 $(document).ready(function() {
+// 	$('#info_table').dataTable();
+// 	$('#show_table').dataTable( {
+// 		//"bAutoWidth": false, //不自动计算列宽度
 
+// 	     //"aoColumns": aoColumns,
+
+// 	/*     "bSort": false,
+
+// 	     "bProcessing": true, //加载数据时显示正在加载信息
+
+// 	     "bServerSide": true, //指定从服务器端获取数据
+
+// 	     "bFilter": false, //不使用过滤功能
+
+// 	     "bLengthChange": false, //用户不可改变每页显示数量
+
+// 	     "iDisplayLength": 16, //每页显示10条数据
+
+// 	     "sPaginationType": "full_numbers", //翻页界面类型
+
+// 	     "headerClickable":false,*/
+
+// 	     //"sortable":false
+// 		//"bServerSide": true,                    //指定从服务器端获取数据    
+// 		"ajax":  {
+//             "url": "mh_nurse_execute_record_patient.action",
+//             "dataSrc": "result"
+            
+//         },
+//         "columns": [
+//                     { "data": "name" },
+//                     { "data": "execute" },
+//                     { "data": "ciShu" },
+//                     { "data": "" }
+//                 ]
+//     } );
 		//初始tab状态
 		$(".main_tab li:eq("+type+")").attr("class","current");
 		///alert(tmp);
@@ -106,8 +150,8 @@ $(document).ready(function() {
 		
 		$("#info_table").dataTable({
 			"bJQueryUI": true,
-			"sPaginationType": "full_numbers",
-			"bFilter":false
+			"sPaginationType": "full_numbers"
+// 			,"bFilter":false
 		});
 		
         $("#excelBtn").click(function(){
@@ -209,7 +253,8 @@ function genertateData(chartId){
 <style type="text/css">
 div.menu_btn{font-size: 15px;font-weight:bold; display:inline-block;text-align: center;margin: 35px;cursor:pointer;}
 div.menu_btn span{font-family: "微软雅黑";}
-ul.titles li{height:30px;padding:5px;line-height: 30px;}
+ul.titles li{padding:5px;line-height: 30px;}
+/* ul.titles li{height:30px;padding:5px;line-height: 30px;}  */
 .checkboxLabel{margin-right: 10px;}
 .date_text{height:21px;line-height: 21px; width: 160px;}
 </style> 
@@ -253,8 +298,10 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	            <input type="text" class="date_text" readonly="readonly" value="<s:property value="endStatDate"/>" id="endStatDate" name="endStatDate"/>
 	        </li>
 	        <li>
-	                              护理行为：
+	        <div style="float:left;width: 70px;">  护理行为：</div>
+	            <div style="float:left">
 	            <s:checkboxlist theme="simple" list="allPatientBehavior" value="patientBehavior" listKey="key" listValue="value" name="patientBehavior" id="patientBehavior"/>
+	       		</div>
 	        </li>
 	        <li>
 	                              护理维度：
@@ -279,9 +326,27 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
      <div id="resultDiv" style="width: 800px;margin-left: auto;margin-right: auto;">
 	      <div id="chartDiv" style="padding-top: 20px; width: 800px; height: 300px; margin: 0 auto; margin-bottom: 20px;">
 	      </div>
-	      
-		  <input type="button"  style="float: right;margin: 10px;" class="ui-button ui-widget ui-state-default ui-corner-all" value="导出excel" id="excelBtn" />
 	      <div id="infoDiv">
+	      <input type="button"  style="float: right;margin: 10px;" class="ui-button ui-widget ui-state-default ui-corner-all" value="导出excel" id="excelBtn" />
+<!-- 	    <table id="show_table" class="display" cellspacing="0" width="100%"> -->
+<!-- 		    <thead> -->
+<!-- 		        <tr> -->
+<!-- 		            <th>病人</th> -->
+<!-- 		            <th>护理行为</th> -->
+<!-- 		            <th>次数</th> -->
+<!-- 		            <th>备注</th> -->
+<!-- 		        </tr> -->
+<!-- 		    </thead> -->
+		 
+<!-- 		    <tfoot> -->
+<!-- 		        <tr> -->
+<!-- 		            <th>病人</th> -->
+<!-- 		            <th>护理行为</th> -->
+<!-- 		            <th>次数</th> -->
+<!-- 		            <th>备注</th> -->
+<!-- 		        </tr> -->
+<!-- 		    </tfoot> -->
+<!-- 		</table>   -->
 			    <table cellpadding="0" cellspacing="0" border="0" class="display" id="info_table">
 			     <s:iterator value="tableData" id="data1" status="status"> 
 			         <s:if test="#status.index == 0">

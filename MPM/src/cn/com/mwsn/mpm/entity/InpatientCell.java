@@ -1,7 +1,10 @@
 package cn.com.mwsn.mpm.entity;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import cn.com.mwsn.dataplatform.devicemgmt.entity.RFIDAntenna;
@@ -28,9 +31,17 @@ public class InpatientCell extends IdEntity {
 	private Integer high;
 	private String curroomCode;   //cell代码   如201,202
 	private String curroomDesc; // cell描述
+	private Set<InpatientBed> beds;
 	private InpatientArea inpatientArea;
 	private RFIDAntenna antenna;
 
+	@OneToMany(mappedBy="inpatientCell")
+	public Set<InpatientBed> getBeds() {
+		return beds;
+	}
+	public void setBeds(Set<InpatientBed> beds) {
+		this.beds = beds;
+	}
 	public Integer getType() {
 		return type;
 	}

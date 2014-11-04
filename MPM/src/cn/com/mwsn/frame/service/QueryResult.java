@@ -15,11 +15,11 @@ public class QueryResult<T> {
 
 	private long total;
 
-	private long pageIndex;
+	private long page_index;
 
-	private long pageSize;
+	private long page_size;
 
-	private long pageTotal;
+	private long page_total;
  
 	private T result;
 
@@ -34,20 +34,24 @@ public class QueryResult<T> {
 		this.total = Math.abs(total);
 		if(this.total==0)
 		{
-			this.pageSize=0;
-			this.pageTotal=0;
+			this.page_size=0;
+			this.page_total=0;
 		}
 		else
 		{
-			this.pageSize = Math.abs(pageSize==0?this.total:pageSize);
-			this.pageTotal=(long)Math.ceil(this.total/(this.pageSize+0.0));
-			if(pageIndex>this.pageTotal||pageIndex<=0)
+			this.page_size = Math.abs(pageSize==0?this.total:pageSize);
+			this.page_total=(long)Math.ceil(this.total/(this.page_size+0.0));
+			if(pageIndex>this.page_total)
 			{
-				this.pageIndex=1;
+				this.page_index=this.page_total;
+			}
+			else if(pageIndex<=0)
+			{
+				this.page_index=1;
 			}
 			else
 			{
-				this.pageIndex = pageIndex;
+				this.page_index = pageIndex;
 			}
 			this.result=result;
 		}
@@ -57,16 +61,16 @@ public class QueryResult<T> {
 		return total;
 	}
 
-	public long getPageIndex() {
-		return pageIndex;
+	public long getPage_index() {
+		return page_index;
 	}
 
-	public long getPageSize() {
-		return pageSize;
+	public long getPage_size() {
+		return page_size;
 	}
 
-	public long getPageTotal() {
-		return pageTotal;
+	public long getPage_sotal() {
+		return page_total;
 	}
 
 	public T getResult() {

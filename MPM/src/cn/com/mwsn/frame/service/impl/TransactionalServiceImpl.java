@@ -152,8 +152,20 @@ public abstract class TransactionalServiceImpl implements
 				q.setParameter(key.toString(), map.get(key));
 			}
 		}
+		pageIndex=Math.abs(pageIndex);
+		pageSize=Math.abs(pageSize);
+		int total = ((Number)q4count.getSingleResult()).intValue();
+		if(pageIndex==0)
+		{
+			pageIndex=1;
+		}
+		if(pageSize==0)
+		{
+			pageSize=total;
+		}
 		List<T> resultList = q.setFirstResult((pageIndex - 1) * pageSize).setMaxResults(pageSize).getResultList();
-		QueryResult<List<T>> result=new QueryResult<List<T>>(((Number)q4count.getSingleResult()).intValue(), pageIndex, pageSize,resultList);
+		System.out.println(resultList);
+		QueryResult<List<T>> result=new QueryResult<List<T>>(total, pageIndex, pageSize,resultList);
 		return result;
 	}
 	@SuppressWarnings("unchecked")
