@@ -32,9 +32,10 @@ public class Patient extends IdEntity {
 	private String caseNo;                //病案号
 	private String hisinnerNo;            //His内部标示
 	private String hisouterNo;            //His外部标示
-	private String curBed;                 //床号
-	private InpatientBed bed;
-	private String curdeptCode;        //科室
+	private String curBed;                 	//床号
+	private String curdeptCode;        		//科室
+	private String inpatientArea;        //病区
+	
 	private String curdeptDesc;      
 	private String careLevel;              //护理级别
 	private Date inhospitalTime;           //入院时间 
@@ -46,8 +47,9 @@ public class Patient extends IdEntity {
 	private String registerNo;            //门诊号
 	
 	//床头终端需要
-	private Doctor doctorCharge;           //主治医生
-	private Nurse nurseCharge;             //责任护士
+//	private InpatientBed bed;
+//	private Doctor doctorCharge;           //主治医生
+//	private Nurse nurseCharge;             //责任护士
 	private String deviceID;               //与之关联的床头终端ID
 	private String safeNotice;             //安全告知
 	private String drugAllergy;           //药物过敏
@@ -66,13 +68,13 @@ public class Patient extends IdEntity {
 	public void setDescc(String descc) {
 		this.descc = descc;
 	}
-	@OneToOne
-	public InpatientBed getBed() {
-		return bed;
-	}
-	public void setBed(InpatientBed bed) {
-		this.bed = bed;
-	}
+//	@OneToOne
+//	public InpatientBed getBed() {
+//		return bed;
+//	}
+//	public void setBed(InpatientBed bed) {
+//		this.bed = bed;
+//	}
 	public String getSex() {
 		return sex;
 	}
@@ -157,20 +159,20 @@ public class Patient extends IdEntity {
 	public void setCurdeptDesc(String curdeptDesc) {
 		this.curdeptDesc = curdeptDesc;
 	}
-	@ManyToOne
-	public Doctor getDoctorCharge() {
-		return doctorCharge;
-	}
-	public void setDoctorCharge(Doctor doctorCharge) {
-		this.doctorCharge = doctorCharge;
-	}
-	@ManyToOne
-	public Nurse getNurseCharge() {
-		return nurseCharge;
-	}
-	public void setNurseCharge(Nurse nurseCharge) {
-		this.nurseCharge = nurseCharge;
-	}
+//	@ManyToOne
+//	public Doctor getDoctorCharge() {
+//		return doctorCharge;
+//	}
+//	public void setDoctorCharge(Doctor doctorCharge) {
+//		this.doctorCharge = doctorCharge;
+//	}
+//	@ManyToOne
+//	public Nurse getNurseCharge() {
+//		return nurseCharge;
+//	}
+//	public void setNurseCharge(Nurse nurseCharge) {
+//		this.nurseCharge = nurseCharge;
+//	}
 	public String getCareLevel() {
 		return careLevel;
 	}
@@ -212,6 +214,12 @@ public class Patient extends IdEntity {
 	}
 	public void setBloodPressure(String bloodPressure) {
 		this.bloodPressure = bloodPressure;
+	}
+	public String getInpatientArea() {
+		return inpatientArea;
+	}
+	public void setInpatientArea(String inpatientArea) {
+		this.inpatientArea = inpatientArea;
 	}
 	
 }

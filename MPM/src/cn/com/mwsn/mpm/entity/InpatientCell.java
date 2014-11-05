@@ -31,17 +31,16 @@ public class InpatientCell extends IdEntity {
 	private Integer high;
 	private String curroomCode;   //cell代码   如201,202
 	private String curroomDesc; // cell描述
-	private Set<InpatientBed> beds;
-	private InpatientArea inpatientArea;
-	private RFIDAntenna antenna;
+	private String inpatientArea;
+	private String antennaNo;
 
-	@OneToMany(mappedBy="inpatientCell")
-	public Set<InpatientBed> getBeds() {
-		return beds;
-	}
-	public void setBeds(Set<InpatientBed> beds) {
-		this.beds = beds;
-	}
+//	@OneToMany(mappedBy="inpatientCell")
+//	public Set<InpatientBed> getBeds() {
+//		return beds;
+//	}
+//	public void setBeds(Set<InpatientBed> beds) {
+//		this.beds = beds;
+//	}
 	public Integer getType() {
 		return type;
 	}
@@ -106,22 +105,38 @@ public class InpatientCell extends IdEntity {
 		this.curroomDesc = curroomDesc;
 	}
 
-	@ManyToOne
-	public InpatientArea getInpatientArea() {
+	public String getInpatientArea() {
 		return inpatientArea;
 	}
 
-	public void setInpatientArea(InpatientArea inpatientArea) {
+	public void setInpatientArea(String inpatientArea) {
 		this.inpatientArea = inpatientArea;
 	}
 
-	@OneToOne
-	public RFIDAntenna getAntenna() {
-		return antenna;
+	public String getAntennaNo() {
+		return antennaNo;
 	}
 
-	public void setAntenna(RFIDAntenna antenna) {
-		this.antenna = antenna;
+	public void setAntennaNo(String antennaNo) {
+		this.antennaNo = antennaNo;
 	}
+
+//	@ManyToOne
+//	public InpatientArea getInpatientArea() {
+//		return inpatientArea;
+//	}
+//
+//	public void setInpatientArea(InpatientArea inpatientArea) {
+//		this.inpatientArea = inpatientArea;
+//	}
+//
+//	@OneToOne
+//	public RFIDAntenna getAntenna() {
+//		return antenna;
+//	}
+//
+//	public void setAntenna(RFIDAntenna antenna) {
+//		this.antenna = antenna;
+//	}
 
 }

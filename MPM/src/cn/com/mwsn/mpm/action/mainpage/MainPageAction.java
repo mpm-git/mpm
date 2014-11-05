@@ -59,7 +59,7 @@ public class MainPageAction extends ActionSupport {
 
 	public String execute() {
 		// 获取当前所有的病区并存入到application中, 由于目前只有一个病区，因此该段代码注释
-		 List<InpatientArea> inpatientAreas = ias.queryAllInpatientAreas();
+		 List<InpatientArea> inpatientAreas = ias.findAllInpatientAreas();
 		 Struts2Utils.getApplication().setAttribute("inpatientAreas",
 		 inpatientAreas);
 		 

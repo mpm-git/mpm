@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.mwsn.frame.service.impl.TransactionalServiceImpl;
 import cn.com.mwsn.mpm.entity.InpatientArea;
+import cn.com.mwsn.mpm.entity.User;
 import cn.com.mwsn.mpm.service.InpatientAreaService;
 
 
@@ -18,9 +19,14 @@ public class InpatientAreaServiceImpl extends TransactionalServiceImpl
 	
 
 	@Override
-	public List<InpatientArea> queryAllInpatientAreas() {
+	public List<InpatientArea> findAllInpatientAreas() {
 		return this.findAll(InpatientArea.class);
 	}
+	@Override
+	public InpatientArea findInpatientAreasByname(String name) {
+		return this.findBy(InpatientArea.class, "name", name);
+	}
+	
 
 	
 	

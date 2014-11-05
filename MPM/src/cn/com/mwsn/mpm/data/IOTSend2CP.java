@@ -184,7 +184,7 @@ public class IOTSend2CP {
 						+ Constant.UPDATE_TIME + "^" + "0";			
 			}
 			if(rfidPerson.getRole().equals("1")) {
-				nurse = nurseService.queryNurse(rfidPerson.getEmpNO());
+				nurse = nurseService.findNurseByNo(rfidPerson.getEmpNO());
 				httpUrl = Constant.URL_PREFIX_USER;
 				postfix = 
 						Constant.UNIT_CODE + "^" + "" + "|"
@@ -228,10 +228,10 @@ public class IOTSend2CP {
 						+ Constant.HISOUTER_NO + "^" + "" + "|"
 						+ Constant.CURDEPT_CODE + "^" + patient.getCurdeptCode() + "|"
 						+ Constant.CURDEPT_DESC + "^" + patient.getCurdeptDesc() + "|"
-						+ Constant.CURWARD_CODE + "^" + patient.getBed().getInpatientCell().getInpatientArea().getName() + "|"
-						+ Constant.CURWARD_DESC + "^" + patient.getBed().getInpatientCell().getInpatientArea().getDescc() + "|"
-						+ Constant.CURROOM_CODE + "^" + patient.getBed().getInpatientCell().getCurroomCode() + "|"
-						+ Constant.CURROOM_DESC + "^" + patient.getBed().getInpatientCell().getCurroomDesc() + "|"
+						+ Constant.CURWARD_CODE + "^" + patient.getInpatientArea() + "|"
+//						+ Constant.CURWARD_DESC + "^" + patient.getBed().getInpatientCell().getInpatientArea().getDescc() + "|"
+//						+ Constant.CURROOM_CODE + "^" + patient.getBed().getInpatientCell().getCurroomCode() + "|"
+//						+ Constant.CURROOM_DESC + "^" + patient.getBed().getInpatientCell().getCurroomDesc() + "|"
 						+ Constant.CURBED + "^" + patient.getCurBed() + "|"
 						+ Constant.IS_STOP + "^" + "0" + "|"
 						+ Constant.IS_UPDATE + "^" + "0" + "|"

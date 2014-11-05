@@ -24,7 +24,7 @@ public class InpatientArea extends IdEntity {
 	
 	private String name;                //病区代号
 	private String descc;               //病区描述
-	private Set<InpatientCell> cells;
+//	private Set<InpatientCell> cells;
 	
 	
 	public String getName() {
@@ -33,13 +33,13 @@ public class InpatientArea extends IdEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-	@OneToMany(mappedBy="inpatientArea")
-	public Set<InpatientCell> getCells() {
-		return cells;
-	}
-	public void setCells(Set<InpatientCell> cells) {
-		this.cells = cells;
-	}
+//	@OneToMany(mappedBy="inpatientArea")
+//	public Set<InpatientCell> getCells() {
+//		return cells;
+//	}
+//	public void setCells(Set<InpatientCell> cells) {
+//		this.cells = cells;
+//	}
 	public String getDescc() {
 		return descc;
 	}

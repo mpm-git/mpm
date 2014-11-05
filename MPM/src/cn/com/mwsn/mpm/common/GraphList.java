@@ -23,7 +23,7 @@ public class GraphList {
 		while(it.hasNext()) {
 			InpatientCell cell = it.next();
 			if(!cell.getName().equals("") && cell.getName().charAt(0) == 'w') {
-				this.graphList.add(new Graph(cell.getInpatientArea().getName(), cell.getName()));
+				this.graphList.add(new Graph(cell.getInpatientArea(), cell.getName()));
 			}
 		}
 		

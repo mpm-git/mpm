@@ -214,8 +214,8 @@ public class RFIDHistory extends IdEntity {
 			this.setActionstate_desc("进");
 		else 
 			this.setActionstate_desc("出");
-		this.setActionward_code(cell.getInpatientArea().getName());
-		this.setActionward_desc(cell.getInpatientArea().getDescc());
+		this.setActionward_code(cell.getInpatientArea());
+		this.setActionward_desc(cell.getInpatientArea());
 		this.setCode(incident.getTagID());
 		this.setDescx("RFID数据");
 		this.setId(incident.getId());	

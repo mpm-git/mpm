@@ -1,6 +1,7 @@
 package cn.com.mwsn.mpm.entity;
 
 import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -24,8 +25,9 @@ public class Doctor extends IdEntity {
 	private String sex;
 	private String doctorId;         //医生工号
 	private String type;			//医生类型名称
-	private InpatientArea inpatientArea;
-	private Set<Patient> patients;
+	private String inpatientArea;
+//	private InpatientArea inpatientArea;
+//	private Set<Patient> patients;
 	
 	
 	public String getName() {
@@ -52,25 +54,31 @@ public class Doctor extends IdEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	@ManyToOne
-	public InpatientArea getInpatientArea() {
-		return inpatientArea;
-	}
-	public void setInpatientArea(InpatientArea inpatientArea) {
-		this.inpatientArea = inpatientArea;
-	}
+//	@ManyToOne
+//	public InpatientArea getInpatientArea() {
+//		return inpatientArea;
+//	}
+//	public void setInpatientArea(InpatientArea inpatientArea) {
+//		this.inpatientArea = inpatientArea;
+//	}
 	public String getDoctorId() {
 		return doctorId;
 	}
 	public void setDoctorId(String doctorId) {
 		this.doctorId = doctorId;
 	}
-	@OneToMany(mappedBy="doctorCharge")
-	public Set<Patient> getPatients() {
-		return patients;
+//	@OneToMany(mappedBy="doctorCharge")
+//	public Set<Patient> getPatients() {
+//		return patients;
+//	}
+//	public void setPatients(Set<Patient> patients) {
+//		this.patients = patients;
+//	}
+	public String getInpatientArea() {
+		return inpatientArea;
 	}
-	public void setPatients(Set<Patient> patients) {
-		this.patients = patients;
+	public void setInpatientArea(String curInpatientArea) {
+		this.inpatientArea = curInpatientArea;
 	}
 	
 }

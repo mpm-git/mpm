@@ -11,7 +11,9 @@ public interface InpatientAreaService extends TransactionalService {
 	 * 查询所有的病区
 	 * @return
 	 */
-	public List<InpatientArea> queryAllInpatientAreas();
+	List<InpatientArea> findAllInpatientAreas();
+
+	InpatientArea findInpatientAreasByname(String name);
 
 	
 }

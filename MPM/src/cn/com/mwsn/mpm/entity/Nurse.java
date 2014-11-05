@@ -26,9 +26,9 @@ public class Nurse extends IdEntity {
 	private String sex;
 	private String nurseNo;         //护士工号
 	private String type;			//护士类型名称
-	private InpatientArea inpatientArea;
-	
-	private Set<Patient> patients;
+	private String inpatientArea;//病区
+//	private InpatientArea inpatientArea;
+//	private Set<Patient> patients;
 	
 	
 	public String getName() {
@@ -55,26 +55,30 @@ public class Nurse extends IdEntity {
 	public void setType(String type) {
 		this.type = type;
 	}
-	@ManyToOne
-	public InpatientArea getInpatientArea() {
-		return inpatientArea;
-	}
-	public void setInpatientArea(InpatientArea inpatientArea) {
-		this.inpatientArea = inpatientArea;
-	}
+//	@ManyToOne
+//	public InpatientArea getInpatientArea() {
+//		return inpatientArea;
+//	}
+//	public void setInpatientArea(InpatientArea inpatientArea) {
+//		this.inpatientArea = inpatientArea;
+//	}
 	public String getNurseNo() {
 		return nurseNo;
 	}
 	public void setNurseNo(String nurseNo) {
 		this.nurseNo = nurseNo;
 	}
-	@OneToMany(mappedBy="nurseCharge")
-	public Set<Patient> getPatients() {
-		return patients;
+//	@OneToMany(mappedBy="nurseCharge")
+//	public Set<Patient> getPatients() {
+//		return patients;
+//	}
+//	public void setPatients(Set<Patient> patients) {
+//		this.patients = patients;
+//	}
+	public String getInpatientArea() {
+		return inpatientArea;
 	}
-	public void setPatients(Set<Patient> patients) {
-		this.patients = patients;
+	public void setInpatientArea(String inpatientAreaName) {
+		this.inpatientArea = inpatientAreaName;
 	}
-
-	
 }

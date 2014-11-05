@@ -209,9 +209,12 @@ public class GsonUtil {
 	}  
 	public static void main(String[] args) {
 		String s="{\"status\":\"200\",\"message\":\"成功\",\"result\":{\"type_sn\":3,\"logo_per_price\":11.2,\"logo_upload_price\":22.3,\"logo_draw_price\":2.0,\"logo_text_price\":33.4,\"logo_color_price\":44.5,\"currency\":2}}";
-		String c="[{'color':'#ff0000'},{'color':'#004466'},{'color':'#ffff00'},{'color':'#ff005e'},{'color':'#a60de3'},{'color':'#0d1fe3'},{'color':'#0daae3'},{'color':'#0de338'},{'color':'#9fe30d'},{'color':'#d5e30d'},{'color':'#e3510d'},{'color':'#e3260d'},{'color':'#c620e0'}]";
+		String c="[{color:'#ff0000'},{'color':'#004466'},{'color':'#ffff00'},{'color':'#ff005e'},{'color':'#a60de3'},{'color':'#0d1fe3'},{'color':'#0daae3'},{'color':'#0de338'},{'color':'#9fe30d'},{'color':'#d5e30d'},{'color':'#e3510d'},{'color':'#e3260d'},{'color':'#c620e0'}]";
 		List<?> list = GsonUtil.jsonToList(c);
-		System.out.println(list.get(0));
+//		System.out.println(list.get(0));
+		Map<String, String> jsonToMap = (Map<String, String>) GsonUtil.jsonToMap(list.get(0).toString());
+		System.out.println(jsonToMap);
+		
 		Map<?, ?> map0 = GsonUtil.jsonToMap(s);
 		System.out.println(map0.get("result"));
 		Map<?, ?> map1 = GsonUtil.jsonToMap(map0.get("result").toString());
@@ -222,6 +225,7 @@ public class GsonUtil {
 		List<?> jsonToList = GsonUtil.jsonToList(Constant.executeType);
 		List<Map<String,String>> lists =new ArrayList<Map<String,String>>();
 		for (Object ss : jsonToList) {
+			System.out.println(ss);
 			Map<String,String> map = (Map<String, String>) GsonUtil.jsonToMap(ss.toString());
 			lists.add(map);
 			System.out.println(map);
