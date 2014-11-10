@@ -99,8 +99,8 @@
 						<table bordercolor="#000000" border=0 cellpadding="0"
 							cellspacing="0" style="margin-top: 100px; margin-left: 90px;">
 							<tr>
-								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;工号：</td>
-								<td><input type="text" id="gonghao" name="gonghao" /></td>
+								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;帐号：</td>
+								<td><input type="text" id="account" name="account" /></td>
 							</tr>
 							<tr>
 								<td height="19"></td>
@@ -114,8 +114,20 @@
 								<td><input type="password" id="passwd" name="passwd" /></td>
 							</tr>
 							<tr>
-								<td height="24">&nbsp;&nbsp;&nbsp;</td>
-								<td>&nbsp;</td>
+								<td height="19"></td>
+								<td>
+									<area />
+								</td>
+							</tr>
+							<tr>
+								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;工号：</td>
+								<td><input type="text" id="staffNum" name="staffNum" /></td>
+							</tr>
+							<tr>
+								<td height="19"></td>
+								<td>
+									<area />
+								</td>
 							</tr>
 							<tr>
 								<td height="34">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

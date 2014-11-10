@@ -70,6 +70,7 @@ public class LoginAction extends ActionSupport {
 					//将账户信息存入session
 					HttpSession session = Struts2Utils.getSession();
 					session.setAttribute("userName", user.getName());
+					session.setAttribute("userRole", user.getUserRole());
 				}
 				
 				return this.SUCCESS;

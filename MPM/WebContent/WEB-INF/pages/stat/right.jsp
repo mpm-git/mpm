@@ -19,7 +19,6 @@
 <script src="<s:url value='/javascript/highcharts.js'/>" type="text/javascript"></script>
 
 <script type="text/javascript">
-
 $(function(){
 	G.req(["gPopMenu"],function(j){j("#aMenu");});
 	G.req(["gPopMenu"],function(j){j("#bMenu");});
@@ -32,12 +31,96 @@ $(function(){
 	$( "#beginStatDate" ).datepicker();
 	$( "#endStatDate" ).datepicker();
 	$( "input:submit", ".wrap" ).button();
-	$('#example').dataTable({
+	
+	init_feature_table();
+/* 	$('#example').dataTable({
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers"
-	});
-	
+	}); */
 });
+
+function init_feature_table(){
+	alert('aaaaa');
+$('#example').dataTable({
+			"bPaginate": true,//翻页功能
+			"bSort": false,
+			"bJQueryUI": true,
+	        "sPaginationType": "full_numbers",
+	        "bRetrieve": true,
+	        "bDestroy":true,
+	        "sAjaxSource" :"get_all_users_features.action?"+new Date().getTime(),
+	         "aoColumnDefs": [
+					{
+					 sDefaultContent: '',
+					 aTargets: [ '_all' ]
+					  }
+					], 
+					/* "aaSorting": [[ 4, "desc" ]], */
+	/* 	"aaData":[
+					['陈云', '18880001', '管理员', '删除 修改', '这里专门用来写备注的哟'],
+					['刘翠翠', '18880002', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['王番', '18880003', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫2', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫3', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫4', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫5', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫6', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫7', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫8', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫9', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+					['邹海鑫12', '18880004', '普通员工', '删除 修改', '这里专门用来写备注的哟'],
+		          ], */
+		"aoColumns": [
+		              { "aaData": "name" },
+		              { "aaData": "staffNum" },
+		              { "aaData": "userType" },
+		              { "aaData": "operate","sClass": "center" },
+		              { "aaData": "descr" },
+		/* { "sTitle": "name","sClass": "center" },
+		{ "sTitle": "staffNum","sClass": "center" },
+		{ "sTitle": "userType","sClass": "center" },
+		{ "sTitle": "operate","sClass": "center" },
+		{ "sTitle": "descr","sClass": "center" } */
+		],
+		"oLanguage" : {
+			"sProcessing" : "正在加载中......",
+			"sLengthMenu" : "每页显示 _MENU_ 条记录",
+			"sZeroRecords" : "没有数据！",
+			"sEmptyTable" : "表中无数据存在！",
+			"sInfo" : "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+			"sInfoEmpty" : "显示0到0条记录",
+			"sInfoFiltered" : "数据表中共为 _MAX_ 条记录",
+			//"sSearch" : "搜索",
+			"oPaginate" : {
+				"sFirst" : "首页",
+				"sPrevious" : "上一页",
+				"sNext" : "下一页",
+				"sLast" : "末页"
+			}
+		}
+		});
+}
+
+function delete_feature(id){
+	$.ajax({    
+        url : '../stat/delete_feature.action',    
+        type : 'post',    
+        data : {
+        	'id': id
+        	},    
+        dataType : 'json',    
+        success : function(data) {
+        	console.info(data.message=='delete_success');
+        	if(data.message=='delete_success'){
+        		init_feature_table();
+        	}
+        	
+        }
+    });  
+	
+}
+
 
 </script>
 </head>
@@ -62,7 +145,7 @@ $(function(){
       </ul>
       <div style="padding-top: 20px">
         <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
-          <thead>
+       <thead>
             <tr>
               <th width="20%">姓名</th>
               <th width="20%">工号</th>
@@ -71,7 +154,7 @@ $(function(){
               <th width="20%">备注</th>
             </tr>
           </thead>
-           <tbody>
+ <!--           <tbody>
             <tr class="gradeA">
               <td>王晓霞</td>
               <td>0123</td>
@@ -120,8 +203,8 @@ $(function(){
               <td class="center">普通用户</td>
               <td>删除   编辑</td>
               <td></td>
-            </tr>
-            </tbody>
+            </tr> 
+            </tbody>-->
           </table>
     </div>
   </div>

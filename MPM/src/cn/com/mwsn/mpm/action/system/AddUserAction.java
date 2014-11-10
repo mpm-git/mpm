@@ -32,21 +32,25 @@ public class AddUserAction extends ActionSupport {
 	public String execute() throws Exception {
 		
 		HttpServletRequest request = Struts2Utils.getRequest();
-		String cardNo = request.getParameter("gonghao");
+		String staffNum = request.getParameter("staffNum");
+		String account = request.getParameter("account");
 		String password = request.getParameter("passwd");
 		String utype = request.getParameter("utype");
 		
-		if(cardNo.equals("") || password.equals("") || utype.equals("")) {
+		if(account.equals("") || staffNum.equals("") || password.equals("") || utype.equals("")) {
 			return this.ERROR;
 		}
 		
 		User user = new User();
-		user.setAccount(cardNo);
+		user.setAccount(account);
 		user.setIsAllowLogin(true);
-		user.setName(cardNo);
+		user.setName(staffNum);
 		user.setPassword(password);
+		user.setUserRole(utype);
+		user.setStaffNum(staffNum);
 		
-		log.debug(cardNo);
+		log.debug(account);
+		log.debug(staffNum);
 		log.debug(password);
 		log.debug(utype);
 		userService.save(user);

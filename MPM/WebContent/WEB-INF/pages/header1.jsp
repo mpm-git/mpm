@@ -83,13 +83,13 @@
                     		</ul>
                 		</div>
                 </li>
+                <s:if test="'管理员'==#session.userRole">
                 <li id="cMenu" class="m_menu">
                 	<a class="m_menu-title"  href="#" >配置管理<b><s></s></b></a>
                 	<div>
                 		<ul>
                 			<li><a href="#">标签管理</a></li>
                 			<li><a href="#">地图管理</a></li>
-                			<li><a href="#">用户权限管理</a></li>
                 			<li><a href="<s:url action="../stat/var-set-stat.action" />">参数配置</a></li>
                 			<li><a href="<s:url action="../stat/user-right-stat.action" />">用户权限管理</a></li>
                 			<li><a href="<s:url action="../stat/change-pswd-stat.action" />">修改密码</a></li>
@@ -97,6 +97,7 @@
                 		</ul>
                 	</div>
                 </li>
+                </s:if>
             </ul>
 
             <div class="gheader-i">

@@ -27,9 +27,22 @@ public class User extends IdEntity{
 	private String telephone;
 	private Boolean isAllowLogin;		//是否允许登录
 	private String description;
+	private String staffNum;
+	private String userRole;			//管理员  普通用户	
 	
-	
-	
+
+	public String getUserRole() {
+		return userRole;
+	}
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+	public String getStaffNum() {
+		return staffNum;
+	}
+	public void setStaffNum(String staffNum) {
+		this.staffNum = staffNum;
+	}
 	public String getAccount() {
 		return account;
 	}
