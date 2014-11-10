@@ -17,7 +17,7 @@ import cn.com.mwsn.mpm.common.Constant.INHOSMODEL_CODE;
  *
  */
 @Entity
-public class Patient extends IdEntity {
+public class Patient_view extends IdEntity {
 
 	/**
 	 * 
@@ -30,6 +30,8 @@ public class Patient extends IdEntity {
 	private String diagnose2;//主要诊断2
 	private String sex;                  //0:男   1:女
 	private Date birthday;	//生日
+	private int age;
+	private int ageInterval;
 	private String clinicNo;              //住院号
 	private String caseNo;                //病案号
 	private String hisinnerNo;            //His内部标示
@@ -105,6 +107,18 @@ public class Patient extends IdEntity {
 	}
 	public void setDiagnose1(String diagnose1) {
 		this.diagnose1 = diagnose1;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public int getAgeInterval() {
+		return ageInterval;
+	}
+	public void setAgeInterval(int ageInterval) {
+		this.ageInterval = ageInterval;
 	}
 	public String getDiagnose2() {
 		return diagnose2;

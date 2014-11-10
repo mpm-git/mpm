@@ -1,3 +1,4 @@
+<%@page import="org.cz.utils.gson.GsonUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.util.*"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
@@ -34,7 +35,16 @@ $(function(){
 	G.req(["gPopMenu"],function(j){j("#eMenu");});
 	G.req(["gPopMenu"],function(j){j("#fMenu");});
 });
-
+<%
+String allXAxisNamesValue4String=GsonUtil.objectToJson(request.getAttribute("allXAxisNamesValue"));
+%>
+var allXAxisNamesValue=<%=allXAxisNamesValue4String%>;
+var zhenduan=null;
+if(allXAxisNamesValue&&allXAxisNamesValue["2"])
+{
+	zhenduan=allXAxisNamesValue["2"].split(",");
+// 	console.info(zhenduan);
+}
 var guanlian={
 	select_disease:"心脏病",
 	suport:70,
@@ -62,6 +72,10 @@ var guanlian={
 		        }
 	          ]
 };
+<%
+String guanlian=GsonUtil.objectToJson(request.getAttribute("guanlian"));
+%>
+guanlian=<%=guanlian%>;
 $(document).ready(function() {
 	    
 	    var type = ${searchType};
@@ -71,6 +85,7 @@ $(document).ready(function() {
 		
 		
 		if(type == 2){
+			console.info(123);
 			//聚合分析
 			$('#chartDiv').highcharts({ 
 				    credits: {enabled: false},
@@ -117,7 +132,7 @@ $(document).ready(function() {
 			            }                                                                                
 			        }                                                                                 
 			});
-			//genertateData('chartDiv', 1);
+			genertateData('chartDiv', 1);
 		}else{
 			//关联挖掘
 // 			$('#chartDiv').highcharts({ 
@@ -139,7 +154,7 @@ $(document).ready(function() {
 				_confidence.push(guanlian.diseases[i].confidence);
 				_suport.push(guanlian.diseases[i].suport);
 			}
-			$('#relate_chart').highcharts({ 
+			$('#chartDiv').highcharts({ 
 				chart: { type: 'column' }, 
 				title: { text: guanlian.select_disease+'与其他疾病数据分析' },
 				credits: {enabled: false},
@@ -172,7 +187,7 @@ $(document).ready(function() {
 				},
 				plotOptions: { column: { pointPadding: 0.2, borderWidth: 0 } }
 			});
-			var chart22 = $("#relate_chart").highcharts();
+			var chart22 = $("#chartDiv").highcharts();
 	          chart22.addSeries({
 		    	    type: 'column', 
 			        name:"支持度", 
@@ -211,8 +226,9 @@ function genertateData(chartId, attrId){
 	var index = 0;
 	if(attrId == 1){
 	<%
-	    Map<String, List<List<String>>> data = (Map<String, List<List<String>>>)request.getAttribute("chartdata");
-		if(data != null)
+	    Map<String, List<List<String>>> data = (Map<String, List<List<String>>>)request.getAttribute("juLeiRes");
+	System.out.print(data);	
+	if(data != null)
 		{
 		  String last_title = "";
           //循环每行数据
@@ -250,7 +266,8 @@ function genertateData(chartId, attrId){
 	%>
 	}else {
 		<%
-	    Map<String, List<List<String>>> data2 = (Map<String, List<List<String>>>)request.getAttribute("chartdata2");
+	    Map<String, List<List<String>>> data2 = (Map<String, List<List<String>>>)request.getAttribute("juLeiRes");
+// 	    Map<String, List<List<String>>> data2 = (Map<String, List<List<String>>>)request.getAttribute("chartdata2");
 		if(data2 != null)
 		{
 		  String last_title = "";
@@ -292,7 +309,7 @@ function genertateData(chartId, attrId){
 }
 
 function genertateData2(){
-	var chart22 = $("#relate_chart").highcharts();
+	var chart22 = $("#chartDiv").highcharts();
 	var totalRowData = new Array();
 	<%
 	    List<List<String>> relate_data = (List<List<String>>)request.getAttribute("relateChartData");
@@ -365,21 +382,38 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
       </ul>
       <form action="dataMiningStat.action" method="post" id="searchForm">
 	      <ul class="titles">
+	      <%
+	      int searchType =Integer.parseInt(request.getAttribute("searchType").toString()); 
+	      if(searchType!=1){ %>
 	        <li>
 	                              病人：
 	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" />
 	        </li>
+	        <%} %>
+	         <s:if test="searchType == 1">
 	        <li>
 	                              病种：
 	          <select name="select_disease " id="select_disease" style="width:160px;height:22px;">
-	              <option value="1" <s:if test="select_disease==1">selected="selected"</s:if>>心脏病</option>
+	          <%
+	          Map<String, String> allXAxisNamesValue= (Map<String, String>)request.getAttribute("allXAxisNamesValue");
+	          String select_disease= request.getAttribute("select_disease").toString();
+	          String zhenDuan=allXAxisNamesValue.get("2");
+	          String[] zhenDuans=zhenDuan.split(",");
+// 	          System.out.print(select_disease);
+	          for(int i=0;i<zhenDuans.length;i++)
+	          {
+%>
+	              <option value="<%=zhenDuans[i] %>" <%if(zhenDuans[i].equals(select_disease)){ %>selected="selected"<%} %>><%=zhenDuans[i] %></option>
 	              
-	              <option value="2" <s:if test="select_disease==2">selected="selected"</s:if>>糖尿病</option>
-	              <option value="3" <s:if test="select_disease==3">selected="selected"</s:if>>高血压</option>
-	              <option value="4" <s:if test="select_disease==4">selected="selected"</s:if>>高血脂</option>
-	               
+<!-- 	              <option value="2" <s:if test="select_disease==2">selected="selected"</s:if>>糖尿病</option> -->
+<!-- 	              <option value="3" <s:if test="select_disease==3">selected="selected"</s:if>>高血压</option> -->
+<!-- 	              <option value="4" <s:if test="select_disease==4">selected="selected"</s:if>>高血脂</option> -->
+	               <%
+	          }
+	               %>
 	            </select>
 	        </li>
+	        </s:if>
 	        <!-- <li>
 	                             护士：
 	            <div id="patientSpan" style="display: inline;">             
@@ -411,8 +445,8 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
      <div style="border-bottom: 1px dashed #CCCCCC"></div>
      
      <div id="resultDiv1" style="width: 800px;margin-left: auto;margin-right: auto;">
-<!-- 	      <div id="chartDiv" style="padding-top: 20px; width: 800px; height: 300px; margin: 0 auto; margin-bottom: 20px;"> -->
-<!-- 	      </div> -->
+	      <div id="chartDiv" style="padding-top: 20px; width: 800px; height: 300px; margin: 0 auto; margin-bottom: 20px;">
+	      </div>
 	      
 	      
 <!-- 	      <input type="button"  style="float: right;margin: 10px;" class="ui-button ui-widget ui-state-default ui-corner-all" value="导出excel" id="excelBtn" />

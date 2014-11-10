@@ -5,16 +5,6 @@ import javax.persistence.Entity;
 import cn.com.mwsn.frame.entity.IdEntity;
 @Entity
 public class MH_NurseExecuteRecord_view extends IdEntity implements Cloneable{
-		@Override
-	public String toString() {
-		return "MH_NurseExecuteRecord_view [patientName=" + patientName
-				+ ", clinicNo=" + clinicNo + ", nurseName=" + nurseName
-				+ ", nurseNo=" + nurseNo + ", careLevel=" + careLevel
-				+ ", age=" + age + ", ageInterval=" + ageInterval
-				+ ", execute=" + execute + ", executeStartTime="
-				+ executeStartTime + ", executeEndTime=" + executeEndTime
-				+ ", haoShi=" + haoShi + ", ciShu=" + ciShu + "\n]";
-	}
 		/**
 	 * 	
 id					int(11)NO
@@ -35,6 +25,7 @@ haoShibig			int(21)YES
 		private String clinicNo;//护士号
 		private String nurseName;//病人名字
 		private String nurseNo;//护士号
+		private String nurseType;//护士类型
 		private String careLevel;//执行动作
 		private int age;//执行动作
 		private int ageInterval;//执行动作
@@ -46,6 +37,8 @@ haoShibig			int(21)YES
 		private long maxHaoShi;//最大执行耗时
 		private long minHaoShi;//最小执行耗时
 		private int ciShu;//执行耗时
+		private String diagnose1;//主要诊断1
+		private String diagnose2;//主要诊断2
 		public String getPatientName() {
 			return patientName;
 		}
@@ -72,6 +65,20 @@ haoShibig			int(21)YES
 		}
 		public String getCareLevel() {
 			return careLevel;
+		}
+		@Override
+		public String toString() {
+			return "[patientName=" + patientName
+					+ ", clinicNo=" + clinicNo + ", nurseName=" + nurseName
+					+ ", nurseNo=" + nurseNo + ", nurseType=" + nurseType
+					+ ", careLevel=" + careLevel + ", age=" + age
+					+ ", ageInterval=" + ageInterval + ", execute=" + execute
+					+ ", executeStartTime=" + executeStartTime
+					+ ", executeEndTime=" + executeEndTime + ", haoShi="
+					+ haoShi + ", avgHaoShi=" + avgHaoShi + ", maxHaoShi="
+					+ maxHaoShi + ", minHaoShi=" + minHaoShi + ", ciShu="
+					+ ciShu + ", diagnose1=" + diagnose1 + ", diagnose2="
+					+ diagnose2 + "]\n";
 		}
 		public void setCareLevel(String careLevel) {
 			this.careLevel = careLevel;
@@ -100,6 +107,12 @@ haoShibig			int(21)YES
 		public void setExecuteStartTime(long executeStartTime) {
 			this.executeStartTime = executeStartTime;
 		}
+		public String getNurseType() {
+			return nurseType;
+		}
+		public void setNurseType(String nurseType) {
+			this.nurseType = nurseType;
+		}
 		public long getExecuteEndTime() {
 			return executeEndTime;
 		}
@@ -126,6 +139,18 @@ haoShibig			int(21)YES
 		}
 		public long getMaxHaoShi() {
 			return maxHaoShi;
+		}
+		public String getDiagnose1() {
+			return diagnose1;
+		}
+		public void setDiagnose1(String diagnose1) {
+			this.diagnose1 = diagnose1;
+		}
+		public String getDiagnose2() {
+			return diagnose2;
+		}
+		public void setDiagnose2(String diagnose2) {
+			this.diagnose2 = diagnose2;
 		}
 		public void setMaxHaoShi(long maxHaoShi) {
 			this.maxHaoShi = maxHaoShi;

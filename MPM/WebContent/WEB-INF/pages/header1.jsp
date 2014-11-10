@@ -7,7 +7,9 @@
 <style type="text/css">
 #long-tab ul li{width: 145px;}
 </style>
+
 <head>
+<script src="<s:url value='/javascript/ex/Utils.js'/>" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 

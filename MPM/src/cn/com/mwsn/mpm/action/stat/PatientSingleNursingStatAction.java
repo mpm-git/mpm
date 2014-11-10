@@ -86,6 +86,8 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 	
 	private InputStream excelFile;  
 	private String downloadFileName;
+	private String sumTitle;
+	private String excel_main_title;
 	
 	
 	//初始化数据
@@ -138,13 +140,13 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		if(allXAxisNames == null){
 			allXAxisNames = new HashMap<String, String>();
 			allXAxisNames.put("1", "特级,一级,二级,三级,四级");//护理等级
-			allXAxisNames.put("2", "基础疾病,糖尿病,心脏病");//主要诊断
+			allXAxisNames.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
 			allXAxisNames.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
 		}
 		if(allXAxisNamesValue == null){
 			allXAxisNamesValue = new HashMap<String, String>();
 			allXAxisNamesValue.put("1", "0,1,2,3,4");//护理等级
-			allXAxisNamesValue.put("2", "基础疾病,糖尿病,心脏病");//主要诊断
+			allXAxisNamesValue.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
 			allXAxisNamesValue.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
 		}
 	}
@@ -170,14 +172,24 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 			Set<String> tmp = allPatientBehavior.keySet();
 			patientBehavior = tmp.toArray(new String[tmp.size()]);
 		}
-		String _patientBehaviorValue="(";
+		String _patientBehaviorValue="";
 		patientBehaviorValue=new String [patientBehavior.length];
 		for (int i=0;i<patientBehavior.length;i++) {
 			String pB =patientBehavior[i];
 			patientBehaviorValue[i]=allPatientBehavior.get(pB);
 			_patientBehaviorValue+="'"+allPatientBehavior.get(pB)+"',";
 		}
-		_patientBehaviorValue=_patientBehaviorValue.replaceAll(",$", ")");
+		if(Util.isNULL(beginStatDate))
+		{
+			Date d=new Date();
+			d.setMonth(d.getMonth()-1);
+			beginStatDate=Util.date2Str(d, "yyyy-MM-dd");
+		}
+		if(Util.isNULL(endStatDate))
+		{
+			endStatDate=Util.date2Str(new Date(), "yyyy-MM-dd");
+		}
+		_patientBehaviorValue=_patientBehaviorValue.replaceAll(",$", "");
 		String conditions="";
 		if(!Util.isNULL(beginStatDate))
 		{
@@ -187,7 +199,10 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		{
 			conditions+="and  executeStartTime<"+Util.str2Date(endStatDate,"yyyy-MM-dd").getTime()+" ";
 		}
-		conditions+="and execute in "+_patientBehaviorValue;
+		if(!Util.isNULL(_patientBehaviorValue))
+		{
+			conditions+="and execute in ("+_patientBehaviorValue+") ";
+		}
 		parm.put("conditions",conditions);
 		find_view = mH_NurseExecuteRecordService.find_view(parm, 0, 0);
 //		System.out.println(GsonUtil.objectToJson(find_view));
@@ -196,7 +211,7 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 //		System.out.println(beginStatDate);
 		dealSum=new DealSum() {
 			@Override
-			public Object execute(Object old,Object news) {
+			public Object execute(Object old,Object news,Object o) {
 				if(old==null)
 					return news;
 				return Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim());
@@ -208,20 +223,25 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 				return null;
 			}
 		};
-
+		if(yAxisName == null){
+			yAxisName = new String[]{"1"};
+		}
 		if(yAxisName[0].equals("1"))
 		{
 			invokeField="ciShu";
+			sumTitle="总计次数";
 		}
 		else if(yAxisName[0].equals("2"))
 		{
 			invokeField="avgHaoShi";
+			sumTitle="平均耗时";
 		}else if(yAxisName[0].equals("3"))
 		{
 			invokeField="executeStartTime";
+			sumTitle="平均时间";
 			dealSum=new DealSum() {
 				@Override
-				public Object execute(Object old,Object news) {
+				public Object execute(Object old,Object news,Object o) {
 					if(old==null)
 						return news;
 					return (Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim()))/2;
@@ -234,10 +254,6 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 				}
 			};
 		}
-		if(yAxisName == null){
-			yAxisName = new String[]{"1"};
-		}
-		
 		chartData = new ArrayList<List<String>>();
 		if(searchType == 1){
     		//第一行  病人名称
@@ -246,6 +262,7 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 			 title="病人";
 			 fieldID="clinicNo";
 			 fieldValue="patientName";
+			 excel_main_title="所有病人";
 		}
 		else if(searchType == 2) 
 		{
@@ -254,59 +271,30 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 			title = "护理等级";
 			fieldID = "careLevel";
 			fieldValue="careLevel";
+			 excel_main_title="护理等级";
 		}
 		else if(searchType == 3){
 			xAxisNames = Arrays.asList(allXAxisNames.get("2").split(",")); 
 			xAxisNamesValue = Arrays.asList(allXAxisNamesValue.get("2").split(","));
     		title = "主要诊断";
-    		fieldID="ageInterval";
-    		fieldValue="ageInterval";
+    		fieldID="diagnose1";
+    		fieldValue="diagnose1";
+    		 excel_main_title="按主要诊断";
     	}else if(searchType == 4){
     		xAxisNames = Arrays.asList(allXAxisNames.get("3").split(",")); 
     		xAxisNamesValue = Arrays.asList(allXAxisNamesValue.get("3").split(","));
     		title = "年龄";
     		fieldID="ageInterval";
     		fieldValue="ageInterval";
+    		 excel_main_title="按年龄";
     	}
 		{
 			String[] execute = new String[]{fieldID,"execute"};
 			find_view_map=changeFind_view4Map(find_view.getResult(),execute);
+			System.out.println(find_view_map);
 			generateData();
 			tableData = composeDate();
 		}
-//		{
-//        	//所有病人综合分析
-//        	//初始化数据
-//
-//        		//下面是各个护理行为项的值和总计的值
-//        		if(null != yAxisName){
-//        			List<List<String>> result = null;
-//        			//如果是  yAxisName=次数  的话
-//        			if(yAxisName[0].equals("1")){
-//        				
-//        				result = generateData(5, 15, xAxisNames.size(), patientBehavior);
-//        				System.out.println(result);
-//        				String[] execute = new String[]{fieldID,"execute"};
-//        				changeFind_view4Map(find_view.getResult(),execute);
-//        			}else if(yAxisName[0].equals("2")){
-//        				//yAxisName=耗时 
-//        				String[] execute = new String[]{fieldID,"execute"};
-//        				changeFind_view4Map(find_view.getResult(),execute);
-//        				result = generateData(2, 10, xAxisNames.size(), patientBehavior);
-//        			}else if(yAxisName[0].equals("3")){
-//        				//yAxisName=开始时间 
-//        				String[] execute = new String[]{fieldID,"execute"};
-//        				changeFind_view4Map(find_view.getResult(),execute);
-//        				result = generateData(7, 22, xAxisNames.size(), patientBehavior);
-//        			}
-//        			if(result != null){
-//        				for(List<String> a : result){
-//        					chartData.add(a);
-//        				}
-//        			}
-//        		}
-//        		tableData = composeDate();
-//		}
 		return SUCCESS;
 	}
 //	
@@ -332,6 +320,7 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		
 		List<MH_NurseExecuteRecord_view> list=new ArrayList<MH_NurseExecuteRecord_view>();
 		Map<String, MH_NurseExecuteRecord_view> find_view_map =new HashMap<String, MH_NurseExecuteRecord_view>();
+		if(find_view!=null&&find_view.size()>0)
 		for (MH_NurseExecuteRecord_view f : find_view) {
 			MH_NurseExecuteRecord_view r = f.clone();
 			String key="";
@@ -350,6 +339,8 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 			r.setMinHaoShi(r.getMinHaoShi()/60000);
 			r.setMaxHaoShi(r.getMaxHaoShi()/60000);
 			r.setHaoShi(r.getHaoShi()/60000);
+			Date start_date=new Date(r.getExecuteStartTime());
+			r.setExecuteStartTime(new Date(70,0,1,start_date.getHours(),start_date.getMinutes(),start_date.getSeconds()).getTime());
 			if(mh==null)
 			{
 				r.setCiShu(1);
@@ -364,12 +355,13 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 				record_view.setAvgHaoShi((record_view.getAvgHaoShi()+r.getAvgHaoShi())/2);
 				record_view.setMinHaoShi(record_view.getMinHaoShi()<r.getMinHaoShi()?record_view.getMinHaoShi():r.getMinHaoShi());
 				record_view.setMaxHaoShi(record_view.getMaxHaoShi()>r.getMaxHaoShi()?record_view.getMaxHaoShi():r.getMaxHaoShi());
-				Date start=new Date(record_view.getExecuteStartTime());
+				Date start_old=new Date(record_view.getExecuteStartTime());
 				Date _start=new Date(r.getExecuteStartTime());
 				//找出每天最早时间
-				if(start.getHours()>_start.getHours()&&start.getMinutes()>_start.getMinutes()&&start.getSeconds()>_start.getSeconds())
+				
+				if(start_old.getHours()>_start.getHours()||start_old.getMinutes()>_start.getMinutes()||start_old.getSeconds()>_start.getSeconds())
 				{
-					record_view.setExecuteStartTime(r.getExecuteStartTime());
+					record_view.setExecuteStartTime( r.getExecuteStartTime());
 				}
 			}
 			
@@ -387,71 +379,9 @@ public class PatientSingleNursingStatAction extends ActionSupport {
             "excelFile", "contentDisposition",  
             "attachment;filename=${downloadFileName}.xls", "bufferSize", "1024" }) })
 	public String exportExcel() throws Exception{
-    	String main_title = "单向护理强度分析";
-		if(searchType == 2){
-			main_title += "-按护理等级";
-		}else if(searchType == 3){
-			main_title += "-按主要诊断";
-    	}else if(searchType == 4){
-    		main_title += "-按年龄";
-    	}
-		//=============造数据=================================
-//		if(searchType == 1){
-//        	//所有病人综合分析
-//        	//初始化数据
-////        	if(!(patients == null || "".equals(patients))){
-//        		chartData = new ArrayList<List<String>>();
-//        		//第一行  病人名称
-//        		List<String> xAxisNames = Arrays.asList(""); 
-//        		chartData.add(xAxisNames);
-//        		//下面是各个护理行为项的值和总计的值
-//        		if(null != yAxisName){
-//        			List<List<String>> result = null;
-//        			//如果是  yAxisName=次数  的话
-//        			if(yAxisName[0].equals("1")){
-//        				result = generateData(5, 15, xAxisNames.size(), patientBehavior);
-//        			}else if(yAxisName[0].equals("2")){
-//        				//yAxisName=耗时 
-//        				result = generateData(2, 10, xAxisNames.size(), patientBehavior);
-//        			}else if(yAxisName[0].equals("3")){
-//        				//yAxisName=开始时间 
-//        				result = generateData(7, 22, xAxisNames.size(), patientBehavior);
-//        			}
-//        			if(result != null){
-//        				for(List<String> a : result){
-//        					chartData.add(a);
-//        				}
-//        			}
-//        		}
-//        		//上面部分表格数据
-//        		tableData = composeDate( "病人","patientName");
-////        	}
-//        }else if(searchType > 1){
-//        	//2:按护理等级分析    3:按主要诊断分析    4:按年龄分析
-//        	//yAxisName = new String[]{"2"};
-//        	chartData = new ArrayList<List<String>>();
-//        	//yAxisName=耗时 
-//        	List<String> xAxisNames = Arrays.asList(allXAxisNames.get((searchType-1) + "").split(",")); 
-//        	chartData.add(xAxisNames);
-//        	List<List<String>> result = generateData(8, 50, allXAxisNames.get((searchType-1) + "").split(",").length, patientBehavior);
-//        	if(result != null){
-//        		for(List<String> a : result){
-//        			chartData.add(a);
-//        		}
-//        	}
-//           	String title = "护理等级";
-//        	String field = "careLevel";
-//        	if(searchType == 3){
-//        		title = "主要诊断";
-//        		field="ageInterval";
-//        	}else if(searchType == 4){
-//        		title = "年龄";
-//        		field="ageInterval";
-//        	}
-//        	tableData = composeDate( title,field);
-//        }
 		//=======================导出excel======================
-		HSSFWorkbook workbook = ExportExcelUtil.exportExcel(tableData, main_title);
+		execute();
+		HSSFWorkbook workbook = ExportExcelUtil.exportExcel(tableData, excel_main_title);
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		workbook.write(output);
 		byte[] ba = output.toByteArray();
@@ -466,7 +396,7 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		List<String> lists=null;
 		Map<String,Object> map4Sum=new HashMap<String, Object>();
 		List<String> list4Sum=new ArrayList<String>();
-		list4Sum.add("总计");
+		list4Sum.add(sumTitle);
 		
 		Map<String, MH_NurseExecuteRecord_view> _find_view_map =null;
 		String add="";
@@ -495,10 +425,10 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 					lists.add(ss.toString());
 					Object o = map4Sum.get(x.trim());
 					if(o==null)
-						map4Sum.put(x.trim(), dealSum.execute(null,ss));
+						map4Sum.put(x.trim(), dealSum.execute(null,ss,record_view));
 					else
 					{
-						map4Sum.put(x.trim(), dealSum.execute(o,ss));
+						map4Sum.put(x.trim(), dealSum.execute(o,ss,record_view));
 					}
 					//						l.add(ss);
 				}
@@ -608,7 +538,7 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 				lineOther.add(find_view_map.get(key).getMaxHaoShi()+"");
 				lineOther.add(find_view_map.get(key).getAvgHaoShi()+"");
 				lineOther.add(find_view_map.get(key).getMinHaoShi()+"");
-				lineOther.add("");
+				lineOther.add(find_view_map.get(key).getHaoShi()+"");
 				data.add(lineOther);
 			}
     	}else if(yAxisName[0].equals("3")){
@@ -740,6 +670,6 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 }
 interface DealSum
 {
-	Object execute(Object old, Object news);
+	Object execute(Object old, Object news, Object record_view);
 	Object changeNull(Object o);
 }

@@ -186,6 +186,8 @@ public abstract class TransactionalServiceImpl implements
 			Object value) {
 		Query query = entityManager.createQuery("from " + entityClass.getName()
 				+ " e where e." + fieldName + "=?1");
+		System.out.println("from " + entityClass.getName()
+				+ " e where e." + fieldName + "="+value);
 		query.setParameter(1, value);
 		return query.getResultList();
 

@@ -107,8 +107,8 @@ $(document).ready(function() {
 		
 		$("#info_table").dataTable({
 			"bJQueryUI": true,
-			"sPaginationType": "full_numbers",
-			"bFilter":false
+			"sPaginationType": "full_numbers"
+// 			"bFilter":false
 		});
 		
         $("#excelBtn").click(function(){
@@ -142,7 +142,7 @@ function genertateData(chartId){
     %>
 		     chart.addSeries({
 	    	    type: 'column', 
-		        name: seriesName, 
+		        name: '<%=totalRow.get(0)%>', 
 		        data: totalRowData
 	         });
     <%
@@ -209,7 +209,7 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	        <li>
 	                              病区：
 	          <select name="patientArea" id="patientArea" style="width:160px;height:22px;">
-	              <option value="1" <s:if test="patientArea==1">selected="selected"</s:if>>8B</option>
+	              <option value="B1" <s:if test="patientArea==B1">selected="selected"</s:if>>8B</option>
 	              <!-- 
 	              <option value="2" <s:if test="patientArea==2">selected="selected"</s:if>>呼吸科(一院)</option>
 	              <option value="3" <s:if test="patientArea==3">selected="selected"</s:if>>胸心外科(一院)</option>

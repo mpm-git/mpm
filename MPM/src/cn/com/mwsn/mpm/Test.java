@@ -64,9 +64,19 @@ public class Test {
 		
 //		s = "lokjsdshdj";
 //		System.out.println(s.replace("shd","1111"));
-		SimpleDateFormat myfmt = new SimpleDateFormat("yyyyMMddhhmmss");
-		System.out.println(myfmt.parse("20141031224000").getTime());
-		System.out.println(myfmt.parse("20141031223000").getTime());
+		SimpleDateFormat myfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date start_date=new Date(0);
+		System.out.println(myfmt.parse("1970-01-01 00:00:00").getTime());
+		System.out.println(myfmt.parse("1970-01-01 06:00:00").getTime());
+		System.out.println(myfmt.parse("1970-01-01 12:00:00").getTime());
+		System.out.println(myfmt.parse("1970-01-01 18:00:00").getTime());
+		System.out.println(myfmt.parse("1970-01-01 24:00:00").getTime());
+		System.out.println(myfmt.format(start_date));
+		
+		Date d=myfmt.parse("2014-01-06 00:00:00");
+		d.setMonth(d.getMonth()-1);
+		System.out.println(myfmt.format(d));
+		System.out.println(myfmt.format(new Date(70,0,1,start_date.getHours(),start_date.getMinutes(),start_date.getSeconds())));
 	
 	}
 
