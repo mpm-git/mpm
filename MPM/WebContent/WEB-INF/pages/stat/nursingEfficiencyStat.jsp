@@ -89,14 +89,33 @@ $(document).ready(function() {
 				categories: ['张三', '李四', '王五', '赵六']
 			},
 			yAxis: {
-				min: 0,
+// 				min: 0,
 				title: {
 					text: '护理时间占工作时间比重(%)'
+				},
+			labels: {
+				formatter:function(){
+					var yAxisName=$("input[name='yAxisName']:checked").val();
+					if(yAxisName==3)
+					{
+						return new Date(this.value).pattern("HH:mm");
+					}
+					return this.value;
 				}
+			}
 			},
 			tooltip: {
-				pointFormat: '<b>{series.name}</b>  <b>{point.y}</b> ',
-				useHTML:true
+				 formatter: function() {
+					 var yAxisName=$("input[name='yAxisName']:checked").val();
+						if(yAxisName==3)
+						{
+							 return '<b>'+ this.series.name +'</b><br/>'+new Date(this.y).pattern("HH:mm")+'';  
+						}
+	                    return '<b>'+ this.series.name +'</b><br/>'+  
+	                    this.x +': '+ this.y +'';  
+	            }
+// 				pointFormat: '<b>{series.name}</b>  <b>{point.y}</b> ',
+// 				useHTML:true
 			}
 		});
 		
@@ -108,8 +127,8 @@ $(document).ready(function() {
 		
 		$("#info_table").dataTable({
 			"bJQueryUI": true,
-			"sPaginationType": "full_numbers",
-			"bFilter":false
+			"sPaginationType": "full_numbers"
+// 			"bFilter":false
 		});
 		
         $("#excelBtn").click(function(){
@@ -144,7 +163,7 @@ function genertateData(chartId){
     %>
 		     chart.addSeries({
 	    	    type: 'column', 
-		        name: '总计', 
+		        name: '<%=totalRow.get(0)%>', 
 		        data: totalRowData
 	         });
     <%
@@ -189,7 +208,8 @@ function genertateData(chartId){
 <style type="text/css">
 div.menu_btn{font-size: 15px;font-weight:bold; display:inline-block;text-align: center;margin: 35px;cursor:pointer;}
 div.menu_btn span{font-family: "微软雅黑";}
-ul.titles li{height:30px;padding:5px;line-height: 30px;}
+ul.titles li{padding:5px;line-height: 30px;}
+/* ul.titles li{height:30px;padding:5px;line-height: 30px;} */
 .checkboxLabel{margin-right: 10px;}
 .date_text{height:21px;line-height: 21px; width: 160px;}
 </style> 
@@ -211,7 +231,7 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	        <li>
 	                              病区：
 	          <select name="patientArea" id="patientArea" style="width:160px;height:22px;">
-	              <option value="1" <s:if test="patientArea==1">selected="selected"</s:if>>8B</option>
+	              <option value="B1" <s:if test="inpatientArea==B1">selected="selected"</s:if>>B1</option>
 	              <!-- 
 	              <option value="2" <s:if test="patientArea==2">selected="selected"</s:if>>呼吸科(一院)</option>
 	              <option value="3" <s:if test="patientArea==3">selected="selected"</s:if>>胸心外科(一院)</option>
@@ -233,8 +253,12 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	            <input type="text" class="date_text" readonly="readonly" value="<s:property value="endStatDate"/>" id="endStatDate" name="endStatDate"/>
 	        </li>
 	        <li>
-	                              护理行为：
+	        	<div style="float:left;width: 70px;">  护理行为：</div>
+	            <div style="float:left">
 	            <s:checkboxlist theme="simple" list="allPatientBehavior" value="patientBehavior" listKey="key" listValue="value" name="patientBehavior" id="patientBehavior"/>
+	       		</div>
+<!-- 	                              护理行为： -->
+<%-- 	            <s:checkboxlist theme="simple" list="allPatientBehavior" value="patientBehavior" listKey="key" listValue="value" name="patientBehavior" id="patientBehavior"/> --%>
 	        </li>
 	        <li>
 	                              护理维度：

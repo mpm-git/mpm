@@ -26,6 +26,8 @@ public class Patient extends IdEntity {
 	
 	private String name;
 	private String descc;
+	private String diagnose1;//主要诊断1
+	private String diagnose2;//主要诊断2
 	private String sex;                  //0:男   1:女
 	private Date birthday;	//生日
 	private String clinicNo;              //住院号
@@ -58,6 +60,23 @@ public class Patient extends IdEntity {
 	public String getName() {
 		return name;
 	}
+	@Override
+	public String toString() {
+		return "[name=" + name + ", descc=" + descc + ", diagnose1="
+				+ diagnose1 + ", diagnose2=" + diagnose2 + ", sex=" + sex
+				+ ", birthday=" + birthday + ", clinicNo=" + clinicNo
+				+ ", caseNo=" + caseNo + ", hisinnerNo=" + hisinnerNo
+				+ ", hisouterNo=" + hisouterNo + ", curBed=" + curBed
+				+ ", curdeptCode=" + curdeptCode + ", inpatientArea="
+				+ inpatientArea + ", curdeptDesc=" + curdeptDesc
+				+ ", careLevel=" + careLevel + ", inhospitalTime="
+				+ inhospitalTime + ", leaveHospitalTime=" + leaveHospitalTime
+				+ ", dietCare=" + dietCare + ", type=" + type + ", inhospital="
+				+ inhospital + ", patientNo=" + patientNo + ", registerNo="
+				+ registerNo + ", deviceID=" + deviceID + ", safeNotice="
+				+ safeNotice + ", drugAllergy=" + drugAllergy
+				+ ", bloodPressure=" + bloodPressure + "]\n";
+	}
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -80,6 +99,18 @@ public class Patient extends IdEntity {
 	}
 	public Date getBirthday() {
 		return birthday;
+	}
+	public String getDiagnose1() {
+		return diagnose1;
+	}
+	public void setDiagnose1(String diagnose1) {
+		this.diagnose1 = diagnose1;
+	}
+	public String getDiagnose2() {
+		return diagnose2;
+	}
+	public void setDiagnose2(String diagnose2) {
+		this.diagnose2 = diagnose2;
 	}
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;

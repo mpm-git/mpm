@@ -53,6 +53,7 @@ if(type == 1){
 	xAxisTitle = "年龄";
 }
 $(document).ready(function() {
+	console.info(new Date(0).pattern("yyyy-MM-dd hh:mm"));
 // 	$('#info_table').dataTable();
 // 	$('#show_table').dataTable( {
 // 		//"bAutoWidth": false, //不自动计算列宽度
@@ -132,14 +133,42 @@ $(document).ready(function() {
 				categories: ['张三', '李四', '王五', '赵六']
 			},
 			yAxis: {
-				min: 0,
+				//min: 0,//不显示负数
 				title: {
 					text: '护理时间占工作时间比重(%)'
+				},
+				labels: {
+					formatter:function(){
+						var yAxisName=$("input[name='yAxisName']:checked").val();
+						if(yAxisName==3)
+						{
+// 							if(-28800000<=this.value<-7200000)
+// 								return "00:00-06:00";
+// 								if(-7200000<=this.value<-28800000)
+// 								return "06:00-12:00";
+// 								if(-28800000<=this.value<36000000)
+// 								return "12:00-18:00";
+// 								if(36000000<=this.value<-7200000)
+// 								return "18:00-24:00";
+							return new Date(this.value).pattern("HH:mm");
+						}
+						return this.value;
+					}
 				}
+				
 			},
 			tooltip: {
-				pointFormat: '<b>{series.name}</b>  <b>{point.y}</b> ',
-				useHTML:true
+				 formatter: function() {
+					 var yAxisName=$("input[name='yAxisName']:checked").val();
+						if(yAxisName==3)
+						{
+							 return '<b>'+ this.series.name +'</b><br/>'+new Date(this.y).pattern("HH:mm")+'';  
+						}
+	                    return '<b>'+ this.series.name +'</b><br/>'+  
+	                    this.x +': '+ this.y +'';  
+	            }
+//				pointFormat: '<b>{series.name}</b>  <b>{point.y}</b> ',
+//				useHTML:true
 			}
 		});
 		var chart = $('#chartDiv').highcharts();
@@ -184,15 +213,15 @@ function genertateData(chartId){
 	<%
 		  }
     %>
-    console.info(<%=ss%>);
 		     chart.addSeries({
 	    	    type: 'column', 
-		        name: '总计', 
+		        name: '<%=totalRow.get(0)%>', 
 		        data: totalRowData
 	         });
 	var pieData=[];
     <%
     int searchType=(Integer)(request.getAttribute("searchType"));
+    int patientArea=(Integer)(request.getAttribute("patientArea"));
           //循环每行数据
 		  for(int i = 0 ;i < (data.size()-1);i++)
 		  {
@@ -217,11 +246,22 @@ function genertateData(chartId){
 			    }
 				if(searchType==1)
 				{%>
+				var yAxisName=$("input[name='yAxisName']:checked").val();
+				if(yAxisName!=3)
+				{
 				pieData.push(
 						{name: onelinetitle, 
 					        y: onelinedata[0]
 					    });
-				   
+				}
+				else
+				{
+					chart.addSeries({
+			    	    type: 'spline', 
+				        name: onelinetitle, 
+				        data: onelinedata
+			       	});
+				}
 				<%}
 				else{%>
 				   	chart.addSeries({
