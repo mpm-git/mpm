@@ -25,20 +25,22 @@ import cn.com.mwsn.mpm.service.UserService;
  */
 @ParentPackage(value="json-default")
 @Results({ @Result(name = "success", location = "/WEB-INF/pages/stat/right.jsp"),
-	@Result(name = "error", location = "/error/error.jsp") })
-public class FeatureListAction  extends ActionSupport {
+	@Result(name = "error", location = "/error/error.jsp"),
+	@Result(name="to_update_page", location="/WEB-INF/pages/stat/rightUpdate.jsp"),})
+public class RoleListAction  extends ActionSupport {
 	private static final long serialVersionUID = 7028939684771417972L;
-	private static final Logger log = Logger.getLogger(FeatureListAction.class);
+	private static final Logger log = Logger.getLogger(RoleListAction.class);
 	@Autowired
 	private UserService userService;
 	
 	private List<List<String>> aaData;
 	
+	private int userId;
+	
 	private String message;
 	
 	@Action(value = "get_all_users_features", results = { @Result(name = "success", type = "json") }	)
 	public String getUsersFeatures(){
-		System.out.println("11111");
 //		HttpServletRequest request = Struts2Utils.getRequest();
 //		String page=request.getParameter("page");
 //		String rows=request.getParameter("rows");
@@ -52,7 +54,7 @@ public class FeatureListAction  extends ActionSupport {
 			ls.add(user.getStaffNum());
 			ls.add(user.getStaffNum());
 			ls.add(user.getUserRole());
-			ls.add("<a href='javascript:void(0)' onclick='delete_feature("+user.getId()+")'>删除</a> <a href='javascript:void(0)'>修改</a>");
+			ls.add("<a href='javascript:void(0)' onclick='delete_feature("+user.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='redirectJsp("+user.getId()+")'>修改</a>");
 			ls.add("这里是备注内容！");
 //			aaData+=ls.toString()+",";
 			aaData.add(ls);
@@ -67,7 +69,6 @@ public class FeatureListAction  extends ActionSupport {
 	public String delteFeature(){
 		HttpServletRequest request = Struts2Utils.getRequest();
 		String id=request.getParameter("id");
-		System.out.println("id:"+id);
 		if(null!=id && !"".equals(id)){
 				userService.remove(User.class, Integer.parseInt(id));
 				message="delete_success";
@@ -77,6 +78,24 @@ public class FeatureListAction  extends ActionSupport {
 		return "success";
 	}
 
+//	@Action(value = "to_update_page")
+//	public String redirectPage(){
+//		HttpServletRequest request = Struts2Utils.getRequest();
+//		String id=request.getParameter("id");
+//		if(null!=id && !"".equals(id))
+//		userId=Integer.parseInt(id);
+//		return "to_update_page";
+//	}
+	
+	@Override
+	public String execute() throws Exception {
+		HttpServletRequest request = Struts2Utils.getRequest();
+		String id=request.getParameter("id");
+		if(null!=id && !"".equals(id))
+		userId=Integer.parseInt(id);
+		return "to_update_page";
+	}
+	
 	public List<List<String>> getAaData() {
 		return aaData;
 	}
@@ -91,6 +110,14 @@ public class FeatureListAction  extends ActionSupport {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 
