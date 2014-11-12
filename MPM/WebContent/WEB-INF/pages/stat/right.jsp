@@ -19,6 +19,8 @@
 <script src="<s:url value='/javascript/highcharts.js'/>" type="text/javascript"></script>
 
 <script type="text/javascript">
+var start;
+var total;
 $(function(){
 	G.req(["gPopMenu"],function(j){j("#aMenu");});
 	G.req(["gPopMenu"],function(j){j("#bMenu");});
@@ -33,21 +35,21 @@ $(function(){
 	$( "input:submit", ".wrap" ).button();
 	
 	init_feature_table();
-/* 	$('#example').dataTable({
+/* 	$('#right_example').dataTable({
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers"
 	}); */
 });
 
 function init_feature_table(){
-	alert('aaaaa');
-$('#example').dataTable({
+$('#right_example').dataTable({
 			"bPaginate": true,//翻页功能
 			"bSort": false,
 			"bJQueryUI": true,
 	        "sPaginationType": "full_numbers",
 	        "bRetrieve": true,
 	        "bDestroy":true,
+	        "bStateSave": true,
 	        "sAjaxSource" :"get_all_users_features.action?"+new Date().getTime(),
 	         "aoColumnDefs": [
 					{
@@ -111,12 +113,41 @@ function delete_feature(id){
         	},    
         dataType : 'json',    
         success : function(data) {
-        	console.info(data.message=='delete_success');
+        	/* console.info(data.message=='delete_success');
         	if(data.message=='delete_success'){
         		init_feature_table();
-        	}
+        	} */
+        	if (data.message =='delete_success') 
+        	{ 
+	        	alert('删除成功!'); 
+	        	start = $("#right_example").dataTable().fnSettings()._iDisplayStart; 
+	        	total = $("#right_example").dataTable().fnSettings().fnRecordsDisplay(); 
+	        	window.location.reload(); 
+	        	if((total-start)==1){ 
+		        	if (start > 0) { 
+		        	$("#right_example").dataTable().fnPageChange( 'previous', true ); 
+		        	} 
+	        	} 
+        	} 
+        	else 
+        	{ 
+        		alert('删除发生错误，请联系管理员!'); 
+        	} 
         	
         }
+    });  
+}
+
+//跳转到修改页面
+function redirectJsp(id){
+	alert(1111);
+	$.ajax({    
+        url : '../stat/role-list.action',    
+        type : 'post',    
+        data : {
+        	'id': id
+        	},    
+        dataType : 'json',    
     });  
 	
 }
@@ -144,7 +175,7 @@ function delete_feature(id){
         </li>
       </ul>
       <div style="padding-top: 20px">
-        <table cellpadding="0" cellspacing="0" border="0" class="display" id="example">
+        <table cellpadding="0" cellspacing="0" border="0" class="display" id="right_example">
        <thead>
             <tr>
               <th width="20%">姓名</th>
