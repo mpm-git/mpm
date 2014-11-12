@@ -39,6 +39,8 @@ public class RoleListAction  extends ActionSupport {
 	
 	private String message;
 	
+	private User user;
+	
 	@Action(value = "get_all_users_features", results = { @Result(name = "success", type = "json") }	)
 	public String getUsersFeatures(){
 //		HttpServletRequest request = Struts2Utils.getRequest();
@@ -78,14 +80,34 @@ public class RoleListAction  extends ActionSupport {
 		return "success";
 	}
 
-//	@Action(value = "to_update_page")
-//	public String redirectPage(){
-//		HttpServletRequest request = Struts2Utils.getRequest();
-//		String id=request.getParameter("id");
-//		if(null!=id && !"".equals(id))
-//		userId=Integer.parseInt(id);
-//		return "to_update_page";
-//	}
+	@Action(value = "get_user_by_id", results = { @Result(name = "success", type = "json") }	)
+	public String redirectPage(){
+		HttpServletRequest request = Struts2Utils.getRequest();
+		String id=request.getParameter("id");
+		if(null!=id && !"".equals(id)){
+			user=userService.findBy(User.class, "id", Integer.parseInt(id));
+		}else{
+			return "error";
+		}
+		return "success";
+	}
+	
+	@Action(value = "update_user_role", results = { @Result(name = "success", type = "json") }	)
+	public String updateUserRole(){
+		HttpServletRequest request = Struts2Utils.getRequest();
+		String id=request.getParameter("id");
+		if(null!=id && !"".equals(id)){
+			user=userService.findBy(User.class, "id", Integer.parseInt(id));
+		}
+		String userRole=request.getParameter("userRole");
+		if(null!=userRole && !"".equals(userRole)){
+			user.setUserRole(userRole);
+			userService.merge(user);
+		}else{
+			return "error";
+		}
+		return "success";
+	}
 	
 	@Override
 	public String execute() throws Exception {
@@ -119,6 +141,14 @@ public class RoleListAction  extends ActionSupport {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 

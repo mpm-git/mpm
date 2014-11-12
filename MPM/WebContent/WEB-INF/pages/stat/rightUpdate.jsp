@@ -19,8 +19,7 @@
 <script src="<s:url value='/javascript/highcharts.js'/>" type="text/javascript"></script>
 
 <script type="text/javascript">
-var start;
-var total;
+var id = <%=request.getAttribute("userId")%> ;
 $(function(){
 	G.req(["gPopMenu"],function(j){j("#aMenu");});
 	G.req(["gPopMenu"],function(j){j("#bMenu");});
@@ -33,13 +32,50 @@ $(function(){
 	$( "#beginStatDate" ).datepicker();
 	$( "#endStatDate" ).datepicker();
 	$( "input:submit", ".wrap" ).button();
+
 	
-	init_feature_table();
+	 
+	 $.ajax({    
+	     url : '../stat/get_user_by_id.action',    
+	     type : 'post',    
+	     data : {
+	     	'id': id
+	     	},    
+	     dataType : 'json',
+	     success:function(data){
+	    	 var user=data.user;
+	    	 $('#rightUpdate_name').html(user.name);
+	    	 $('#rightUpdate_staffNum').html(user.staffNum);
+	    	 $("#rightUpdate_select_role").val(user.userRole); 
+	     }
+ 	});  
+	 
+	
 /* 	$('#right_example').dataTable({
 		"bJQueryUI": true,
 		"sPaginationType": "full_numbers"
 	}); */
 });
+	 function updataRole(){
+		var userRole= $('#rightUpdate_select_role').val();
+		 $.ajax({    
+		     url : '../stat/update_user_role.action',    
+		     type : 'post',    
+		     data : {
+		    	 'id':id,
+		     	'userRole':userRole
+		     	},    
+		     dataType : 'json',
+		     success:function(data){
+		    	 if(data.message='success'){
+		    		 alert('修改成功');
+		    		 window.location="../stat/user-right-stat.action";
+		    	 }else{ 
+		    		 alert('修改失败');
+		    	 }
+		     }
+	 	});  
+	 }
 
 
 </script>
@@ -64,27 +100,68 @@ $(function(){
         </li>
       </ul>
       <div style="padding-top: 20px">
-        <table bordercolor="#000000" border=0 cellpadding="0"
+  <%--       <table bordercolor="#000000" border=0 cellpadding="0"
 							cellspacing="0" style="margin-top: 100px; margin-left: 90px;">
 				<tr>
 					<td>名字:</td>
-					<td></td>
+					<td id="rightUpdate_name"></td>
 				</tr>
 				<tr>
 					<td>工号:</td>
-					<td></td>
+					<td id="rightUpdate_staffNum"></td>
 				</tr>
 				<tr>
 					<td>请选择角色:</td>
 					<td>
 						<select id="rightUpdate_select_role">
-							<option value="1">18-21</option>   
-							<option value="2">22-25</option>   
+							<option value="管理员">管理员</option>   
+							<option value="普通员工">普通员工</option>   
 						</select>
 					</td>
 				</tr>
 							
-			</table>
+			</table> --%>
+					<div class="STYLE1" id="newrfid">
+						修改用户角色
+						<div id="alert" align="left"
+							style="color: #FF0000; margin-top: 80px; margin-left: 30px;"></div>
+						<table bordercolor="#000000" border=0 cellpadding="0"
+							cellspacing="0" style="margin-top: 100px; margin-left: 90px;">
+							<tr>
+								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;名字：</td>
+								<td id="rightUpdate_name"></td>
+							</tr>
+							<tr>
+								<td height="19"></td>
+								<td>
+									<area />
+								</td>
+							</tr>
+							<tr>
+								<td height="13">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+									&nbsp;&nbsp;工号：</td>
+								<td id="rightUpdate_staffNum"></td>
+							</tr>
+							<tr>
+								<td height="19"></td>
+								<td>
+									<area />
+								</td>
+							</tr>
+							<tr>
+								<td height="34">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									请选择用户类型：</td>
+								<td><SELECT id="rightUpdate_select_role" class="u11">
+										<OPTION value="管理员">管理员</OPTION>
+										<OPTION value="普通用户">普通用户</OPTION>
+								</SELECT></td>
+							</tr>
+						</table>
+						<div class="btnsave">
+							<a href="javascript:void(0)" onclick="updataRole()"><img
+								 />修    改</a>
+						</div>
+					</div>
     </div>
   </div>
   
