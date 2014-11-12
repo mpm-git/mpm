@@ -89,6 +89,7 @@ public class RoleListAction  extends ActionSupport {
 	
 	@Override
 	public String execute() throws Exception {
+
 		HttpServletRequest request = Struts2Utils.getRequest();
 		String id=request.getParameter("id");
 		if(null!=id && !"".equals(id))

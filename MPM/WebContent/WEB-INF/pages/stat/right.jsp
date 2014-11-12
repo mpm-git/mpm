@@ -140,15 +140,15 @@ function delete_feature(id){
 
 //跳转到修改页面
 function redirectJsp(id){
-	alert(1111);
-	$.ajax({    
+	window.location="../stat/role-list.action?id="+id;
+/* 	$.ajax({    
         url : '../stat/role-list.action',    
         type : 'post',    
         data : {
         	'id': id
         	},    
         dataType : 'json',    
-    });  
+    });  */ 
 	
 }
 
