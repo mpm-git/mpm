@@ -55,8 +55,16 @@ public class UserServiceImpl extends TransactionalServiceImpl implements
 		}
 		return true;
 	}
-	
-	
+
+	@Override
+	public <T> List<T> findUserAndDoctor() {
+		return this.find("select new map(u.staffNum as staffNum,u.description as description,u.userRole as userRole,u.id as userId,d.name as name) from User u,Doctor d where u.staffNum=d.doctorId", new Object[]{});
+	}
+
+	@Override
+	public <T> List<T> findUserAndNurse() {
+		return this.find("select new map(u.staffNum as staffNum,u.description as description,u.userRole as userRole,u.id as userId,n.name as name) from User u,Nurse n where u.staffNum=n.nurseNo", new Object[]{});
+	}
 	
 
 }

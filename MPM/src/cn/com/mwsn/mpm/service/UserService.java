@@ -1,5 +1,7 @@
 package cn.com.mwsn.mpm.service;
 
+import java.util.List;
+
 import cn.com.mwsn.frame.service.TransactionalService;
 import cn.com.mwsn.mpm.entity.User;
 
@@ -34,5 +36,21 @@ public interface UserService extends TransactionalService{
 	 * 	如果密码修改成功，则返回true，否则返回false
 	 */
 	public boolean changePassWord(User user);
+	
+	/**
+	 * 查询User表和Doctor关联数据
+	 * @param null
+	 * @return
+	 * 	根据staffNum关联关系返回List的泛型
+	 */
+	public <T> List<T> findUserAndDoctor();
+	
+	/**
+	 * 查询User表和Nurse关联数据
+	 * @param null
+	 * @return
+	 * 	根据staffNum关联关系返回List的泛型
+	 */
+	public <T> List<T> findUserAndNurse();
 
 }
