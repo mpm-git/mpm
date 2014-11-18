@@ -89,7 +89,6 @@
 		        	},    
 		        dataType : 'json',    
 		        success : function(data) {
-		        	console.info(data.message);
 		        	if(data.status=='success'){
 		        		$('#password_velidate').color="#00FF00";
 		        	}

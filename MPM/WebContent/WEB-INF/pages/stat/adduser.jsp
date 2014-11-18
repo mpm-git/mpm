@@ -15,6 +15,12 @@
 	href="<s:url value='/styles/smoothness/jquery-ui-1.8.16.custom.css'/>" />
 <link rel="stylesheet" type="text/css"
 	href="<s:url value='/styles/jquery_table_jui.css'/>">
+	
+<style type="text/css">
+	.select_width{
+		width:100%
+	}
+</style>
 
 <script type="text/javascript"
 	src="<s:url value='/javascript/jquery-1.7.min.js'/>"></script>
@@ -45,6 +51,23 @@
 			"bJQueryUI" : true,
 			"sPaginationType" : "full_numbers"
 		});
+		$.ajax({    
+	        url : '../system/findStaffNumByType.action',    
+	        type : 'post',    
+	        data : {
+	        	'jobType': $('#jobType').val()
+	        	},    
+	        dataType : 'json',    
+	        success : function(data) {
+	        	var staffNums=data.staffNums;
+	        	if($('#jobType').val()=='医生'){
+	        		for(var i=0;i<staffNums.length;i++){
+	        			console.info(staffNums[i].doctorId);
+	        			$('#staffNum').append("<option value='"+staffNums[i].doctorId+"'>"+staffNums[i].doctorId+"</option>"); 
+	        		}
+	        	}
+	        }
+	    });
 
 	});
 </script>
@@ -72,6 +95,31 @@
 		}
 		alert("添加成功！");
 		document.adduserForm.submit();
+	}
+	
+	function findStaffNum(){
+		$('#staffNum').html('');
+		var jobType=$('#jobType').val();
+		$.ajax({    
+	        url : '../system/findStaffNumByType.action',    
+	        type : 'post',    
+	        data : {
+	        	'jobType': jobType
+	        	},    
+	        dataType : 'json',    
+	        success : function(data) {
+	        	var staffNums=data.staffNums;
+	        	if(jobType=='医生'){
+	        		for(var i=0;i<staffNums.length;i++){
+	        			$('#staffNum').append("<option value='"+staffNums[i].doctorId+"'>"+staffNums[i].doctorId+"</option>"); 
+	        		}
+	        	}else if(jobType=='护士'){
+	        		for(var i=0;i<staffNums.length;i++){
+	        			$('#staffNum').append("<option value='"+staffNums[i].nurseNo+"'>"+staffNums[i].nurseNo+"</option>"); 
+	        		}
+	        	}
+	        }
+	    });  
 	}
 </script>
 </head>
@@ -120,8 +168,22 @@
 								</td>
 							</tr>
 							<tr>
+								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;职工类型：</td>
+								<td><SELECT id="jobType" class="u11 select_width" name="jobType" onchange="findStaffNum();">
+										<OPTION value="医生">医生</OPTION>
+										<OPTION value="护士">护士</OPTION>
+								</SELECT></td>
+							</tr>
+							<tr>
+								<td height="19"></td>
+								<td>
+									<area />
+								</td>
+							</tr>
+							<tr>
 								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;工号：</td>
-								<td><input type="text" id="staffNum" name="staffNum" /></td>
+								<td><SELECT id="staffNum" class="u11 select_width" name="staffNum">
+								</SELECT></td>
 							</tr>
 							<tr>
 								<td height="19"></td>
@@ -132,7 +194,7 @@
 							<tr>
 								<td height="34">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 									用户类型：</td>
-								<td><SELECT id="utype" class="u11" name="utype">
+								<td><SELECT id="utype" class="u11 select_width" name="utype">
 										<OPTION value="管理员">管理员</OPTION>
 										<OPTION value="普通用户">普通用户</OPTION>
 								</SELECT></td>
