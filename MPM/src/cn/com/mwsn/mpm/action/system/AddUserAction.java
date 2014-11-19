@@ -17,6 +17,7 @@ import cn.com.mwsn.mpm.entity.Doctor;
 import cn.com.mwsn.mpm.entity.Nurse;
 import cn.com.mwsn.mpm.entity.User;
 import cn.com.mwsn.mpm.service.DoctorService;
+import cn.com.mwsn.mpm.service.NurseService;
 import cn.com.mwsn.mpm.service.UserService;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -36,6 +37,8 @@ public class AddUserAction extends ActionSupport {
 	private UserService userService;
 	@Autowired
 	private DoctorService doctorService;
+	@Autowired
+	private NurseService nurseService;
 	
 	private List staffNums;
 	
@@ -73,9 +76,9 @@ public class AddUserAction extends ActionSupport {
 		HttpServletRequest request=Struts2Utils.getRequest();
 		String jobType=request.getParameter("jobType");
 		if("医生".equals(jobType)){
-			staffNums=doctorService.findAll(Doctor.class);
+			staffNums=doctorService.findNotBingDoctor();
 		}else if("护士".equals(jobType)){
-			staffNums=doctorService.findAll(Nurse.class);
+			staffNums=nurseService.findNotBingNurse();
 		}else{
 			return "error";
 		}

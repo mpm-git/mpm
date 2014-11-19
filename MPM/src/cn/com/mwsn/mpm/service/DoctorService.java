@@ -12,6 +12,18 @@ public interface DoctorService extends TransactionalService {
 	 * @return
 	 */
 	public List<Doctor> queryAllDoctors();
+	
+	/**
+	 * 根据员工好查询所有医生
+	 * @return
+	 */
 	public Doctor queryDoctor(String empNO);
+	
+	
+	/**
+	 * 查询所有未绑定权限的医生
+	 * @return
+	 */
+	public List<Doctor> findNotBingDoctor();
 }
 

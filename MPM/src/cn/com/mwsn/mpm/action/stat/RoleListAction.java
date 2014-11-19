@@ -116,7 +116,12 @@ public class RoleListAction  extends ActionSupport {
 		HttpServletRequest request = Struts2Utils.getRequest();
 		String id=request.getParameter("id");
 		if(null!=id && !"".equals(id)){
-				userService.remove(User.class, Integer.parseInt(id));
+//				userService.remove(User.class, Integer.parseInt(id));
+				User user=userService.find(User.class, Integer.parseInt(id));
+				user.setUserRole("");
+				if(user!=null){
+					userService.merge(user);
+				}
 				message="delete_success";
 		}else{
 			message="delete_faile";
