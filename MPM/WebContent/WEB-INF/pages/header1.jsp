@@ -15,7 +15,7 @@
 
         <div class="gheader-wp">
         <div class="gheader-wp-b">
-        <div class="gheader">
+        <div class="gheader" style="z-index: 1000">
             <a class="gheader-logo"  href="/" title="重点人员监管信息"></a>
             <ul class="gheader-nav">
             	<li><a class="m_ment-title" href="../mainpage/main-page.action">首页</a></li>
@@ -96,6 +96,7 @@
                 			<li><a href="<s:url action="../stat/user-right-stat.action" />">用户权限管理</a></li>
                 			<li><a href="<s:url action="../stat/change-pswd-stat.action" />">修改密码</a></li>
                 			<li><a href="<s:url action="../stat/add-user-stat.action" />">添加用户</a></li>
+                			<li><a href="<s:url action="../stat/health-popularization.action" />">健康普及管理</a></li>
                 		</ul>
                 	</div>
                 </li>
