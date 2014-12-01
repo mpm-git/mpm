@@ -2,6 +2,7 @@ package cn.com.mwsn.mpm.action.stat;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
@@ -21,9 +22,14 @@ import com.opensymphony.xwork2.ActionSupport;
 @ParentPackage(value="json-default")
 @Results({ @Result(name = "success", location = "/WEB-INF/pages/stat/healthManagement.jsp"),
 	@Result(name = "error", location = "/error/error.jsp") })
-public class HealthPopularization extends ActionSupport{
+public class HealthPopularizationAction extends ActionSupport{
 	
-	private static final long serialVersionUID = 7028939684771417971L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8479567996952946833L;
+
+	private static final Logger log = Logger.getLogger(HealthPopularizationAction.class);
 	
 	@Autowired
 	private HealthPopularizationService hService;
@@ -35,9 +41,8 @@ public class HealthPopularization extends ActionSupport{
 		return "success";
 	}
 	
-	@Action(value = "save_content", results = { @Result(name = "success", type = "json") }	)
-	private String saveHtmlContent(){
-		System.out.println("in saveHtmlContent");
+	@Action(value = "save_html_content", results = { @Result(name = "success", type = "json") }	)
+	public String saveHtmlContent(){
 		HttpServletRequest request=Struts2Utils.getRequest();
 		String htmlContent=request.getParameter("htmlContent");
 		HealthContent healthContent=new HealthContent(htmlContent);

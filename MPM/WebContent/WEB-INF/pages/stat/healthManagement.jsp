@@ -135,16 +135,18 @@ function createEditor() {
     UE.getEditor('editor');
 }
 function getAllHtml() {
-   var html= UE.getEditor('editor').getAllHtml();
+   //var html= UE.getEditor('editor').getAllHtml();
+   var html=UE.getEditor('editor').getContent();
+   console.info(html);
 	$.ajax({    
-        url : '../stat/save_content.action',    
+        url : 'save_html_content.action',    
         type : 'post',    
         data : {
         	'htmlContent': html
         	},    
         dataType : 'json',    
         success : function(data) {
-        	console.info(data);
+        	console.info(data.message);
         	if(data.message=='success'){
         		alert('保存成功');
         	}
