@@ -45,7 +45,8 @@ public class HealthPopularizationAction extends ActionSupport{
 	public String saveHtmlContent(){
 		HttpServletRequest request=Struts2Utils.getRequest();
 		String htmlContent=request.getParameter("htmlContent");
-		HealthContent healthContent=new HealthContent(htmlContent);
+		HealthContent healthContent=new HealthContent();
+		healthContent.setJspContent(htmlContent);
 		try {
 			hService.saveContent(healthContent);
 		} catch (Exception e) {

@@ -14,6 +14,26 @@ public class HealthContent  extends IdEntity {
 	
 	@Lob @Basic(fetch = FetchType.LAZY) @Column(columnDefinition = "TEXT")
 	private String jspContent;
+	
+	private String type;
+	
+	private String title;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getJspContent() {
 		return jspContent;
@@ -21,15 +41,6 @@ public class HealthContent  extends IdEntity {
 
 	public void setJspContent(String jspContent) {
 		this.jspContent = jspContent;
-	}
-
-	public HealthContent(String jspContent) {
-		super();
-		this.jspContent = jspContent;
-	}
-
-	public HealthContent() {
-		super();
 	}
 	
 }
