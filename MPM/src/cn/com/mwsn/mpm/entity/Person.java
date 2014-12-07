@@ -25,7 +25,7 @@ public class Person extends IdEntity {
 	private String inpatientArea;//病区
 	private String empNO;//员工号
 	private int tagID;	//定位标签号
-	private String type;	//类型
+	private String type;	//类型 “1”：医生，“2”:护士，"3":其他（系统管理员等等）
 	public String getName() {
 		return name;
 	}
