@@ -1,5 +1,8 @@
 package cn.com.mwsn.mpm.service.impl;
 
+import java.util.List;
+
+import org.apache.cxf.binding.corba.wsdl.Object;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,21 @@ public class HealthPopularizationServiceImpl  extends TransactionalServiceImpl i
 	@Override
 	public void saveContent(HealthContent htmlContent) {
 		this.save(htmlContent);
+	}
+
+	@Override
+	public List<HealthContent> getAllPages() {
+		return this.findAll(HealthContent.class);
+	}
+
+	@Override
+	public void deleteHealthPageById(int id) {
+		HealthContent healthContent=this.remove(HealthContent.class, id);
+	}
+
+	@Override
+	public HealthContent findHealthPageByid(int id) {
+		return this.find(HealthContent.class, id);
 	}
 
 }
