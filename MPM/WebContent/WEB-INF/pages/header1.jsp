@@ -71,6 +71,7 @@
                     			<li><a href="#"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />可视化管理</a></li>
                     			<li><a href="#"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />设备查询</a></li>
                     			<li><a href="#"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />设备控制</a></li>
+                    			<li><a href="<s:url action="../stat/health-popularization.action" />"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />健康普及管理</a></li>
                     		</ul>
                 		</div>
                 </li>
@@ -96,7 +97,6 @@
                 			<li><a href="<s:url action="../stat/user-right-stat.action" />">用户权限管理</a></li>
                 			<li><a href="<s:url action="../stat/change-pswd-stat.action" />">修改密码</a></li>
                 			<li><a href="<s:url action="../stat/add-user-stat.action" />">添加用户</a></li>
-                			<li><a href="<s:url action="../stat/health-popularization.action" />">健康普及管理</a></li>
                 		</ul>
                 	</div>
                 </li>

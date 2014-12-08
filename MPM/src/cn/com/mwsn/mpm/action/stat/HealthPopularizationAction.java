@@ -1,5 +1,8 @@
 package cn.com.mwsn.mpm.action.stat;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,8 @@ public class HealthPopularizationAction extends ActionSupport{
 	private List<List<String>> aaData=new ArrayList<List<String>>();
 	
 	private int pageId;
+	
+	private String types;   //菜单1，菜单2    类型1，类型2
 	
 	@Override
 	public String execute() throws Exception {
@@ -123,6 +128,7 @@ public class HealthPopularizationAction extends ActionSupport{
 		String id=request.getParameter("id");
 		if(null!=id && !"".equals(id))
 		pageId=Integer.parseInt(id);
+		types=getPropertiesValue();
 		return "to_update_health_page";
 	}
 
@@ -149,7 +155,38 @@ public class HealthPopularizationAction extends ActionSupport{
 	public void setPageId(int pageId) {
 		this.pageId = pageId;
 	}
+
+	public String getTypes() {
+		return types;
+	}
+
+	public void setTypes(String types) {
+		this.types = types;
+	}
 	
-	
+	public String getPropertiesValue() {
+		String path = menus.class.getResource("menus.properties").toString();
+		String file=path.substring(6, path.length());
+		BufferedReader reader = null;
+		String tempString = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			// 一次读入一行，直到读入null为文件结束
+			if ((tempString = reader.readLine()) == null) {
+				return null;
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e1) {
+				}
+			}
+		}
+		return tempString;
+	}
 
 }

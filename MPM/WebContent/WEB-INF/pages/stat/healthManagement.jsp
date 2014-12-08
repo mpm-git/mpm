@@ -68,12 +68,21 @@
 		$("#endStatDate").datepicker();
 		$("input:submit", ".wrap").button();
 		
-		$('#pageType').change(function(){
+		var types=<%=request.getParameter("types")%>;
+		console.info(types);
+		if(types!=null & types!=''){
+			var arr=new Array();
+			arr=types.split(',');
+			for(var i=0;i<arr.size();i++){
+				$('#pageType').append("<option value='"+arr[i]+"'>"+arr[i]+"</option>");
+			}
+		}
+		/* $('#pageType').change(function(){
 			var type=$('#pageType').val();
 			if(type==1){
 				$('#typeTr').show();
 			}
-		});
+		}); */
 	});
 </script>
 </head>
@@ -112,8 +121,6 @@
 						<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;类型：</td>
 						<td><SELECT id="pageType" style="width: 131px;"
 							name="type">
-								<OPTION value="0">页面</OPTION>
-								<OPTION value="1">图片</OPTION>
 						</SELECT></td>
 					</tr>
 					<tr>
