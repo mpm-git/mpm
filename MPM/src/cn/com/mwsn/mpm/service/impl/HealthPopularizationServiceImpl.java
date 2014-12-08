@@ -1,6 +1,8 @@
 package cn.com.mwsn.mpm.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cxf.binding.corba.wsdl.Object;
 import org.apache.log4j.Logger;
@@ -30,12 +32,30 @@ public class HealthPopularizationServiceImpl  extends TransactionalServiceImpl i
 
 	@Override
 	public void deleteHealthPageById(int id) {
-		HealthContent healthContent=this.remove(HealthContent.class, id);
+		this.remove(HealthContent.class, id);
 	}
 
 	@Override
 	public HealthContent findHealthPageByid(int id) {
-		return this.find(HealthContent.class, id);
+		System.out.println("in findHealthPageByid method");
+		HealthContent heal=null;
+		try {
+			heal=this.find(HealthContent.class, id);
+			System.out.println(heal.getTitle());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return heal;
+	}
+
+	@Override
+	public void setPageIsUsed(String columnName,String value, int isUsed) {
+		String queryString="update HealthContent set isUsed="+isUsed+" where "+columnName+"='"+value+"'";
+		try {
+			this.update(queryString, new Object[]{});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

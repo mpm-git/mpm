@@ -30,9 +30,10 @@
 <script type="text/javascript" charset="utf-8"
 	src="/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8"
-	src="/ueditor/ueditor.all.min.js">
+	src="/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="/MPM/upload/ajaxfileupload.js"> </script>
 	
-</script>
+
 <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
 <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
 <script type="text/javascript" charset="utf-8"
@@ -68,14 +69,47 @@
 		$("#endStatDate").datepicker();
 		$("input:submit", ".wrap").button();
 		
-		var types=<%=request.getParameter("types")%>;
-		console.info(types);
-		if(types!=null & types!=''){
-			var arr=new Array();
-			arr=types.split(',');
-			for(var i=0;i<arr.size();i++){
-				$('#pageType').append("<option value='"+arr[i]+"'>"+arr[i]+"</option>");
-			}
+
+		
+		$.ajax({    
+	        url : '../stat/findtypes.action',    
+	        type : 'post',    
+	        dataType : 'json', 
+	        async: false, 
+	        success : function(data) {
+	        	var types=data.types;
+				if(types!=null & types!=''){
+					var arr=new Array();
+					arr=types.split(',');
+					for(var i=0;i<arr.length;i++){
+						$('#pageType').append("<option value='"+arr[i]+"'>"+arr[i]+"</option>");
+					}
+				}
+	        	
+	        }
+	    });
+		var id=<%= request.getParameter("id")%>;
+		if(id!=null){
+			alert(id);
+			$.ajax({    
+		        url : '../stat/find_health_content.action',    
+		        type : 'post',    
+		        dataType : 'json', 
+		        async: false, 
+		        data:{
+		        	'id':id
+		        },
+		        success : function(data) {
+		        	alert(data.message);
+		        	if(data.message=='success'){
+		        		var healthContent=data.healthContent1;
+		        		$('#title').val(healthContent.title);
+		        		$('#type').val(healthContent.type);
+		        		$('#text').val(healthContent.imagePath);
+		        		UE.getEditor('editor').setContent(healthContent.jspContent);
+		        	}
+		        }
+		    });
 		}
 		/* $('#pageType').change(function(){
 			var type=$('#pageType').val();
@@ -84,6 +118,28 @@
 			}
 		}); */
 	});
+	
+	function ajaxFileUpload() {
+		$("#personInfo_form1").ajaxStart(function() {
+			$(this).show();
+		}).ajaxComplete(function() {
+			$(this).hide();
+		});
+
+		$.ajaxFileUpload({
+					url : "/ueditor/jsp/controller.jsp?action=uploadimage",
+					secureuri : false,
+					fileElementId : 'file',
+					dataType : 'json',
+					success : function(data) {
+						alert('上传成功');
+						$("#text").show();
+						$("#text").val("/ueditor"+data.url);
+					}
+		
+				});
+		return false;
+	}
 </script>
 </head>
 <body>
@@ -104,11 +160,10 @@
 						<!-- <p class="titles-b"></p> -->
 					</li>
 				</ul>
-				<form action="">
 				<table bordercolor="#000000" border=0 cellpadding="0"
 					cellspacing="0" style="margin-top: 20px;">
 					<tr>
-						<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;标题：</td>
+						<td  class="odd">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;标题：</td>
 						<td><input type="text" id="title" name="title" /></td>
 					</tr>
 					<tr>
@@ -118,7 +173,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;类型：</td>
+						<td  class="odd">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;类型：</td>
 						<td><SELECT id="pageType" style="width: 131px;"
 							name="type">
 						</SELECT></td>
@@ -129,13 +184,21 @@
 							<area />
 						</td>
 					</tr>
-					<tr id="typeTr" style="display: none;">
-						<td class="odd">上传图片：</td>
+					<tr>
+						<td class="odd">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;上传路径：</td>
 						<td>
-							<input type="file" name="file"/>
+							<form id="personInfo_form1" method="post" enctype="multipart/form-data"> 
+								<input id="file" type="file" value="选择文件" name="upfile"><input type="button" value="上传" id="uploadImage" onclick="ajaxFileUpload();">
+							</form>
+							<input style="display: none;" id="text" type="text"/>
 						</td>
 					</tr>
 				</table>
+				<!-- <form id="personInfo_form1" method="post" enctype="multipart/form-data"> 
+			 		&nbsp;&nbsp;&nbsp;&nbsp;上传路径：<input id="file" type="file" value="选择文件" name="upfile">
+					<input type="button" value="上传" id="uploadImage" onclick="ajaxFileUpload();">
+				</form>
+					<input id="text" readonly type="text"/>  -->
 				<div style="padding-top: 20px">
 					<div>
 						<script id="editor" type="text/plain"
@@ -183,7 +246,6 @@
 					</div>
 
 				</div>
-				</form>
 			</div>
 
 			<s:include value="../footer.jsp"></s:include>
@@ -218,13 +280,17 @@
 			url : 'save_html_content.action',
 			type : 'post',
 			data : {
-				'htmlContent' : html
+				'htmlContent' : html,
+				'title':$('#title').val(),
+				'type':$('#pageType').val(),
+				'imagePath':$('#text').val()
 			},
 			dataType : 'json',
 			success : function(data) {
 				console.info(data.message);
 				if (data.message == 'success') {
 					alert('保存成功');
+					window.location="../stat/health-popularization.action";
 				}
 				if (data.message == 'error') {
 					alert('保存失败');

@@ -15,7 +15,7 @@ public class HealthContent  extends IdEntity {
 	@Lob @Basic(fetch = FetchType.LAZY) @Column(columnDefinition = "TEXT")
 	private String jspContent;  //html 文章内容
 	
-	private int type;   //保存类型  0 保存文章 1 保存图片+文章
+	private String type;   //保存类型
 	
 	private String title;  //标题
 	
@@ -23,6 +23,16 @@ public class HealthContent  extends IdEntity {
 	
 	private String imagePath;  //图片路径
 	
+	private String descr;
+	
+	public String getDescr() {
+		return descr;
+	}
+
+	public void setDescr(String descr) {
+		this.descr = descr;
+	}
+
 	public String getImagePath() {
 		return imagePath;
 	}
@@ -40,11 +50,11 @@ public class HealthContent  extends IdEntity {
 	}
 
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 

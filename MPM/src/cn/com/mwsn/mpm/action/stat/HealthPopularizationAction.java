@@ -1,10 +1,14 @@
 package cn.com.mwsn.mpm.action.stat;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,6 +53,8 @@ public class HealthPopularizationAction extends ActionSupport{
 	
 	private String types;   //菜单1，菜单2    类型1，类型2
 	
+	private HealthContent healthContent1;
+	
 	@Override
 	public String execute() throws Exception {
 		return "success";
@@ -58,8 +64,20 @@ public class HealthPopularizationAction extends ActionSupport{
 	public String saveHtmlContent(){
 		HttpServletRequest request=Struts2Utils.getRequest();
 		String htmlContent=request.getParameter("htmlContent");
+		String title=request.getParameter("title");
+		String type=request.getParameter("type");
+		String imagePath=request.getParameter("imagePath");
+		String descr=request.getParameter("descr");
 		HealthContent healthContent=new HealthContent();
 		healthContent.setJspContent(htmlContent);
+		healthContent.setTitle(title);
+		healthContent.setImagePath(imagePath);
+		healthContent.setType(type);
+		healthContent.setDescr(descr);
+		//修改其他类型为type的为未使用
+		hService.setPageIsUsed("type",type, 0);
+		//设置新添的内容为已使用
+		healthContent.setIsUsed(1);//已使用
 		try {
 			hService.saveContent(healthContent);
 		} catch (Exception e) {
@@ -77,21 +95,18 @@ public class HealthPopularizationAction extends ActionSupport{
 			List<String> ls=new ArrayList<String>();
 			ls.add(healthContent.getTitle());
 			ls.add(healthContent.getImagePath());
+			String actionString=null;
 			if(healthContent.getIsUsed()==0){
 				ls.add("未使用");
+				actionString="<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a><a href='javascript:void(0)' onclick='setIsUsed("+healthContent.getId()+","+1+",\""+healthContent.getType()+"\")'> 使用</a>";
 			}else if(healthContent.getIsUsed()==1){
 				ls.add("使用中");
+				actionString="<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a><a href='javascript:void(0)' onclick='setIsUsed("+healthContent.getId()+","+0+",\""+healthContent.getType()+"\")'> 取消</a>";
 			}else{
 				ls.add("");
 			}
-			if(healthContent.getType()==0){
-				ls.add("页面");
-			}else if(healthContent.getType()==1){
-				ls.add("图片");
-			}else{
-				ls.add("");
-			}
-			ls.add("<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a>");
+			ls.add(healthContent.getType());
+			ls.add(actionString);
 			aaData.add(ls);
 		}
 		
@@ -115,7 +130,9 @@ public class HealthPopularizationAction extends ActionSupport{
 	public String findHealthContent(){
 		HttpServletRequest request=Struts2Utils.getRequest();
 		String id=request.getParameter("id");
-		if(id!=null && "".equals(id)){
+		if(id!=null && !"".equals(id)){
+			healthContent1=hService.findHealthPageByid(Integer.parseInt(id));
+			message="success";
 		}else{
 			return this.ERROR;
 		}
@@ -130,6 +147,31 @@ public class HealthPopularizationAction extends ActionSupport{
 		pageId=Integer.parseInt(id);
 		types=getPropertiesValue();
 		return "to_update_health_page";
+	}
+	
+	@Action(value = "findtypes", results = { @Result(name = "success", type = "json") }	)
+	public String findTypes(){
+		types=getPropertiesValue();
+		return "success";
+	}
+	
+	@Action(value = "set_page_used", results = { @Result(name = "success", type = "json") }	)
+	public String setPageIsUsed(){
+		HttpServletRequest request=Struts2Utils.getRequest();
+		String id=request.getParameter("id");
+		String isUsed=request.getParameter("isUsed");
+		String type=request.getParameter("type");
+		if(isUsed!=null & !"".equals(isUsed)){
+			int isUser_=Integer.parseInt(isUsed);
+			//修改其他类型为type的为未使用
+			hService.setPageIsUsed("type",type, 0);
+			hService.setPageIsUsed("id",id, isUser_);
+			message="success";
+		}else{
+			message="error";
+			return this.ERROR;
+		}
+		return "success";
 	}
 
 	public String getMessage() {
@@ -164,29 +206,45 @@ public class HealthPopularizationAction extends ActionSupport{
 		this.types = types;
 	}
 	
+	public HealthContent getHealthContent1() {
+		return healthContent1;
+	}
+
+	public void setHealthContent1(HealthContent healthContent1) {
+		this.healthContent1 = healthContent1;
+	}
+
 	public String getPropertiesValue() {
 		String path = menus.class.getResource("menus.properties").toString();
 		String file=path.substring(6, path.length());
-		BufferedReader reader = null;
-		String tempString = null;
+		Properties prop=new Properties();        
 		try {
-			reader = new BufferedReader(new FileReader(file));
-			// 一次读入一行，直到读入null为文件结束
-			if ((tempString = reader.readLine()) == null) {
-				return null;
-			}
-			reader.close();
+			prop.load(new InputStreamReader(new FileInputStream(file)));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e1) {
-				}
-			}
-		}
-		return tempString;
+		}    
+//		BufferedReader reader = null;
+//		String tempString = null;
+//		try {
+//			reader = new BufferedReader(new FileReader(file));
+//			// 一次读入一行，直到读入null为文件结束
+//			if ((tempString = reader.readLine()) == null) {
+//				return null;
+//			}
+//			reader.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (reader != null) {
+//				try {
+//					reader.close();
+//				} catch (IOException e1) {
+//				}
+//			}
+//		}
+		return prop.getProperty("menus");
 	}
 
 }

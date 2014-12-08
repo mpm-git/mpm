@@ -152,6 +152,37 @@ function updateJsp(id){
 	
 }
 
+//改变使用状态
+function setIsUsed(pageid,isUsed,type){
+	$.ajax({
+		url : 'set_page_used.action',
+		type : 'post',
+		data : {
+			'id':pageid,
+			'isUsed':isUsed,
+			'type':type
+		},
+		dataType : 'json',
+		success : function(data) {
+			console.info(data.message);
+			if (data.message == 'success') {
+				alert('设置成功');
+				start = $("#healthList_example").dataTable().fnSettings()._iDisplayStart; 
+	        	total = $("#healthList_example").dataTable().fnSettings().fnRecordsDisplay(); 
+	        	window.location.reload(); 
+	        	if((total-start)==1){ 
+		        	if (start > 0) { 
+		        	$("#healthList_example").dataTable().fnPageChange( 'previous', true ); 
+		        	} 
+	        	} 
+			}
+			if (data.message == 'error') {
+				alert('设置失败');
+			}
+		}
+	});
+}
+
 
 </script>
 </head>

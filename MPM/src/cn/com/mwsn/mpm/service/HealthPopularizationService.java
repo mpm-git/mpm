@@ -25,4 +25,9 @@ public interface HealthPopularizationService {
 	 * 根据id查询内容
 	 */
 	public HealthContent findHealthPageByid(int id);
+	
+	/**
+	 * 设定所有类型为xxx的page为isUsed
+	 */
+	public void setPageIsUsed(String columnName,String value, int isUsed);
 }
