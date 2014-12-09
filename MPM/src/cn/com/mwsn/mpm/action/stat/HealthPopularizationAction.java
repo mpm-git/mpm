@@ -63,26 +63,38 @@ public class HealthPopularizationAction extends ActionSupport{
 	@Action(value = "save_html_content", results = { @Result(name = "success", type = "json") }	)
 	public String saveHtmlContent(){
 		HttpServletRequest request=Struts2Utils.getRequest();
+		String id=request.getParameter("id");
 		String htmlContent=request.getParameter("htmlContent");
 		String title=request.getParameter("title");
 		String type=request.getParameter("type");
 		String imagePath=request.getParameter("imagePath");
 		String descr=request.getParameter("descr");
-		HealthContent healthContent=new HealthContent();
-		healthContent.setJspContent(htmlContent);
-		healthContent.setTitle(title);
-		healthContent.setImagePath(imagePath);
-		healthContent.setType(type);
-		healthContent.setDescr(descr);
-		//修改其他类型为type的为未使用
-		hService.setPageIsUsed("type",type, 0);
-		//设置新添的内容为已使用
-		healthContent.setIsUsed(1);//已使用
-		try {
-			hService.saveContent(healthContent);
-		} catch (Exception e) {
-			message="error";
-			return this.ERROR;
+		
+		if(id!=null && !"".equals(id)){
+			HealthContent healthContent=hService.findHealthPageByid(Integer.parseInt(id));
+			healthContent.setJspContent(htmlContent);
+			healthContent.setTitle(title);
+			healthContent.setImagePath(imagePath);
+			healthContent.setType(type);
+			healthContent.setDescr(descr);
+			hService.updateHealthContent(healthContent);
+		}else{
+			HealthContent healthContent=new HealthContent();
+			healthContent.setJspContent(htmlContent);
+			healthContent.setTitle(title);
+			healthContent.setImagePath(imagePath);
+			healthContent.setType(type);
+			healthContent.setDescr(descr);
+			//修改其他类型为type的为未使用
+			//hService.setPageIsUsed("type",type, 0);
+			//设置新添的内容为已使用
+			healthContent.setIsUsed(1);//已使用
+			try {
+				hService.saveContent(healthContent);
+			} catch (Exception e) {
+				message="error";
+				return this.ERROR;
+			}
 		}
 		message="success";
 		return "success";
@@ -97,11 +109,11 @@ public class HealthPopularizationAction extends ActionSupport{
 			ls.add(healthContent.getImagePath());
 			String actionString=null;
 			if(healthContent.getIsUsed()==0){
-				ls.add("未使用");
-				actionString="<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a><a href='javascript:void(0)' onclick='setIsUsed("+healthContent.getId()+","+1+",\""+healthContent.getType()+"\")'> 使用</a>";
+				ls.add("无效");
+				actionString="<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a><a title='设置无效' href='javascript:void(0)' onclick='setIsUsed("+healthContent.getId()+","+1+",\""+healthContent.getType()+"\")'> 有效</a>";
 			}else if(healthContent.getIsUsed()==1){
-				ls.add("使用中");
-				actionString="<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a><a href='javascript:void(0)' onclick='setIsUsed("+healthContent.getId()+","+0+",\""+healthContent.getType()+"\")'> 取消</a>";
+				ls.add("有效");
+				actionString="<a href='javascript:void(0)' onclick='delete_page("+healthContent.getId()+")'>删除</a> <a href='javascript:void(0)' onclick='updateJsp("+healthContent.getId()+")'>修改</a><a title='设置有效' href='javascript:void(0)' onclick='setIsUsed("+healthContent.getId()+","+0+",\""+healthContent.getType()+"\")'> 无效</a>";
 			}else{
 				ls.add("");
 			}
@@ -160,11 +172,11 @@ public class HealthPopularizationAction extends ActionSupport{
 		HttpServletRequest request=Struts2Utils.getRequest();
 		String id=request.getParameter("id");
 		String isUsed=request.getParameter("isUsed");
-		String type=request.getParameter("type");
+		//String type=request.getParameter("type");
 		if(isUsed!=null & !"".equals(isUsed)){
 			int isUser_=Integer.parseInt(isUsed);
 			//修改其他类型为type的为未使用
-			hService.setPageIsUsed("type",type, 0);
+			//hService.setPageIsUsed("type",type, 0);
 			hService.setPageIsUsed("id",id, isUser_);
 			message="success";
 		}else{

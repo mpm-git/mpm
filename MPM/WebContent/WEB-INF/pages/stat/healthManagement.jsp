@@ -31,7 +31,7 @@
 	src="/ueditor/ueditor.config.js"></script>
 <script type="text/javascript" charset="utf-8"
 	src="/ueditor/ueditor.all.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="/MPM/upload/ajaxfileupload.js"> </script>
+<script type="text/javascript" charset="utf-8" src="<s:url value='/upload/ajaxfileupload.js'/>"> </script>
 	
 
 <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
@@ -90,7 +90,6 @@
 	    });
 		var id=<%= request.getParameter("id")%>;
 		if(id!=null){
-			alert(id);
 			$.ajax({    
 		        url : '../stat/find_health_content.action',    
 		        type : 'post',    
@@ -100,16 +99,32 @@
 		        	'id':id
 		        },
 		        success : function(data) {
-		        	alert(data.message);
 		        	if(data.message=='success'){
 		        		var healthContent=data.healthContent1;
 		        		$('#title').val(healthContent.title);
-		        		$('#type').val(healthContent.type);
+		        		$("#pageType option[value='"+healthContent.type+"']").attr("selected","selected");
+		        		$('#personInfo_form1').hide();
 		        		$('#text').val(healthContent.imagePath);
-		        		UE.getEditor('editor').setContent(healthContent.jspContent);
+		        		$('#upload_image').attr("src",healthContent.imagePath);
+// 		        		$("#text").show();
+		        		//UE.getEditor('editor').setContent(healthContent.jspContent);
+		        		var ueditor=UE.getEditor('editor');
+		        		ueditor.addListener("ready", function () {
+		        			 // editor准备好之后才可以使用
+		        			 ueditor.setContent(healthContent.jspContent);
+
+		        		});
+		        		$('#button_save').bind('click',function(){
+		        			updateHealthPage(id);
+		        		});
+		        		
 		        	}
 		        }
 		    });
+		}else{
+			$('#button_save').bind('click',function(){
+				getAllHtml();
+    		});
 		}
 		/* $('#pageType').change(function(){
 			var type=$('#pageType').val();
@@ -132,15 +147,48 @@
 					fileElementId : 'file',
 					dataType : 'json',
 					success : function(data) {
-						alert('上传成功');
-						$("#text").show();
+// 						$("#text").show();
 						$("#text").val("/ueditor"+data.url);
+						$("#upload_image").attr("src","/ueditor"+data.url);
 					}
 		
 				});
 		return false;
 	}
+	
+	function updateHealthPage(id){
+		var html = UE.getEditor('editor').getContent();
+		$.ajax({
+			url : 'save_html_content.action',
+			type : 'post',
+			data : {
+				'id':id,
+				'htmlContent' : html,
+				'title':$('#title').val(),
+				'type':$('#pageType').val(),
+				'imagePath':$('#text').val()
+			},
+			dataType : 'json',
+			success : function(data) {
+				console.info(data.message);
+				if (data.message == 'success') {
+					alert('保存成功');
+					window.location="../stat/health-popularization.action";
+				}
+				if (data.message == 'error') {
+					alert('保存失败');
+				}
+
+			}
+		});
+	}
 </script>
+ <script type="text/javascript" language="javascript">    
+        function FileUpload_onselect()
+        {
+        	ajaxFileUpload();
+        }
+    </script>
 </head>
 <body>
 
@@ -185,12 +233,15 @@
 						</td>
 					</tr>
 					<tr>
-						<td class="odd">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;上传路径：</td>
+						<td class="odd">&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;主题图片：</td>
 						<td>
 							<form id="personInfo_form1" method="post" enctype="multipart/form-data"> 
-								<input id="file" type="file" value="选择文件" name="upfile"><input type="button" value="上传" id="uploadImage" onclick="ajaxFileUpload();">
+								<!-- <input id="health_file" type="file" value="选择文件" name="upfile"><input type="button" value="上传" id="uploadImage" onclick="ajaxFileUpload();"> -->
+<!-- 								<input type="button" value="选择" onclick="file.click()" class="btn_mouseout"/> -->
+								 <input id="file" type="file"  name="upfile" contentEditable="false" accept="image/*" style="width:448px; height: 22px;display:none" onclick="return FileUpload_onclick()" onchange="return FileUpload_onselect()"/>
 							</form>
-							<input style="display: none;" id="text" type="text"/>
+							<input style="display: none;" id="text" type="text" style="display:none" />
+								<img id="upload_image" src="<s:url value='/styles/image/add.png'/>" onclick="file.click()" /> 
 						</td>
 					</tr>
 				</table>
@@ -207,10 +258,10 @@
 
 					<div id="btns">
 						<div>
-							<button onclick="getAllHtml()">保存页面</button>
+							<button id="button_save" onclick="">保存页面</button>
 							<button onclick="setContent()">清空内容</button>
-							<!--  <button onclick="getContent()">获得内容</button>
-					        <button onclick="setContent(true)">追加内容</button>
+					        <!--  <button onclick="setContent(true)">追加内容</button>
+							<button onclick="getContent()">获得内容</button>
 					        <button onclick="getContentTxt()">获得纯文本</button>
 					        <button onclick="getPlainTxt()">获得带格式的纯文本</button>
 					        <button onclick="hasContent()">判断是否有内容</button>
@@ -264,9 +315,9 @@
 		UE.getEditor('editor').blur();
 		UE.dom.domUtils.preventDefault(e)
 	}
-	function insertHtml() {
+	function insertHtml(content) {
 		var value = prompt('插入html代码', '');
-		UE.getEditor('editor').execCommand('insertHtml', value)
+		UE.getEditor('editor').execCommand('insertHtml', content)
 	}
 	function createEditor() {
 		enableBtn();
@@ -275,7 +326,6 @@
 	function getAllHtml() {
 		//var html= UE.getEditor('editor').getAllHtml();
 		var html = UE.getEditor('editor').getContent();
-		console.info(html);
 		$.ajax({
 			url : 'save_html_content.action',
 			type : 'post',
@@ -314,12 +364,11 @@
 		arr.push(UE.getEditor('editor').getPlainTxt());
 		alert(arr.join('\n'))
 	}
-	function setContent(isAppendTo) {
+	function setContent() {
 		var arr = [];
-		//arr.push("使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容");
-		//UE.getEditor('editor').setContent('欢迎使用ueditor', isAppendTo);
-		UE.getEditor('editor').setContent('', isAppendTo);
-		//alert(arr.join("\n"));
+        arr.push( "使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容" );
+        UE.getEditor('editor').setContent( '欢迎使用ueditor' );
+        alert( arr.join( "\n" ) );
 	}
 	function setDisabled() {
 		UE.getEditor('editor').setDisabled('fullscreen');

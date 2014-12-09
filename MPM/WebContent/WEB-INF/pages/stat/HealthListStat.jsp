@@ -206,7 +206,7 @@ function setIsUsed(pageid,isUsed,type){
         </li>
       </ul>
       <div style="padding-top: 20px">
-      	<div align="right"><a href="<s:url action="../stat/to_update_health_page.action" />"><img alt="" src="/MPM/styles/image/add.png"></a></div>
+      	<div align="right"><a href="<s:url action="../stat/to_update_health_page.action" />"><img title="添加" src="<s:url value='/styles/image/add.png'/>"></a></div>
         <table cellpadding="0" cellspacing="0" border="0" class="display" id="healthList_example">
        <thead>
             <tr>

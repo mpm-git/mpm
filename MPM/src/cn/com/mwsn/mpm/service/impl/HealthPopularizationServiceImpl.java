@@ -58,4 +58,9 @@ public class HealthPopularizationServiceImpl  extends TransactionalServiceImpl i
 		}
 	}
 
+	@Override
+	public void updateHealthContent(HealthContent content) {
+		this.merge(content);
+	}
+
 }
