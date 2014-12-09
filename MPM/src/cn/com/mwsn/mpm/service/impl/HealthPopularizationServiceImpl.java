@@ -1,12 +1,9 @@
 package cn.com.mwsn.mpm.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.cxf.binding.corba.wsdl.Object;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,11 +34,9 @@ public class HealthPopularizationServiceImpl  extends TransactionalServiceImpl i
 
 	@Override
 	public HealthContent findHealthPageByid(int id) {
-		System.out.println("in findHealthPageByid method");
 		HealthContent heal=null;
 		try {
 			heal=this.find(HealthContent.class, id);
-			System.out.println(heal.getTitle());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -227,7 +227,7 @@ public class HealthPopularizationAction extends ActionSupport{
 	}
 
 	public String getPropertiesValue() {
-		String path = menus.class.getResource("menus.properties").toString();
+		String path = HealthPopularizationAction.class.getResource("menus.properties").toString();
 		String file=path.substring(6, path.length());
 		Properties prop=new Properties();        
 		try {
