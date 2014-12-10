@@ -42,7 +42,7 @@ $(document).ready(function(){
 		  .after('<select class="res-menu">' + optionsList + '</select>');
 
 		$('.res-menu').on('change', function() {
-			window.location = $(this).val();
+			//window.location = $(this).val();
 		});
 		
 	})();

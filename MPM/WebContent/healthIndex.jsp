@@ -124,7 +124,11 @@
         });
     });
     var menus;
-    $(function(){ 
+    $(function(){
+    	$('.res-menu').change(function(){
+    		var index=$('.res-menu').val();
+    		showPage(index);
+    	});
     	$.ajax({    
             url : 'stat/get_all_menus.action',    
             type : 'post',    
@@ -134,17 +138,20 @@
             		menus=data.menus;
             		for(var i=0;i<menus.length;i++){
             			$('#health_menu').append('<li><a href="#" onclick="showPage('+i+');"><h3>'+menus[i].menusName+'</h3></a></li>');
-            			
+            			$('.res-menu').append('<option value="'+i+'">'+menus[i].menusName+'</option>');
 //             			if(i==0){
 //             				$('#health_menu').append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
 //             			}else{
-//             				$('#health_menu').append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
+//             				$('#health_menu's).append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
 //             			}
             		}
             		var list=menus[0].list;
             		for(var i=0;i<list.length;i++){
             			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
             		}
+            		 $('.flexslider').flexslider({
+            	            animation: "slide"
+            	        });
             	}else{
             		alert('菜单读取失败');
             	}
@@ -155,11 +162,16 @@
     });
     
     function showPage(index){
-    	$('#healthIndex_image').html('');
+    	$('#slider').empty();
+    	$('#slider').append('<div class="flexslider"><ul class="slides" id="healthIndex_image"> </ul></div>');
+//     	$('#healthIndex_image').empty();
+//     	$('#healthIndex_image').html('');
     	var list=menus[index].list;
     	//$(".flexslider").html('<ul class="slides" id="healthIndex_image"></ul>');
 		for(var i=0;i<list.length;i++){
+			
 			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
+// 			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
 		}
 		 $('.flexslider').flexslider({
 	            animation: "slide"
