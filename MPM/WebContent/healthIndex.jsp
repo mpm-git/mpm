@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<!--[if lt IE 7 ]>
-<html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]>
-<html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]>
-<html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!-->
-<html lang="en"> <!--<![endif]-->
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>无锡市第四人民医院医疗行为管理系统-健康普及</title>
     
     <meta name="viewport" content="width=100%; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;" />
     <link rel="icon" href="menus/images/favicon.png" type="image/png" />
@@ -127,7 +125,7 @@
     $(function(){
     	$('.res-menu').change(function(){
     		var index=$('.res-menu').val();
-    		showPage(index);
+    		showImage(index);
     	});
     	$.ajax({    
             url : 'stat/get_all_menus.action',    
@@ -137,7 +135,7 @@
             	if(data.message=='success'){
             		menus=data.menus;
             		for(var i=0;i<menus.length;i++){
-            			$('#health_menu').append('<li><a href="#" onclick="showPage('+i+');"><h3>'+menus[i].menusName+'</h3></a></li>');
+            			$('#health_menu').append('<li><a href="#" onclick="showImage('+i+');"><h1>'+menus[i].menusName+'</h1></a></li>');
             			$('.res-menu').append('<option value="'+i+'">'+menus[i].menusName+'</option>');
 //             			if(i==0){
 //             				$('#health_menu').append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
@@ -161,21 +159,24 @@
     	
     });
     
-    function showPage(index){
+    function showImage(index){
     	$('#slider').empty();
-    	$('#slider').append('<div class="flexslider"><ul class="slides" id="healthIndex_image"> </ul></div>');
+    	$('#slider').append('<div class="flexslider"><div class="flex-viewport" style="overflow: hidden; position: relative;"><ul class="slides" id="healthIndex_image"> </ul></div></div>');
 //     	$('#healthIndex_image').empty();
 //     	$('#healthIndex_image').html('');
     	var list=menus[index].list;
     	//$(".flexslider").html('<ul class="slides" id="healthIndex_image"></ul>');
 		for(var i=0;i<list.length;i++){
-			
-			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
+			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+index+','+i+');"><font class="carousel-caption" style="position: absolute; top: 200px; left: 100px;">'+list[i].title+'</font></a></p></li>');
 // 			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
 		}
 		 $('.flexslider').flexslider({
 	            animation: "slide"
 	     });
+    }
+    
+    function showPage(index,i){
+    	$('#slider').html(menus[index].list[i].jspContent);
     }
     
 </script>
