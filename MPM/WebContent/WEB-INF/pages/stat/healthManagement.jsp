@@ -158,15 +158,31 @@
 	
 	function updateHealthPage(id){
 		var html = UE.getEditor('editor').getContent();
+		var title=$('#title').val();
+		var type=$('#pageType').val();
+		var imagePath=$('#text').val()
+		if(title==''){
+			alert("标题不能为空");
+			return;
+		}
+		if(imagePath==''){
+			alert("主题图片不能为空");
+			return;
+		}
+		if(html==''){
+			alert("内容不能为空");
+			return;
+		}
+		
 		$.ajax({
 			url : 'save_html_content.action',
 			type : 'post',
 			data : {
 				'id':id,
 				'htmlContent' : html,
-				'title':$('#title').val(),
-				'type':$('#pageType').val(),
-				'imagePath':$('#text').val()
+				'title':title,
+				'type':type,
+				'imagePath':imagePath
 			},
 			dataType : 'json',
 			success : function(data) {
@@ -326,14 +342,29 @@
 	function getAllHtml() {
 		//var html= UE.getEditor('editor').getAllHtml();
 		var html = UE.getEditor('editor').getContent();
+		var title=$('#title').val();
+		var type=$('#pageType').val();
+		var imagePath=$('#text').val()
+		if(title==''){
+			alert("标题不能为空");
+			return;
+		}
+		if(imagePath==''){
+			alert("主题图片不能为空");
+			return;
+		}
+		if(html==''){
+			alert("内容不能为空");
+			return;
+		}
 		$.ajax({
 			url : 'save_html_content.action',
 			type : 'post',
 			data : {
 				'htmlContent' : html,
-				'title':$('#title').val(),
-				'type':$('#pageType').val(),
-				'imagePath':$('#text').val()
+				'title':title,
+				'type':type,
+				'imagePath':imagePath
 			},
 			dataType : 'json',
 			success : function(data) {

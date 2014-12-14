@@ -365,12 +365,12 @@ h4.title a {
 
 #menu > ul a:hover {
     color: #FFFFFF;
-    background: #3DE258;
+    background: #8a8989;
 }
 
 #menu .current {
     color: #FFFFFF !important;
-    background: #3DE258;
+    background: #8a8989;
 }
 
 #menu ul ul {
@@ -719,7 +719,6 @@ h4.title a {
 section#slider {
     display: block;
     overflow: hidden;
-    background-color: #60C74A;
 }
  /*Browser Resets */
 .flex-container a:active,

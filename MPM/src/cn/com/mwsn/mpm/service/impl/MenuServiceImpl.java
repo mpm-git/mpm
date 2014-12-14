@@ -23,13 +23,13 @@ public class MenuServiceImpl  extends TransactionalServiceImpl implements MenuSe
 
 	@Override
 	public List<Menu> findMenus() {
-		String queryString="select type from HealthContent group by type";
+		String queryString="select type from HealthContent where isUsed=1 group by type";
 		List<String> list=this.find(queryString, new Object[]{});
 		List<Menu> menus=new ArrayList<Menu>();
 		for(String menuName:list){
 			Menu menu=new Menu();
 			menu.setMenusName(menuName);
-			String queryStr="from HealthContent where type=:type";
+			String queryStr="from HealthContent where isUsed=1 and type=:type";
 			Map<String,Object> map=new HashMap<String, Object>();
 			map.put("type", menuName);
 			List<HealthContent> pages=null;

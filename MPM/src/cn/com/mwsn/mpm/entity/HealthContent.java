@@ -12,7 +12,9 @@ import cn.com.mwsn.frame.entity.IdEntity;
 public class HealthContent  extends IdEntity {
 	private static final long serialVersionUID = -588618421825231329L;
 	
-	@Lob @Basic(fetch = FetchType.LAZY) @Column(columnDefinition = "TEXT")
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	@Column(columnDefinition = "TEXT")
 	private String jspContent;  //html 文章内容
 	
 	private String type;   //保存类型

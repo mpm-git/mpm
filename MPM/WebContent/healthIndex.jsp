@@ -33,7 +33,6 @@
     <script type="text/javascript" src="menus/js/jquery.flexslider-min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-
 <body>
 
 <header id="header1">
@@ -99,7 +98,7 @@
 <section id="health_content" style="display: none;">
 	
 </section>
-<section id="slider">
+<section id="slider"  style="width: 80%; margin-left: 10%;">
     <div class="flexslider">
         <ul class="slides" id="healthIndex_image">
 <!--             <li> -->
@@ -135,7 +134,7 @@
             	if(data.message=='success'){
             		menus=data.menus;
             		for(var i=0;i<menus.length;i++){
-            			$('#health_menu').append('<li><a href="#" onclick="showImage('+i+');"><h1>'+menus[i].menusName+'</h1></a></li>');
+            			$('#health_menu').append('<li id="li_'+i+'"><a href="#" onclick="showImage('+i+');"><h1>'+menus[i].menusName+'</h1></a></li>');
             			$('.res-menu').append('<option value="'+i+'">'+menus[i].menusName+'</option>');
 //             			if(i==0){
 //             				$('#health_menu').append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
@@ -145,7 +144,8 @@
             		}
             		var list=menus[0].list;
             		for(var i=0;i<list.length;i++){
-            			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
+//             			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
+            			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+0+','+i+');"><font class="carousel-caption" style="position: absolute; top: 50%; left: 100px;">'+list[i].title+'</font></a></p></li>');
             		}
             		 $('.flexslider').flexslider({
             	            animation: "slide"
@@ -160,6 +160,7 @@
     });
     
     function showImage(index){
+    	$('#menu #li_'+index).addClass('current');
     	$('#slider').empty();
     	$('#slider').append('<div class="flexslider"><div class="flex-viewport" style="overflow: hidden; position: relative;"><ul class="slides" id="healthIndex_image"> </ul></div></div>');
 //     	$('#healthIndex_image').empty();
@@ -167,7 +168,7 @@
     	var list=menus[index].list;
     	//$(".flexslider").html('<ul class="slides" id="healthIndex_image"></ul>');
 		for(var i=0;i<list.length;i++){
-			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+index+','+i+');"><font class="carousel-caption" style="position: absolute; top: 200px; left: 100px;">'+list[i].title+'</font></a></p></li>');
+			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+index+','+i+');"><font class="carousel-caption" style="position: absolute; top: top: 50%; left: 100px;">'+list[i].title+'</font></a></p></li>');
 // 			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
 		}
 		 $('.flexslider').flexslider({
