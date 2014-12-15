@@ -14,6 +14,7 @@
     <title>Home Page</title>
     <link href="menus/css/bootstrap.css" type="text/css" rel="stylesheet" />
     <link href="menus/css/style.css" type="text/css" rel="stylesheet" />
+    <link href="http://www.helloweba.com/demo/flexslider/flexslider.css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="menus/js/jquery.min.js"></script>
     <script type="text/javascript" src="menus/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="menus/js/jquery.easing.1.3.js"></script>
@@ -98,18 +99,26 @@
 <section id="health_content" style="display: none;">
 	
 </section>
-<section id="slider"  style="width: 80%; margin-left: 10%;">
+<section id="slider"  style="width: 90%; margin-left: 5%;">
     <div class="flexslider">
         <ul class="slides" id="healthIndex_image">
-<!--             <li> -->
-<!--                 <img src="menus/images/slides/slide3.jpg" /> -->
-<!--             </li> -->
-<!--             <li> -->
-<!--                 <img src="menus/images/slides/slide2.jpg" /> -->
-<!--             </li> -->
-<!--             <li> -->
-<!--                 <img src="menus/images/slides/slide1.jpg" /> -->
-<!--             </li> -->
+            <li>
+                <img src="menus/images/slides/slide3.jpg" />
+                <div style="position:absolute; top:70px; right:65px; width:420px; padding:10px; background:#333; opacity:.8; color:#fff">
+				<h4>FlexSlider</h4>
+				<p>FlexSlider是一款基于的jQuery内容滚动插件。它能让你轻松的创建内容滚动的效果，具有非常高的可定制性。它是将UL列表转换成内容滚动的列表，可以自动播放，或者使用导航按钮和键盘来控制。<a href="http://www.woothemes.com/flexslider/" target="_blank" rel="nofollow">FlexSlider官网</a> <a href="http://www.helloweba.com/view-blog-265.html" target="_blank">中文使用教程</a></p>
+				</div>
+            </li>
+            <li>
+                <img src="menus/images/slides/slide2.jpg" />
+                 <div style="position:absolute; top:70px; right:65px; width:420px; padding:10px; background:#333; opacity:.8; color:#fff">
+				<h4>F</h4>
+				<p>FlexSlider。<a href="http://www.woothemes.com/flexslider/" target="_blank" rel="nofollow">FlexSlider官网</a> <a href="http://www.helloweba.com/view-blog-265.html" target="_blank">中文使用教程</a></p>
+				</div>
+            </li>
+            <li>
+                <img src="menus/images/slides/slide1.jpg" />
+            </li>
         </ul>
     </div>
 </section>
@@ -117,7 +126,7 @@
 <script>
     $(window).load(function() {
         $('.flexslider').flexslider({
-            animation: "slide"
+//             animation: "slide"
         });
     });
     var menus;
@@ -129,12 +138,17 @@
     	$.ajax({    
             url : 'stat/get_all_menus.action',    
             type : 'post',    
-            dataType : 'json',    
+            dataType : 'json', 
+            async:false,
             success : function(data) {
             	if(data.message=='success'){
             		menus=data.menus;
             		for(var i=0;i<menus.length;i++){
-            			$('#health_menu').append('<li id="li_'+i+'"><a href="#" onclick="showImage('+i+');"><h1>'+menus[i].menusName+'</h1></a></li>');
+            			if(i==0){
+            				$('#health_menu').append('<li id="li_'+i+'" class="current"><a href="#" onclick="showImage('+i+');"><h1>'+menus[i].menusName+'</h1></a></li>');
+            			}else{
+            				$('#health_menu').append('<li id="li_'+i+'"><a href="#" onclick="showImage('+i+');"><h1>'+menus[i].menusName+'</h1></a></li>');
+            			}
             			$('.res-menu').append('<option value="'+i+'">'+menus[i].menusName+'</option>');
 //             			if(i==0){
 //             				$('#health_menu').append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
@@ -142,14 +156,15 @@
 //             				$('#health_menu's).append('<li><a href="#"><h3>'+menus[i].menusName+'</h3></a></li>');
 //             			}
             		}
-            		var list=menus[0].list;
-            		for(var i=0;i<list.length;i++){
-//             			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
-            			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+0+','+i+');"><font class="carousel-caption" style="position: absolute; top: 50%; left: 100px;">'+list[i].title+'</font></a></p></li>');
-            		}
-            		 $('.flexslider').flexslider({
-            	            animation: "slide"
-            	        });
+            		showImage(0);
+//             		var list=menus[0].list;
+//             		for(var i=0;i<list.length;i++){
+// //             			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
+//             			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+0+','+i+');"><font class="carousel-caption" style="position: absolute; top: 50%; left: 100px;">'+list[i].title+'</font></a></p></li>');
+//             		}
+//             		 $('.flexslider').flexslider({
+//             	            animation: "slide"
+//             	        });
             	}else{
             		alert('菜单读取失败');
             	}
@@ -160,6 +175,7 @@
     });
     
     function showImage(index){
+    	$('#menu li').removeClass('current');
     	$('#menu #li_'+index).addClass('current');
     	$('#slider').empty();
     	$('#slider').append('<div class="flexslider"><div class="flex-viewport" style="overflow: hidden; position: relative;"><ul class="slides" id="healthIndex_image"> </ul></div></div>');
@@ -168,12 +184,19 @@
     	var list=menus[index].list;
     	//$(".flexslider").html('<ul class="slides" id="healthIndex_image"></ul>');
 		for(var i=0;i<list.length;i++){
-			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><p align="center"><a href="#" onclick="showPage('+index+','+i+');"><font class="carousel-caption" style="position: absolute; top: top: 50%; left: 100px;">'+list[i].title+'</font></a></p></li>');
-// 			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /></li>');
+			var text='<div style="position:absolute; bottom:5%;  width:100%; padding:20px 10px 20px 50px; background:#333; opacity:.8; color:#fff">'+
+// 				'<h4>F</h4>'+
+				'<p><a href="#" onclick="showPage('+index+','+i+');"><font style="font-size: 40px;font-family:\'微软雅黑\';color:white";>'+list[i].title+'</font></a></p>'+
+				'</div>';
+// 			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" /><div><p align="center"><a href="#" onclick="showPage('+index+','+i+');"><font class="carousel-caption" style="position: absolute; top: 20%; left: 200px;">'+list[i].title+'</font></a></p></div></li>');
+			$('#healthIndex_image').append('<li><img src="'+list[i].imagePath+'" />'+text+'</li>');
 		}
-		 $('.flexslider').flexslider({
-	            animation: "slide"
-	     });
+		setTimeout(function(){
+			 $('.flexslider').flexslider({
+		            animation: "slide",
+		            slideshow:true
+		     });
+		},1000);
     }
     
     function showPage(index,i){
