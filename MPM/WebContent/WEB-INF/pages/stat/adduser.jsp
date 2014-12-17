@@ -62,8 +62,8 @@
 	        	var staffNums=data.staffNums;
 	        	if($('#jobType').val()=='医生'){
 	        		for(var i=0;i<staffNums.length;i++){
-	        			console.info(staffNums[i].doctorId);
-	        			$('#staffNum').append("<option value='"+staffNums[i].doctorId+"'>"+staffNums[i].doctorId+"</option>"); 
+	        			console.info(staffNums[i]);
+	        			$('#staffNum').append("<option value='"+staffNums[i].doctorId+"'>"+staffNums[i].doctorId+","+staffNums[i].name+"</option>"); 
 	        		}
 	        	}
 	        }
@@ -111,11 +111,11 @@
 	        	var staffNums=data.staffNums;
 	        	if(jobType=='医生'){
 	        		for(var i=0;i<staffNums.length;i++){
-	        			$('#staffNum').append("<option value='"+staffNums[i].doctorId+"'>"+staffNums[i].doctorId+"</option>"); 
+	        			$('#staffNum').append("<option value='"+staffNums[i].doctorId+"'>"+staffNums[i].doctorId+","+staffNums[i].name+"</option>"); 
 	        		}
 	        	}else if(jobType=='护士'){
 	        		for(var i=0;i<staffNums.length;i++){
-	        			$('#staffNum').append("<option value='"+staffNums[i].nurseNo+"'>"+staffNums[i].nurseNo+"</option>"); 
+	        			$('#staffNum').append("<option value='"+staffNums[i].nurseNo+"'>"+staffNums[i].nurseNo+","+staffNums[i].name+"</option>"); 
 	        		}
 	        	}
 	        }
@@ -181,7 +181,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;工号：</td>
+								<td>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;工号/姓名：</td>
 								<td><SELECT id="staffNum" class="u11 select_width" name="staffNum">
 								</SELECT></td>
 							</tr>
