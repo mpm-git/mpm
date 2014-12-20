@@ -123,6 +123,16 @@
 			<servlet-name>IOTReceiveDataFromHis</servlet-name>
 			<url-pattern>/userMsg</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>Dispatcher</servlet-name>
+			<servlet-class>
+				per.cz.servlet.Dispatcher
+			</servlet-class>
+	</servlet>
+	<servlet-mapping>
+			<servlet-name>Dispatcher</servlet-name>
+			<url-pattern>/dispatcher</url-pattern>
+	</servlet-mapping>
 	
 	
 	<!-- 床头管理数据接口 -->

@@ -126,7 +126,7 @@ $(document).ready(function() {
 			                },                                                     
 			                tooltip: {                                                                   
 			                    headerFormat: '<b>{series.name}</b><br>',                                
-			                    pointFormat: '{point.x}岁, {point.y}%',
+			                    pointFormat: '{point.x}岁, {point.y:.2f}%',
 			                    useHTML:true
 			                }                                                                            
 			            }                                                                                
@@ -182,7 +182,7 @@ $(document).ready(function() {
 	                }]
 				}, 
 				tooltip: {
-					pointFormat: '<b>{series.name}</b>  <b>{point.y}%</b> ',
+					pointFormat: '<b>{series.name}</b>  <b>{point.y:.2f}%</b> ',
 					useHTML:true
 				},
 				plotOptions: { column: { pointPadding: 0.2, borderWidth: 0 } }
@@ -209,10 +209,13 @@ $(document).ready(function() {
 		
 		$("#info_table").dataTable({
 			"bJQueryUI": true,
-			"sPaginationType": "full_numbers",
-			"bFilter":false
+			"sPaginationType": "full_numbers"
+// 			"bFilter":false
 		});
-		
+        $("#excelBtn").click(function(){
+        	$("#searchForm").attr("action","dataMiningExportExcel.action");
+        	$("#searchForm").submit();
+        });
 		$(".main_tab li").click(function(){
        	 var index = parseInt($(this).index()) + 1;
        	 $("#searchType").val(index);
@@ -385,10 +388,10 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	      <%
 	      int searchType =Integer.parseInt(request.getAttribute("searchType").toString()); 
 	      if(searchType!=1){ %>
-	        <li>
-	                              病人：
-	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" />
-	        </li>
+<!-- 	        <li> -->
+<!-- 	                              病人： -->
+<%-- 	          <s:checkboxlist theme="simple" list="#{'1':'年龄','2':'诊断'}" value="%{patientCondition}" listKey="key" listValue="value" name="patientCondition" /> --%>
+<!-- 	        </li> -->
 	        <%} %>
 	         <s:if test="searchType == 1">
 	        <li>
@@ -412,6 +415,15 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	          }
 	               %>
 	            </select>
+	        </li>
+	        </s:if>
+	        <s:if test="searchType == 2">
+	        <li>
+				算法依据：
+	           <select name="accordingTo " id="accordingTo" style="width:160px;height:22px;">
+	          	 <option value="年龄" <s:if test="accordingTo=='年龄'">selected="selected"</s:if>>年龄</option>
+	          	 <option value="诊断" <s:if test="accordingTo=='诊断'">selected="selected"</s:if>>诊断</option>
+	           </select>
 	        </li>
 	        </s:if>
 	        <!-- <li>
@@ -449,9 +461,33 @@ ul.titles li{height:30px;padding:5px;line-height: 30px;}
 	      </div>
 	      
 	      
-<!-- 	      <input type="button"  style="float: right;margin: 10px;" class="ui-button ui-widget ui-state-default ui-corner-all" value="导出excel" id="excelBtn" />
- -->	      <div id="infoDiv">
+		 <s:if test="searchType == 2">
+ 			<input type="button"  style="float: right;margin: 10px;" class="ui-button ui-widget ui-state-default ui-corner-all" value="导出excel" id="excelBtn" />
+	      <div id="infoDiv">
+			    <table  cellpadding="0" cellspacing="0" border="0" class="display" id="info_table">
+			     <s:iterator value="tableData" id="data1" status="status"> 
+			         <s:if test="#status.index == 0">
+			             <thead>
+				           <tr> 
+				               <s:iterator value="data1" id="info">
+					             <th><s:property value="info"/></th> 
+					           </s:iterator>
+				           </tr>
+			             </thead>
+			         </s:if>
+			         <s:else>
+			            <tr>
+			               <s:iterator value="data1" id="info2">
+						       <td><s:property value="info2"/></td> 
+			               </s:iterator>
+				       </tr> 
+			         </s:else>
+			     </s:iterator>
+	          </table>
+		 </div>
+		 </s:if>
  <!-- 
+ 
 			    <table  cellpadding="0" cellspacing="0" border="0" class="display" id="info_table">
 		             <thead>
 			           <tr> 

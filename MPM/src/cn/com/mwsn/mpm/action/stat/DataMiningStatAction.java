@@ -1,5 +1,8 @@
 package cn.com.mwsn.mpm.action.stat;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,13 +13,17 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
+import org.cz.utils.ClassUtil;
+import org.cz.utils.DateUtil;
 import org.cz.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.com.mwsn.frame.service.QueryResult;
+import cn.com.mwsn.frame.util.ExportExcelUtil;
 import cn.com.mwsn.mpm.common.Constant;
 import cn.com.mwsn.mpm.entity.MH_NurseExecuteRecord_view;
 import cn.com.mwsn.mpm.entity.Nurse;
@@ -63,15 +70,18 @@ public class DataMiningStatAction extends ActionSupport {
 
 	private String beginStatDate;
 	private String endStatDate;
+	private InputStream excelFile;  
+	private String downloadFileName;
 	//查询条件
 	private List<String> patientCondition;//选中的病人的分析项
+	private String accordingTo;//分析依据
 	private String select_disease="子宫平滑肌瘤";//选中的疾病
 	private String algorithm;//选中的算法
 	private int suport = 70;//支持度
 	private int confidence = 30 ;//置信度
 
 	//数据
-	private List<List<String>> tabledata;//表格的数据
+	private List<List<String>> tableData;//表格的数据
 	private Map<String, List<List<String>>> chartdata;//图表的数据
 	private Map<String, List<List<String>>> chartdata2;//图表2的数据（柱状图）
 
@@ -89,6 +99,9 @@ public class DataMiningStatAction extends ActionSupport {
 	private String nurses;
 	private HashMap<String, Object> guanlian;
 	private HashMap<String, Object> juLeiRes;
+	private HashMap<String, Integer> map4All;
+	private HashMap<String, Integer> map;
+	private HashMap<String, Integer> map1;
 
 
 	static{
@@ -128,73 +141,25 @@ public class DataMiningStatAction extends ActionSupport {
 		}
 		if(allXAxisNames == null){
 			allXAxisNames = new HashMap<String, String>();
-			allXAxisNames.put("1", "特级,一级,二级,三级,四级");//护理等级
-			allXAxisNames.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
-			allXAxisNames.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
-			allXAxisNames.put("5", "普通护士,责任护士");//护士类型
+			allXAxisNames.put("1", Constant.allXAxisNames_1);//护理等级
+			allXAxisNames.put("2", Constant.allXAxisNames_2);//主要诊断
+			allXAxisNames.put("3", Constant.allXAxisNames_3);//年龄
+			allXAxisNames.put("5", Constant.allXAxisNames_5);//护士类型
 		}
 		if(allXAxisNamesValue == null){
 			allXAxisNamesValue = new HashMap<String, String>();
-			allXAxisNamesValue.put("1", "0,1,2,3,4");//护理等级
-			allXAxisNamesValue.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
-			allXAxisNamesValue.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
-			allXAxisNamesValue.put("5", "普通护士,责任护士");//护士类型
+			allXAxisNamesValue.put("1", Constant.allXAxisNamesValue_1);//护理等级
+			allXAxisNamesValue.put("2", Constant.allXAxisNamesValue_2);//主要诊断
+			allXAxisNamesValue.put("3", Constant.allXAxisNamesValue_3);//年龄
+			allXAxisNamesValue.put("5", Constant.allXAxisNamesValue_5);//护士类型
 		}
 	}
 
 	@Action(value="dataMiningStat")
 	public String execute() throws Exception
 	{
-//		if(patientBehavior == null){
-//			Set<String> tmp = allPatientBehavior.keySet();
-//			patientBehavior = tmp.toArray(new String[tmp.size()]);
-//		}
 		Map<String,Object> parm=new HashMap<String, Object>();
-//		if(patientBehavior == null){
-//			Set<String> tmp = allPatientBehavior.keySet();
-//			patientBehavior = tmp.toArray(new String[tmp.size()]);
-//		}
-//		if(Util.isNULL(beginStatDate))
-//		{
-//			Date d=new Date();
-//			d.setMonth(d.getMonth()-1);
-//			beginStatDate=Util.date2Str(d, "yyyy-MM-dd");
-//		}
-//		if(Util.isNULL(endStatDate))
-//		{
-//			endStatDate=Util.date2Str(new Date(), "yyyy-MM-dd");
-//		}
 		String conditions="";
-//		if(!Util.isNULL(beginStatDate))
-//		{
-//			conditions+="and executeStartTime>"+Util.str2Date(beginStatDate,"yyyy-MM-dd").getTime()+" ";
-//		}
-//		if(!Util.isNULL(endStatDate))
-//		{
-//			conditions+="and  executeStartTime<"+Util.str2Date(endStatDate,"yyyy-MM-dd").getTime()+" ";
-//		}
-//		String _patientBehaviorValue="";
-//		patientBehaviorValue=new String [patientBehavior.length];
-//		for (int i=0;i<patientBehavior.length;i++) {
-//			String pB =patientBehavior[i];
-//			patientBehaviorValue[i]=allPatientBehavior.get(pB);
-//			_patientBehaviorValue+="'"+allPatientBehavior.get(pB)+"',";
-//		}
-//		if(!Util.isNULL(_patientBehaviorValue))
-//		{
-//			_patientBehaviorValue=_patientBehaviorValue.replaceAll(",$", "");
-//			conditions+="and execute in ("+_patientBehaviorValue+") ";
-//		}
-//		dealNurses();
-//		String _nurseNos="";
-//		if(!Util.isNULL(nurseList)&&nurseList.size()>0)
-//		{
-//			for (String key : nurseList.keySet()) {
-//				_nurseNos+="'"+key+"',";
-//			}
-//			_nurseNos=_nurseNos.replaceAll(",$", "");
-//			conditions+=" and nurseNo in ("+_nurseNos+") ";
-//		}
 		String zhenDuan = allXAxisNamesValue.get("2");
 		String[] zhenDuans = zhenDuan.split(",");
 		String _zhenDuans="";
@@ -202,7 +167,14 @@ public class DataMiningStatAction extends ActionSupport {
 			_zhenDuans+="'"+k+"',";
 		}
 		_zhenDuans=_zhenDuans.replaceAll(",$", "");
-		conditions+=" and ( diagnose1 in ("+_zhenDuans+") OR diagnose2 in ("+_zhenDuans+")) ";
+		if(searchType == 1)
+		{
+			conditions+=" and ( diagnose1 in ("+_zhenDuans+") OR diagnose2 in ("+_zhenDuans+")) ";
+		}
+		if(searchType == 2)
+		{
+			conditions+=" and ( diagnose1 in ("+_zhenDuans+") ) ";
+		}
 		parm.put("conditions",conditions);
 //		find_view = mH_NurseExecuteRecordService.find_view(parm, 0, 0);
 		find_view = patientService.find(parm, 0, 0);
@@ -212,23 +184,34 @@ public class DataMiningStatAction extends ActionSupport {
 		else if(searchType == 2)
 		{
 			juLei();
-			generateData();
-			generateData2();
+//			generateData();
+//			generateData2();
 		}
 		return SUCCESS;
 	}
 	private void juLei() {
+		accordingTo=accordingTo==null?"年龄":accordingTo.trim();
 		List<Patient_view> list = find_view.getResult();
 		Long total = find_view.getTotal();
 		String zhenDuan = allXAxisNamesValue.get("2");
 		String _ageIntervals = allXAxisNamesValue.get("3");
 		String[] zhenDuans = zhenDuan.split(",");
 		String[] ageIntervals = _ageIntervals.split(",");
-		Map<String,Integer> map4All=new HashMap<String, Integer>();
-		Map<String,Integer> map=new HashMap<String, Integer>();
+		 map4All=new HashMap<String, Integer>();
+		 map=new HashMap<String, Integer>();
+		 map1=new HashMap<String, Integer>();
 		for (Patient_view p : list) {
 			String diagnose1 = p.getDiagnose1().trim();
 			int ageInterval = p.getAgeInterval();
+			if(map1.containsKey(ageInterval+""))
+			{
+				int s = map1.get(ageInterval+"");
+				map1.put(ageInterval+"", s+1);
+			}
+			else
+			{
+				map1.put(ageInterval+"", 1);
+			}
 			if(map.containsKey(diagnose1))
 			{
 				int s = map.get(diagnose1);
@@ -254,6 +237,8 @@ public class DataMiningStatAction extends ActionSupport {
 			//高血压=[[高血压, 20, 65.9], [高血压, 30, 80.0], [高血压, 40, 74.8], [高血压, 50, 83.1], [高血压, 60, 76.1], [高血压, 70, 73.4], [高血压, 80, 45.2]]}
 		}
 		juLeiRes=new HashMap<String, Object>();
+		System.out.println(map4All);
+		System.out.println(map1);
 		for(int i=0;i<zhenDuans.length;i++)
 		{
 			List<List<String>> l=new ArrayList<List<String>>();
@@ -263,7 +248,11 @@ public class DataMiningStatAction extends ActionSupport {
 				if(map4All.containsKey(k))
 				{
 					int size = map4All.get(k);
-					double d=map.get(zhenDuans[i])==0?0:size/(map.get(zhenDuans[i])+0.0)*100;
+					double d=0.0;
+					if(accordingTo.equals("年龄"))
+						d=map1.get(ageIntervals[j])==0?0:size/(map1.get(ageIntervals[j])+0.0)*100;
+					else 
+						d=map.get(zhenDuans[i])==0?0:size/(map.get(zhenDuans[i])+0.0)*100;
 					List<String> ls=new ArrayList<String>();
 					ls.add(zhenDuans[i]);
 					ls.add(ageIntervals[j]);
@@ -274,6 +263,7 @@ public class DataMiningStatAction extends ActionSupport {
 			}
 			juLeiRes.put(zhenDuans[i], l);
 		}
+		tableData=composeDate();
 	}
 	private void relate()
 	{
@@ -336,8 +326,8 @@ public class DataMiningStatAction extends ActionSupport {
 			int size = map4All.get(key)==null?0: map4All.get(key);
 			int total2 = map.get(select_disease)==null?0:map.get(select_disease);
 			Map<String,Object> m=new HashMap<String, Object>();
-			int confidence=total2==0?0:(int)((size/(total2+0.0))*100);
-			int suport=total==0?0:(int)((size/(total+0.0))*100);
+			double confidence=total2==0?0:((size/(total2+0.0))*100);
+			double suport=total==0?0:((size/(total+0.0))*100);
 //			System.out.println(size+"|"+total2+"|"+confidence);
 			m.put("name", zhenDuans[i]);
 			m.put("confidence", confidence);
@@ -358,6 +348,22 @@ public class DataMiningStatAction extends ActionSupport {
 
 
 	}
+	@Action(value = "dataMiningExportExcel", results = { @Result(name = "success", type = "stream", params = {  
+			"contentType", "application/vnd.ms-excel", "inputName",  
+			"excelFile", "contentDisposition",  
+			"attachment;filename=${downloadFileName}.xls", "bufferSize", "1024" }) })
+	public String exportExcel() throws Exception{
+		//=======================导出excel======================
+		execute();
+		HSSFWorkbook workbook = ExportExcelUtil.exportExcel(tableData, accordingTo);
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		workbook.write(output);
+		byte[] ba = output.toByteArray();
+		excelFile = new ByteArrayInputStream(ba);
+		output.flush();
+		output.close();
+		return "success";
+	} 
 	private String getKey(String diagnose1,String diagnose2)
 	{
 		if(diagnose1.hashCode()>diagnose2.hashCode())
@@ -390,6 +396,19 @@ public class DataMiningStatAction extends ActionSupport {
 			}
 		}
 	}
+	public String getDownloadFileName() {
+		System.out.println("根据"+accordingTo+"聚类分析");
+		return "根据"+accordingTo+"聚类分析";
+	}
+	public void setDownloadFileName(String downloadFileName) {
+		this.downloadFileName = downloadFileName;
+	}
+	public InputStream getExcelFile() {
+		return excelFile;
+	}
+	public void setExcelFile(InputStream excelFile) {
+		this.excelFile = excelFile;
+	}
 	//	@Action(value="dataMiningStat")
 	public String execute2() throws Exception {
 		select_disease=select_disease==null?"子宫平滑肌瘤":select_disease.trim();
@@ -406,7 +425,6 @@ public class DataMiningStatAction extends ActionSupport {
 			//confidence = "";
 		}
 		algorithms = allAlgorithms.get(searchType);
-		generateData();
 		generateData2();
 		if(searchType == 1){
 			generateRelateChartData();
@@ -418,61 +436,55 @@ public class DataMiningStatAction extends ActionSupport {
 	/**
 	 * 根据现有的选项随机生成数据
 	 */
-	private void generateData(){
-		//聚合分析
-		tabledata = new ArrayList<List<String>>();
-		chartdata = new HashMap<String, List<List<String>>>();
-		int size = 5;//数据大小
-		DecimalFormat df = new DecimalFormat("#.0");
-		for(int j = 0; j < diseases.length; j++){
-			String d = diseases[j];
-			List<List<String>> chart_tmp = new ArrayList<List<String>>();
-			if(searchType == 1){
-				//关联挖掘
-				size = generateRandom(5, 10);//数据大小
-			}else{
-				//聚合分析
-				size = generateRandom(10, 30);//数据大小
-			}
-			//年龄大的密集一点
-			for(int i = 0;i < size; i++){
-				List<String> table_tmp = new ArrayList<String>();
-				table_tmp.add(d);//疾病
-				table_tmp.add(generateRandom(55, 80) + "");//年龄
-				double percent = Math.random() * 50 + 40;
-				table_tmp.add(df.format(percent) + "");//百分比
-				if(searchType == 1){
-					//关联挖掘
-					table_tmp.add(generateRandom(30, 100) + "");//TODO 随便写个值，代表大小
+	private List<List<String>> composeDate(){
+		List<List<String>> data = new ArrayList<List<String>>();
+		List<String> up_line1 = new ArrayList<String>();
+		up_line1.add("年龄");
+		up_line1.add("诊断");
+		up_line1.add("比例");
+		data.add(up_line1);
+		String zhenDuan = allXAxisNamesValue.get("2");
+		String _ageIntervals = allXAxisNamesValue.get("3");
+		String[] zhenDuans = zhenDuan.split(",");
+		String[] ageIntervals = _ageIntervals.split(",");
+		for(int i=0;i<zhenDuans.length;i++)
+		{
+			//				List<List<String>> l=new ArrayList<List<String>>();
+			for(int j=0;j<ageIntervals.length;j++)
+			{
+				String k=zhenDuans[i].trim()+"_"+ageIntervals[j];
+				if(map4All.containsKey(k))
+				{
+					int size = map4All.get(k);
+					double d=0.0;
+					List<String> ls=new ArrayList<String>();
+					if(accordingTo.equals("年龄"))
+					{
+						d=map1.get(ageIntervals[j])==0?0:size/(map1.get(ageIntervals[j])+0.0)*100;
+						ls.add(ageIntervals[j]);
+						ls.add(zhenDuans[i]);
+					}
+					else 
+					{
+						d=map.get(zhenDuans[i])==0?0:size/(map.get(zhenDuans[i])+0.0)*100;
+						ls.add(zhenDuans[i]);
+						ls.add(ageIntervals[j]);
+
+					}
+					ls.add(d+"");
+					//						Object os[]=new Object[]{zhenDuans[i],ageIntervals[j],d};
+					data.add(ls);
 				}
-				tabledata.add(table_tmp);
-				chart_tmp.add(table_tmp);
 			}
-			//年龄小的稀疏一点
-			for(int i = 0;i < 6; i++){
-				List<String> table_tmp = new ArrayList<String>();
-				table_tmp.add(d);//疾病
-				table_tmp.add(generateRandom(20, 54) + "");//年龄
-				double percent = Math.random() * 60;
-				table_tmp.add(df.format(percent) + "");//百分比
-				if(searchType == 1){
-					//关联挖掘
-					table_tmp.add(generateRandom(10, 50) + "");//TODO 随便写个值，代表大小
-				}
-				tabledata.add(table_tmp);
-				chart_tmp.add(table_tmp);
-			}
-			chartdata.put(d, chart_tmp);
 		}
+		return data;
 	}
-
-
 	/**
 	 * 根据现有的选项随机生成数据
 	 */
 	private void generateData2(){
 		//聚合分析
-		tabledata = new ArrayList<List<String>>();
+		tableData = new ArrayList<List<String>>();
 		chartdata2 = new HashMap<String, List<List<String>>>();
 		int size = 8;//数据大小
 		DecimalFormat df = new DecimalFormat("#.0");
@@ -491,7 +503,7 @@ public class DataMiningStatAction extends ActionSupport {
 					//关联挖掘
 					table_tmp.add(generateRandom(30, 100) + "");//TODO 随便写个值，代表大小
 				}
-				tabledata.add(table_tmp);
+				tableData.add(table_tmp);
 				chart_tmp.add(table_tmp);
 			}
 
@@ -556,6 +568,12 @@ public class DataMiningStatAction extends ActionSupport {
 	}
 
 
+	public String getAccordingTo() {
+		return accordingTo;
+	}
+	public void setAccordingTo(String accordingTo) {
+		this.accordingTo = accordingTo;
+	}
 	public void setSuport(int suport) {
 		this.suport = suport;
 	}
@@ -584,13 +602,13 @@ public class DataMiningStatAction extends ActionSupport {
 	}
 
 
-	public List<List<String>> getTabledata() {
-		return tabledata;
+	public List<List<String>> getTableData() {
+		return tableData;
 	}
 
 
-	public void setTabledata(List<List<String>> tabledata) {
-		this.tabledata = tabledata;
+	public void setTableData(List<List<String>> tabledata) {
+		this.tableData = tabledata;
 	}
 
 

@@ -139,15 +139,17 @@ public class PatientSingleNursingStatAction extends ActionSupport {
 		
 		if(allXAxisNames == null){
 			allXAxisNames = new HashMap<String, String>();
-			allXAxisNames.put("1", "特级,一级,二级,三级,四级");//护理等级
-			allXAxisNames.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
-			allXAxisNames.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
+			allXAxisNames.put("1", Constant.allXAxisNames_1);//护理等级
+			allXAxisNames.put("2", Constant.allXAxisNames_2);//主要诊断
+			allXAxisNames.put("3", Constant.allXAxisNames_3);//年龄
+			allXAxisNames.put("5", Constant.allXAxisNames_5);//护士类型
 		}
 		if(allXAxisNamesValue == null){
 			allXAxisNamesValue = new HashMap<String, String>();
-			allXAxisNamesValue.put("1", "0,1,2,3,4");//护理等级
-			allXAxisNamesValue.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
-			allXAxisNamesValue.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
+			allXAxisNamesValue.put("1", Constant.allXAxisNamesValue_1);//护理等级
+			allXAxisNamesValue.put("2", Constant.allXAxisNamesValue_2);//主要诊断
+			allXAxisNamesValue.put("3", Constant.allXAxisNamesValue_3);//年龄
+			allXAxisNamesValue.put("5", Constant.allXAxisNamesValue_5);//护士类型
 		}
 	}
 

@@ -133,6 +133,12 @@ public abstract class TransactionalServiceImpl implements
 		setParameters(query, params);
 		return (List<T>) query.getResultList();
 	}
+	public <T> T findFirst(String queryString, Object... params) {
+		Query query = entityManager.createQuery(queryString);
+		setParameters(query, params);
+		List<T> list=(List<T>) query.getResultList();
+		return list==null||list.size()==0?null:list.get(0);
+	}
 	public <T> QueryResult<List<T>> find(String queryString, Map<String, Object> map, int pageIndex, int pageSize) {
 		
 		String _queryString=queryString.trim().toLowerCase();

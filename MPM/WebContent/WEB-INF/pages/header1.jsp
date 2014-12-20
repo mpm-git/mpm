@@ -10,6 +10,7 @@
 
 <head>
 <script src="<s:url value='/javascript/ex/Utils.js'/>" type="text/javascript" charset="utf-8"></script>
+<script src="<s:url value='/javascript/ex/global.js'/>" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 

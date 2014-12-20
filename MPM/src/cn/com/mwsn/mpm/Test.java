@@ -51,7 +51,7 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		
+		System.out.println(new Date().getTime());
 		String str;
 		str = "http://localhost:8080/MPM/patientinfo?patid=2011&patname=sssssssss";
 		//System.out.println(str);
