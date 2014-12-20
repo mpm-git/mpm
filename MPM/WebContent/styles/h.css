@@ -16,7 +16,11 @@ body {
 	line-height: 1.5
 }
 
-th,td {
+th,td,.odd {
+	text-align: right;
+	vertical-align: top
+}
+th,td,.even {
 	text-align: left;
 	vertical-align: top
 }

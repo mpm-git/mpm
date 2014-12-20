@@ -16,7 +16,7 @@
 
         <div class="gheader-wp">
         <div class="gheader-wp-b">
-        <div class="gheader">
+        <div class="gheader" style="z-index: 1000">
             <a class="gheader-logo"  href="/" title="重点人员监管信息"></a>
             <ul class="gheader-nav">
             	<li><a class="m_ment-title" href="../mainpage/main-page.action">首页</a></li>
@@ -72,6 +72,7 @@
                     			<li><a href="#"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />可视化管理</a></li>
                     			<li><a href="#"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />设备查询</a></li>
                     			<li><a href="#"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />设备控制</a></li>
+                    			<li><a href="<s:url action="../stat/health-popularization.action" />"><img src="<s:url value='/styles/image/doctor.png'/>" width="20" height="20" />健康普及管理</a></li>
                     		</ul>
                 		</div>
                 </li>

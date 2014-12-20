@@ -105,37 +105,40 @@ $('#right_example').dataTable({
 }
 
 function delete_feature(id){
-	$.ajax({    
-        url : '../stat/delete_feature.action',    
-        type : 'post',    
-        data : {
-        	'id': id
-        	},    
-        dataType : 'json',    
-        success : function(data) {
-        	/* console.info(data.message=='delete_success');
-        	if(data.message=='delete_success'){
-        		init_feature_table();
-        	} */
-        	if (data.message =='delete_success') 
-        	{ 
-	        	alert('删除成功!'); 
-	        	start = $("#right_example").dataTable().fnSettings()._iDisplayStart; 
-	        	total = $("#right_example").dataTable().fnSettings().fnRecordsDisplay(); 
-	        	window.location.reload(); 
-	        	if((total-start)==1){ 
-		        	if (start > 0) { 
-		        	$("#right_example").dataTable().fnPageChange( 'previous', true ); 
+	var flag=confirm("是否删除?");
+	if(flag==true){
+		$.ajax({    
+	        url : '../stat/delete_feature.action',    
+	        type : 'post',    
+	        data : {
+	        	'id': id
+	        	},    
+	        dataType : 'json',    
+	        success : function(data) {
+	        	/* console.info(data.message=='delete_success');
+	        	if(data.message=='delete_success'){
+	        		init_feature_table();
+	        	} */
+	        	if (data.message =='delete_success') 
+	        	{ 
+		        	alert('删除成功!'); 
+		        	start = $("#right_example").dataTable().fnSettings()._iDisplayStart; 
+		        	total = $("#right_example").dataTable().fnSettings().fnRecordsDisplay(); 
+		        	window.location.reload(); 
+		        	if((total-start)==1){ 
+			        	if (start > 0) { 
+			        	$("#right_example").dataTable().fnPageChange( 'previous', true ); 
+			        	} 
 		        	} 
 	        	} 
-        	} 
-        	else 
-        	{ 
-        		alert('删除发生错误，请联系管理员!'); 
-        	} 
-        	
-        }
-    });  
+	        	else 
+	        	{ 
+	        		alert('删除发生错误，请联系管理员!'); 
+	        	} 
+	        	
+	        }
+	    });  
+	}
 }
 
 //跳转到修改页面
