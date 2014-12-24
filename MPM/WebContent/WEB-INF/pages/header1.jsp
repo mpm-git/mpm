@@ -9,6 +9,7 @@
 </style>
 
 <head>
+<script type="text/javascript" src="<s:url value='/html5/findPath/js/ex/load.js'/>"></script>
 <script src="<s:url value='/javascript/ex/Utils.js'/>" type="text/javascript" charset="utf-8"></script>
 <script src="<s:url value='/javascript/ex/global.js'/>" type="text/javascript" charset="utf-8"></script>
 </head>
