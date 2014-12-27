@@ -15,7 +15,17 @@
 	href="<s:url value='/styles/smoothness/jquery-ui-1.8.16.custom.css'/>" />
 <link rel="stylesheet" type="text/css"
 	href="<s:url value='/styles/jquery_table_jui.css'/>">
-
+<style type="text/css">
+	.m2{
+ 		border:1px solid #CCCCCC;  
+        margin:2em auto 1em;  
+        max-width:640px;  
+        min-width:480px;  
+        -moz-border-radius:20px;  
+        -webkit-border-radius:20px;  
+        border-radius:10px; 
+ 	}
+</style>
 <script type="text/javascript"
 	src="<s:url value='/javascript/jquery-1.7.min.js'/>"></script>
 <script src="<s:url value='/javascript/h.js'/>" type="text/javascript"
@@ -125,7 +135,7 @@
 				</ul>
 				<form action="../system/change-pswd.action" method="post"
 					name="changepswd" id="changepswd">
-					<div class="changepswd" id="newrfid">
+					<div class="changepswd m2" id="newrfid">
 						<div style="margin-left: 100px; margin-top: 25px;">修改登录密码</div>
 
 						<table bordercolor="#000000" border=0 cellpadding="0"

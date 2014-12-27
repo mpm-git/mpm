@@ -1,6 +1,8 @@
 package cn.com.mwsn.mpm.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.cxf.binding.corba.wsdl.Object;
 import org.apache.log4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.mwsn.frame.service.impl.TransactionalServiceImpl;
 import cn.com.mwsn.mpm.entity.HealthContent;
+import cn.com.mwsn.mpm.entity.HealthType;
 import cn.com.mwsn.mpm.service.HealthPopularizationService;
 
 @Service
@@ -56,6 +59,34 @@ public class HealthPopularizationServiceImpl  extends TransactionalServiceImpl i
 	@Override
 	public void updateHealthContent(HealthContent content) {
 		this.merge(content);
+	}
+
+	@Override
+	public List<HealthType> getHealthTypes() {
+		return this.findAll(HealthType.class);
+	}
+
+	@Override
+	public void deleteHealthType(String typeName) {
+//		String query="delete HealthContent where typeName=:typeName";
+//		Map<String, String> map=new HashMap<String, String>();
+//		map.put("typeName", typeName);
+//		try {
+//			this.update(query, map);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		this.remove(HealthType.class, this.findBy(HealthType.class, "typeName", typeName).getId());
+	}
+
+	@Override
+	public void addHealthType(String typeName) {
+		this.save(new HealthType(typeName));
+	}
+
+	@Override
+	public HealthType findHealthType(String healthType) {
+		return this.findBy(HealthType.class, "typeName", healthType);
 	}
 
 }

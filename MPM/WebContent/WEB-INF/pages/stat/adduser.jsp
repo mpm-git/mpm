@@ -20,6 +20,14 @@
 	.select_width{
 		width:100%
 	}
+ 	.m1{
+ 		border:1px solid #CCCCCC;   
+        max-width:640px;  
+        min-width:544px;  
+        -moz-border-radius:20px;  
+        -webkit-border-radius:20px;  
+        border-radius:10px; 
+ 	}
 </style>
 
 <script type="text/javascript"
@@ -140,10 +148,10 @@
 				</ul>
 				<form action="../system/add-user.action" method="post"
 					name="adduserForm" id="adduserForm">
-					<div class="STYLE1" id="newrfid">
+					<div class="STYLE1 m1" id="newrfid">
 						添加新用户
 						<div id="alert" align="left"
-							style="color: #FF0000; margin-top: 80px; margin-left: 30px;"></div>
+							style="color: #FF0000; margin-top: 80px; margin-left: 25px;"></div>
 						<table bordercolor="#000000" border=0 cellpadding="0"
 							cellspacing="0" style="margin-top: 100px; margin-left: 90px;">
 							<tr>

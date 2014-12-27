@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.com.mwsn.frame.web.action.Struts2Utils;
 import cn.com.mwsn.mpm.entity.HealthContent;
+import cn.com.mwsn.mpm.entity.HealthType;
 import cn.com.mwsn.mpm.service.HealthPopularizationService;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -51,7 +52,9 @@ public class HealthPopularizationAction extends ActionSupport{
 	
 	private int pageId;
 	
-	private String types;   //菜单1，菜单2    类型1，类型2
+//	private String types;   //菜单1，菜单2    类型1，类型2
+	
+	private List<String> types=new ArrayList<String>();
 	
 	private HealthContent healthContent1;
 	
@@ -157,13 +160,41 @@ public class HealthPopularizationAction extends ActionSupport{
 		String id=request.getParameter("id");
 		if(null!=id && !"".equals(id))
 		pageId=Integer.parseInt(id);
-		types=getPropertiesValue();
+		List<HealthType> list=hService.getHealthTypes();
+		for(HealthType healthType:list){
+			types.add(healthType.getTypeName());
+		}
 		return "to_update_health_page";
 	}
 	
 	@Action(value = "findtypes", results = { @Result(name = "success", type = "json") }	)
 	public String findTypes(){
-		types=getPropertiesValue();
+		List<HealthType> list=hService.getHealthTypes();
+		for(HealthType healthType:list){
+			types.add(healthType.getTypeName());
+		}
+		return "success";
+	}
+	
+	@Action(value = "addtypes", results = { @Result(name = "success", type = "json") }	)
+	public String addTypes(){
+		HttpServletRequest request=Struts2Utils.getRequest();
+		String typeName=request.getParameter("typeName");
+		if(hService.findHealthType(typeName)==null){
+			hService.addHealthType(typeName);
+			message="success";
+		}else{
+			message="error_same_name";
+		}
+		return "success";
+	}
+	
+	@Action(value = "deletetypes", results = { @Result(name = "success", type = "json") }	)
+	public String deleteTypes(){
+		HttpServletRequest request=Struts2Utils.getRequest();
+		String typeName=request.getParameter("typeName");
+		hService.deleteHealthType(typeName);
+		message="success";
 		return "success";
 	}
 	
@@ -210,53 +241,20 @@ public class HealthPopularizationAction extends ActionSupport{
 		this.pageId = pageId;
 	}
 
-	public String getTypes() {
+	public List<String> getTypes() {
 		return types;
 	}
 
-	public void setTypes(String types) {
+	public void setTypes(List<String> types) {
 		this.types = types;
 	}
-	
+
 	public HealthContent getHealthContent1() {
 		return healthContent1;
 	}
 
 	public void setHealthContent1(HealthContent healthContent1) {
 		this.healthContent1 = healthContent1;
-	}
-
-	public String getPropertiesValue() {
-		String path = HealthPopularizationAction.class.getResource("menus.properties").toString();
-		String file=path.substring(6, path.length());
-		Properties prop=new Properties();        
-		try {
-			prop.load(new InputStreamReader(new FileInputStream(file)));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}    
-//		BufferedReader reader = null;
-//		String tempString = null;
-//		try {
-//			reader = new BufferedReader(new FileReader(file));
-//			// 一次读入一行，直到读入null为文件结束
-//			if ((tempString = reader.readLine()) == null) {
-//				return null;
-//			}
-//			reader.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} finally {
-//			if (reader != null) {
-//				try {
-//					reader.close();
-//				} catch (IOException e1) {
-//				}
-//			}
-//		}
-		return prop.getProperty("menus");
 	}
 
 }
