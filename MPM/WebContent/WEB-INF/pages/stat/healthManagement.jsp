@@ -68,26 +68,8 @@
 		$("#beginStatDate").datepicker();
 		$("#endStatDate").datepicker();
 		$("input:submit", ".wrap").button();
-		
 
-		
-		$.ajax({    
-	        url : '../stat/findtypes.action',    
-	        type : 'post',    
-	        dataType : 'json', 
-	        async: false, 
-	        success : function(data) {
-	        	var types=data.types;
-				if(types!=null & types!=''){
-					var arr=new Array();
-					arr=types.split(',');
-					for(var i=0;i<arr.length;i++){
-						$('#pageType').append("<option value='"+arr[i]+"'>"+arr[i]+"</option>");
-					}
-				}
-	        	
-	        }
-	    });
+		initTypes();
 		var id=<%= request.getParameter("id")%>;
 		if(id!=null){
 			$.ajax({    
@@ -133,6 +115,31 @@
 			}
 		}); */
 	});
+	
+	function initTypes(){
+		$.ajax({    
+	        url : '../stat/findtypes.action',    
+	        type : 'post',    
+	        dataType : 'json', 
+	        async: false, 
+	        success : function(data) {
+	        	console.info('data:'+data.types);
+	        	var types=data.types;
+	        	for(var i=0;i<types.length;i++){
+					$('#pageType').append("<option value='"+types[i]+"'>"+types[i]+"</option>");
+					$('#health_select_del').append("<option value='"+types[i]+"'>"+types[i]+"</option>");
+				}
+				/* if(types!=null & types!=''){
+					var arr=new Array();
+					arr=types.split(',');
+					for(var i=0;i<arr.length;i++){
+						$('#pageType').append("<option value='"+arr[i]+"'>"+arr[i]+"</option>");
+					}
+				} */
+	        	
+	        }
+	    });
+	}
 	
 	function ajaxFileUpload() {
 		$("#personInfo_form1").ajaxStart(function() {
@@ -198,6 +205,100 @@
 			}
 		});
 	}
+	
+	function addHealthType(){
+		//todo type_dialog
+		$("#type_dialog1").dialog({
+		    bgiframe: true,
+		    resizable: false,
+		    height:160,
+		    modal: true,
+		    title:'添加类型',
+		    position:["center",100],
+		    overlay: {
+		        //backgroundColor: '#000',
+		        opacity: 0.5
+		    },
+		    buttons: {
+		        '确认': function() {
+		        	$.ajax({
+		    			url : 'addtypes.action',
+		    			type : 'post',
+		    			data : {
+		    				'typeName':$('#add_type').val()
+		    			},
+		    			dataType : 'json',
+		    			success : function(data) {
+		    				console.info(data.message);
+		    				if (data.message == 'success') {
+			    				$('#pageType').empty();
+			    				$('#health_select_del').empty();
+			    				initTypes();
+			    				$("#type_dialog1").dialog('close');
+			    				$('#add_type').val('');
+		    					alert('保存成功');
+		    				}
+		    				if (data.message == 'error_same_name') {
+		    					alert('保存失败,该类型已存在！');
+		    				}
+
+		    			}
+		    		});
+		        	
+		        },
+		        '取消': function() {
+		            $(this).dialog('close');
+		        }
+		    }
+		});
+	}
+	
+	function deleteHealthType(){
+		//todo health_select_del
+		$("#type_dialog2").dialog({
+		    bgiframe: true,
+		    resizable: false,
+		    height:160,
+		    modal: true,
+		    title:'删除类型',
+		    position:["center",100],
+		    overlay: {
+		        //backgroundColor: '#000',
+		        opacity: 0.5
+		    },
+		    buttons: {
+		        '确认': function() {
+		        	$.ajax({
+		    			url : 'deletetypes.action',
+		    			type : 'post',
+		    			data : {
+		    				'typeName':$('#health_select_del').val()
+		    			},
+		    			dataType : 'json',
+		    			success : function(data) {
+		    				console.info(data.message);
+		    				if (data.message == 'success') {
+		    					$('#pageType').empty();
+			    				$('#health_select_del').empty();
+			    				initTypes();
+		    					$("#type_dialog2").dialog('close');
+		    					alert('删除成功');
+		    				}else{
+		    					$("#type_dialog2").dialog('close');
+		    					alert('删除失败');
+		    				}
+
+		    			}
+		    		});
+		        },
+		        '取消': function() {
+		            $(this).dialog('close');
+		        }
+		    }
+		});
+	}
+	
+	
 </script>
  <script type="text/javascript" language="javascript">    
         function FileUpload_onselect()
@@ -241,6 +342,35 @@
 						<td><SELECT id="pageType" style="width: 131px;"
 							name="type">
 						</SELECT></td>
+						<td>
+							&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+							<input type="button" value="添加类型" onclick="addHealthType()"/>
+							 &nbsp;&nbsp; &nbsp;&nbsp;
+							<input type="button" value="删除类型" onclick="deleteHealthType()"/>
+							<div id="type_dialog1" style="display: none;">
+								<table>
+									<tr>
+										<td>请输入您的类型：</td>
+									</tr>
+									<tr>
+										<td><input id="add_type" type="text"></td>
+									</tr>
+								</table>
+							</div>
+							<div id="type_dialog2" style="display: none;">
+								<table>
+									<tr>
+										<td>请选择你要删除的类型：</td>
+									</tr>
+									<tr>
+										<td>
+											<select id="health_select_del" style="width: 131px;">
+											</select>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
 					</tr>
 					<tr>
 						<td height="19"></td>
@@ -257,7 +387,7 @@
 								 <input id="file" type="file"  name="upfile" contentEditable="false" accept="image/*" style="width:448px; height: 22px;display:none" onclick="return FileUpload_onclick()" onchange="return FileUpload_onselect()"/>
 							</form>
 							<input style="display: none;" id="text" type="text" style="display:none" />
-								<img id="upload_image" src="<s:url value='/styles/image/add.png'/>" onclick="file.click()" /> 
+								<img title="添加图片" id="upload_image" src="<s:url value='/styles/image/add.png'/>" onclick="file.click()" /> 
 						</td>
 					</tr>
 				</table>
