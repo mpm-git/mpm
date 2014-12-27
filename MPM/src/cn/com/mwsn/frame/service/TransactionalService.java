@@ -113,4 +113,6 @@ public interface TransactionalService {
 //	<T> List<T> find(String queryString, Map<String, Object> map, int page, int rows);
 	<T> QueryResult<List<T>> find(String queryString, Map<String, Object> map, int page, int rows);
 
+	<T> T findFirst(String queryString, Object[] params);
+
 }

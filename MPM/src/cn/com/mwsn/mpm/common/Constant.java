@@ -1,6 +1,7 @@
 package cn.com.mwsn.mpm.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,14 @@ public class Constant {
 	public static enum RECORD_STATE {START, STOP};
 	public static enum MOBILEFLAG {FINDING, FOUND};
 	public static enum DATEFLAG {FINDBED, ALARM};
+	public static String allXAxisNames_1="特级,一级,二级,三级,四级";
+	public static String allXAxisNames_2="前庭大腺囊肿,卵巢恶性肿瘤,卵巢肿物,外阴恶性肿瘤,外阴血肿,子宫内膜恶性肿瘤,子宫内膜病变,子宫平滑肌瘤,子宫恶性肿瘤,子宫腺肌瘤,子宫颈CIN,子宫颈恶性肿瘤,子宫颈鳞状上皮不典型增生,异位妊娠,盆腔肿物";
+	public static String allXAxisNames_3="10,20,30,40,50,60,70,80,90,100";
+	public static String allXAxisNames_5="普通护士,责任护士";
+	public static String allXAxisNamesValue_1="0,1,2,3,4";
+	public static String allXAxisNamesValue_2="前庭大腺囊肿,卵巢恶性肿瘤,卵巢肿物,外阴恶性肿瘤,外阴血肿,子宫内膜恶性肿瘤,子宫内膜病变,子宫平滑肌瘤,子宫恶性肿瘤,子宫腺肌瘤,子宫颈CIN,子宫颈恶性肿瘤,子宫颈鳞状上皮不典型增生,异位妊娠,盆腔肿物";
+	public static String allXAxisNamesValue_3="10,20,30,40,50,60,70,80,90,100";
+	public static String allXAxisNamesValue_5="普通护士,责任护士";
 	public static String executeType="["
 			+ "{name:'晨间护理',info:'整理床单位'},"
 			+ "{name:'协助进食水',info:'协助进食水'},"
@@ -89,6 +98,7 @@ public class Constant {
 			+ "{name:'暂停',info:'1'},"
 			+ "{name:'刻写',info:'1'}"
 			+ "]";
+	
 	//地点代码
 	
 	public static String PLACE_201_CODE = "201";

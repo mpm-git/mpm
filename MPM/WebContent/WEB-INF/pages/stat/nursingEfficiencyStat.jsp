@@ -112,7 +112,7 @@ $(document).ready(function() {
 							 return '<b>'+ this.series.name +'</b><br/>'+new Date(this.y).pattern("HH:mm")+'';  
 						}
 	                    return '<b>'+ this.series.name +'</b><br/>'+  
-	                    this.x +': '+ this.y +'';  
+	                    this.x +': '+ this.y.toFixed(2) +'';  
 	            }
 // 				pointFormat: '<b>{series.name}</b>  <b>{point.y}</b> ',
 // 				useHTML:true

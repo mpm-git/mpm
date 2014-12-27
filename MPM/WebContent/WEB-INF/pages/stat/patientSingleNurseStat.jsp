@@ -53,7 +53,7 @@ if(type == 1){
 	xAxisTitle = "年龄";
 }
 $(document).ready(function() {
-	console.info(new Date(0).pattern("yyyy-MM-dd hh:mm"));
+// 	console.info(new Date(0).pattern("yyyy-MM-dd hh:mm"));
 // 	$('#info_table').dataTable();
 // 	$('#show_table').dataTable( {
 // 		//"bAutoWidth": false, //不自动计算列宽度
@@ -157,9 +157,27 @@ $(document).ready(function() {
 				}
 				
 			},
+			plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+// 	                    color: '#000000',
+// 	                    connectorColor: '#000000',
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+	                }
+	            }
+	        },
 			tooltip: {
+	    	 //   pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
 				 formatter: function() {
 					 var yAxisName=$("input[name='yAxisName']:checked").val();
+						if( type==0&&yAxisName!=3)
+						{
+							return '<b>'+ this.series.name +'</b><br/>'+  
+		                    this.percentage.toFixed(2)+"%";  
+						}
 						if(yAxisName==3)
 						{
 							 return '<b>'+ this.series.name +'</b><br/>'+new Date(this.y).pattern("HH:mm")+'';  
@@ -213,6 +231,7 @@ function genertateData(chartId){
 	<%
 		  }
     %>
+    if(type!=0)
 		     chart.addSeries({
 	    	    type: 'column', 
 		        name: '<%=totalRow.get(0)%>', 
@@ -275,11 +294,29 @@ function genertateData(chartId){
 			if(searchType==1)
 			{%>
 			console.info(pieData);
+// 				chart.addSeries({
+// 		            type: 'pie',
+// 		            name: 'Browser share',
+// 		            data: [
+// 		                ['Firefox',   45.0],
+// 		                ['IE',       26.8],
+// 		                {
+// 		                    name: 'Chrome',
+// 		                    y: 12.8,
+// 		                    sliced: true,
+// 		                    selected: true
+// 		                },
+// 		                ['Safari',    8.5],
+// 		                ['Opera',     6.2],
+// 		                ['Others',   0.7]
+// 		            ]
+// 		        });
 				chart.addSeries({
 				    type: 'pie', 
-				    name: ' ',
+				    name: onelinetitle,
 					data:pieData
 			   	});
+
 			   
 			<%}
 

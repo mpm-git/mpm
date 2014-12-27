@@ -95,6 +95,12 @@ public class NursingStrengthStatAction extends ActionSupport {
 
 	private String excel_main_title;
 
+	private String fieldID2;
+
+	private int workingDays;
+
+	private int workingTime;
+
 	//初始化数据
 	static {
 		if(allNursesList == null){
@@ -143,17 +149,17 @@ public class NursingStrengthStatAction extends ActionSupport {
 		}
 		if(allXAxisNames == null){
 			allXAxisNames = new HashMap<String, String>();
-			allXAxisNames.put("1", "特级,一级,二级,三级,四级");//护理等级
-			allXAxisNames.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
-			allXAxisNames.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
-			allXAxisNames.put("5", "普通护士,责任护士");//护士类型
+			allXAxisNames.put("1", Constant.allXAxisNames_1);//护理等级
+			allXAxisNames.put("2", Constant.allXAxisNames_2);//主要诊断
+			allXAxisNames.put("3", Constant.allXAxisNames_3);//年龄
+			allXAxisNames.put("5", Constant.allXAxisNames_5);//护士类型
 		}
 		if(allXAxisNamesValue == null){
 			allXAxisNamesValue = new HashMap<String, String>();
-			allXAxisNamesValue.put("1", "0,1,2,3,4");//护理等级
-			allXAxisNamesValue.put("2", "子宫平滑肌瘤,异位妊娠,子宫颈恶性肿瘤,子宫内膜恶性肿瘤");//主要诊断
-			allXAxisNamesValue.put("3", "10,20,30,40,50,60,70,80,90,100");//年龄
-			allXAxisNamesValue.put("5", "普通护士,责任护士");//护士类型
+			allXAxisNamesValue.put("1", Constant.allXAxisNamesValue_1);//护理等级
+			allXAxisNamesValue.put("2", Constant.allXAxisNamesValue_2);//主要诊断
+			allXAxisNamesValue.put("3", Constant.allXAxisNamesValue_3);//年龄
+			allXAxisNamesValue.put("5", Constant.allXAxisNamesValue_5);//护士类型
 		}
 	}
 	@Action(value="nursingStrengthStat")
@@ -235,8 +241,16 @@ public class NursingStrengthStatAction extends ActionSupport {
 		}
 		else if(yAxisName[0].equals("2"))
 		{
-			invokeField="avgHaoShi";
-			sumTitle="平均耗时";
+			if(searchType==1)
+			{
+				invokeField="haoShi";
+				sumTitle="每日平均耗时";
+			}
+			if(searchType==2)
+			{
+				invokeField="avgHaoShi";
+				sumTitle="平均耗时";
+			}
 			dealSum=new DealSum() {
 				@Override
 				public Object execute(Object old,Object news,Object o) {
@@ -246,7 +260,13 @@ public class NursingStrengthStatAction extends ActionSupport {
 					//				return Long.parseLong(old.toString().trim())+haoShi;
 					if(old==null)
 						return news;
-					return (Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim()))/2;
+					if(searchType==2)
+					{
+						return (Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim()))/2;
+					}else
+					{
+						return (Long.parseLong(old.toString().trim())+Long.parseLong(news.toString().trim()));
+					}
 				}
 
 				@Override
@@ -278,11 +298,13 @@ public class NursingStrengthStatAction extends ActionSupport {
 		chartData = new ArrayList<List<String>>();
 		if(searchType == 1){
 			//第一行  病人名称
-
+			workingTime=8*60/100;
+			workingDays=DateUtil.getWorkingDays(Util.str2Date(beginStatDate, "yyyy-MM-dd"), true, Util.str2Date(endStatDate, "yyyy-MM-dd"), true);
 			xAxisNames = new ArrayList<String>(nurseList.values());
 			xAxisNamesValue = new ArrayList<String>(nurseList.keySet());
 			title="护士";
 			fieldID="nurseNo";
+			fieldID2="execute";
 			fieldValue="nurseName";
 			 excel_main_title="按护士";
 		}
@@ -309,15 +331,18 @@ public class NursingStrengthStatAction extends ActionSupport {
 //		}
 		else if(searchType == 2) 
 		{
+			workingDays=1;
+			workingTime=1;
 			xAxisNames = Arrays.asList(allXAxisNames.get("5").split(","));
 			xAxisNamesValue = Arrays.asList(allXAxisNamesValue.get("5").split(","));
 			title = "护士职称";
 			fieldID = "nurseType";
+			fieldID2 = "execute";
 			fieldValue="nurseType";
 			 excel_main_title="按职称";
 		}
 		{
-			String[] execute = new String[]{fieldID,"execute"};
+			String[] execute = new String[]{fieldID,fieldID2};
 			find_view_map=changeFind_view4Map(find_view.getResult(),execute);
 			generateData();
 			tableData = composeDate();
@@ -397,6 +422,7 @@ public class NursingStrengthStatAction extends ActionSupport {
 				}
 
 			}
+		System.out.println(find_view_map);
 		return find_view_map;
 	}
 	private void generateData() {
@@ -410,7 +436,7 @@ public class NursingStrengthStatAction extends ActionSupport {
 		String add="";
 		if(searchType==0)
 		{
-			String[] execute = new String[]{"execute"};
+			String[] execute = new String[]{"nurseNo"};
 			_find_view_map=changeFind_view4Map(find_view.getResult(),execute);
 //			System.out.println(_find_view_map);
 		}
@@ -430,7 +456,7 @@ public class NursingStrengthStatAction extends ActionSupport {
 				{
 
 					Object ss = ClassUtil.invokeGet(record_view, invokeField);
-					lists.add(ss.toString());
+					lists.add(Integer.parseInt(ss.toString())/(workingDays*1.0*workingTime)+"");
 					Object o = map4Sum.get(x.trim());
 					if(o==null)
 						map4Sum.put(x.trim(), dealSum.execute(null,ss,record_view));
@@ -455,7 +481,7 @@ public class NursingStrengthStatAction extends ActionSupport {
 				list4Sum.add("0");
 			else
 			{
-				list4Sum.add(o.toString());
+				list4Sum.add(Integer.parseInt(o.toString())/(workingDays*1.0*workingTime)+"");
 			}
 		}
 		chartData.add(list4Sum);
@@ -568,10 +594,19 @@ public class NursingStrengthStatAction extends ActionSupport {
 			List<String> up_line1 = new ArrayList<String>();
 			up_line1.add(title);
 			up_line1.add("护理行为");
-			up_line1.add("最大耗时");
-			up_line1.add("平均耗时");
-			up_line1.add("最小耗时");
-			up_line1.add("总耗时");
+			if(searchType==1)
+			{
+				up_line1.add("最大耗时");
+				up_line1.add("平均耗时");
+//				up_line1.add("每天平均耗时");
+				up_line1.add("总耗时");
+			}
+			if(searchType==2)
+			{
+				up_line1.add("最大耗时");
+				up_line1.add("平均耗时");
+				up_line1.add("最小耗时");
+			}
 			data.add(up_line1);
 
 			List<String> lineOther = null;
@@ -580,10 +615,19 @@ public class NursingStrengthStatAction extends ActionSupport {
 				lineOther = new ArrayList<String>();
 				lineOther.add(ClassUtil.invokeGet(find_view_map.get(key), fieldValue).toString());
 				lineOther.add(find_view_map.get(key).getExecute());
-				lineOther.add(find_view_map.get(key).getMaxHaoShi()+"");
-				lineOther.add(find_view_map.get(key).getAvgHaoShi()+"");
-				lineOther.add(find_view_map.get(key).getMinHaoShi()+"");
-				lineOther.add(find_view_map.get(key).getHaoShi()+"");
+				if(searchType==1)
+				{
+					lineOther.add(find_view_map.get(key).getMaxHaoShi()+"");
+					lineOther.add(find_view_map.get(key).getAvgHaoShi()+"");
+//					lineOther.add(find_view_map.get(key).getHaoShi()/(workingDays*1.0*workingTime)+"");
+					lineOther.add(find_view_map.get(key).getHaoShi()+"");
+				}
+				if(searchType==2)
+				{
+					lineOther.add(find_view_map.get(key).getMaxHaoShi()+"");
+					lineOther.add(find_view_map.get(key).getAvgHaoShi()+"");
+					lineOther.add(find_view_map.get(key).getMinHaoShi()+"");
+				}
 				data.add(lineOther);
 			}
 		}else if(yAxisName[0].equals("3")){

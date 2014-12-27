@@ -28,6 +28,6 @@ public class NurseServiceImpl extends TransactionalServiceImpl implements
 	}
 	@Override
 	public List<Doctor> findNotBingNurse() {
-		return this.find("from Nurse where nurseNo not in(select staffNum from User)", new Object[]{});
+		return this.find("from Nurse where nurseNo not in(select staffNum from User where staffNum<>null)", new Object[]{});
 	}
 }

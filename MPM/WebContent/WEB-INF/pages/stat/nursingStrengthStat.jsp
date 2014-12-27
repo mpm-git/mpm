@@ -38,14 +38,17 @@ var type = ${searchType} - 1;
 var seriesName = "总计";
 var chartTitle = "护理时间与工作时间分析";
 var xAxisTitle = "护士";
+var text;
+var fuhao;
 if(type == 0){
 	seriesName = "总服务时间";
+	fuhao='%';
+	text="耗时("+fuhao+")";
 }else if(type == 1){
-	chartTitle = "任职时间与护理时间分析";
-	xAxisTitle = "任职时间";
-}else if(type == 2){
 	chartTitle = "护士职称与护理时间分析";
 	xAxisTitle = "护士职称";
+	fuhao='分钟';
+	text="耗时("+fuhao+")";
 }
 
 $(document).ready(function() {
@@ -95,11 +98,11 @@ $(document).ready(function() {
 			yAxis: {
 				min: 0,
 				title: {
-					text: '耗时'
+					text: text
 				}
 			},
 			tooltip: {
-				pointFormat: '<b>{series.name}</b>  <b>{point.y}</b> ',
+				pointFormat: '<b>{series.name}</b> <b>{point.y:.2f}'+fuhao+'</b> ',
 				useHTML:true
 			}
 		});
