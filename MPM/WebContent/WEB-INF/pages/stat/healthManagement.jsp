@@ -172,6 +172,10 @@
 			alert("标题不能为空");
 			return;
 		}
+		if(type==''){
+			alert("类型不能为空");
+			return;
+		}
 		if(imagePath==''){
 			alert("主题图片不能为空");
 			return;
@@ -477,6 +481,10 @@
 		var imagePath=$('#text').val()
 		if(title==''){
 			alert("标题不能为空");
+			return;
+		}
+		if(type==''){
+			alert("类型不能为空");
 			return;
 		}
 		if(imagePath==''){
